@@ -8,6 +8,7 @@ import com.github.tommyettinger.gdcrux.PointF2;
 import com.github.tommyettinger.gdcrux.PointI2;
 import com.github.tommyettinger.gdcrux.PointI3;
 import com.github.tommyettinger.gdcrux.PointI4;
+import lando.systems.ld58.game.components.Position;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class FramePool {
     private final Pool<PointI3> pi3;
     private final Pool<PointI4> pi4;
     private final Pool<Circle> circle;
+    private final Pool<Position> pos;
     private final Pool<Rectangle> rect;
     private final Pool<Color> color;
 
@@ -39,6 +41,7 @@ public class FramePool {
         this.pi2 = Pools.get(PointI2.class, 500);
         this.pi3 = Pools.get(PointI3.class, 500);
         this.pi4 = Pools.get(PointI4.class, 500);
+        this.pos = Pools.get(Position.class, 500);
         this.circle = Pools.get(Circle.class, 500);
         this.rect = Pools.get(Rectangle.class, 500);
         this.color = Pools.get(Color.class, 100);
@@ -50,6 +53,7 @@ public class FramePool {
         this.pools.put(PointI2.class, this.pi2);
         this.pools.put(PointI3.class, this.pi3);
         this.pools.put(PointI4.class, this.pi4);
+        this.pools.put(Position.class, this.pos);
         this.pools.put(Circle.class, this.circle);
         this.pools.put(Rectangle.class, this.rect);
         this.pools.put(Color.class, this.color);
@@ -127,7 +131,13 @@ public class FramePool {
     // Components
     // ------------------------------------------------------------------------
 
-    // TODO...
+    public static Position pos() {
+        return instance.pos.obtain();
+    }
+
+    public static Position pos(int x, int y) {
+        return pos().set(x, y);
+    }
 
     // ------------------------------------------------------------------------
     // Circle

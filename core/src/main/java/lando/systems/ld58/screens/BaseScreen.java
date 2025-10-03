@@ -1,6 +1,7 @@
 package lando.systems.ld58.screens;
 
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
@@ -14,6 +15,7 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.FontType;
+import lando.systems.ld58.game.Systems;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public abstract class BaseScreen implements Screen {
@@ -24,6 +26,7 @@ public abstract class BaseScreen implements Screen {
     public final ShapeDrawer shapes;
     public final TweenManager tween;
     public final OrthographicCamera windowCamera;
+    public final Engine engine;
     public final Stage uiStage;
 
     public OrthographicCamera worldCamera;
@@ -38,6 +41,7 @@ public abstract class BaseScreen implements Screen {
         this.shapes = game.assets.shapes;
         this.tween = game.tween;
         this.windowCamera = game.windowCamera;
+        this.engine = new Engine();
 
         var viewport = new ScreenViewport(windowCamera);
         this.uiStage = new Stage(viewport);
@@ -51,6 +55,8 @@ public abstract class BaseScreen implements Screen {
         layout.setTargetWidth(windowCamera.viewportWidth);
         font.markup(getClass().getSimpleName(), layout);
         font.regenerateLayout(layout);
+
+        Systems.init(this);
     }
 
     /** Called when this screen becomes the current screen for a {@link Game}. */

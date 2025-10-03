@@ -1,0 +1,87 @@
+package lando.systems.ld58.game.components;
+
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.utils.Util;
+import lombok.AllArgsConstructor;
+
+public class Image extends Renderable {
+
+    private final Color prevColor = Color.WHITE.cpy();
+    private ImageValue value;
+
+    public Image(ImageType type)                     { this(type, type.get(), null); }
+    public Image(ImageType type, Vector2 size)       { this(type, type.get(), size); }
+
+    public Image(TextureRegion region)               { this(null, region, null); }
+    public Image(TextureRegion region, Vector2 size) { this(null, region, size); }
+
+    public Image(Texture texture)                    { this(null, texture, null); }
+    public Image(Texture texture, Vector2 size)      { this(null, texture, size); }
+
+    private Image(ImageType type, TextureRegion region, Vector2 size) {
+        set(region);
+        if      (size   != null) this.size.set(size);
+        else if (region != null) this.size.set(region.getRegionWidth(), region.getRegionHeight());
+    }
+
+    private Image(ImageType type, Texture texture, Vector2 size) {
+        set(texture);
+        if      (size    != null) this.size.set(size);
+        else if (texture != null) this.size.set(texture.getWidth(), texture.getHeight());
+    }
+
+    public void set(ImageType type)       { set(type.get()); }
+    public void set(Texture texture)      { value = new TextureImage(texture); }
+    public void set(TextureRegion region) { value = new RegionImage(region); }
+
+    @Override
+    public void render(SpriteBatch batch, Position position) {
+        if (value == null) return;
+
+        batch.setColor(tint);
+
+        var bounds = rect(position);
+        if (value instanceof RegionImage) {
+            var image = (RegionImage) value;
+            Util.draw(batch, image.region, bounds, tint);
+        } else if (value instanceof TextureImage) {
+            var image = (TextureImage) value;
+            var texture = image.texture;
+            // repeat texture as much as needed to fill the draw bounds
+            float u2 = bounds.width / texture.getWidth();
+            float v2 = bounds.height / texture.getHeight();
+            batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height, 0, 0, u2, -v2);
+        }
+
+        batch.setColor(prevColor);
+    }
+
+    // ------------------------------------------------------------------------
+    // Internal structures to allow for either Texture or TextureRegion values
+    // but not both in the same Image component.
+    // ------------------------------------------------------------------------
+
+    private interface ImageValue {
+        int width();
+        int height();
+    }
+
+    @AllArgsConstructor
+    private static class TextureImage implements ImageValue {
+        public final Texture texture;
+        public int width() { return texture.getWidth(); }
+        public int height() { return texture.getHeight(); }
+    }
+
+    @AllArgsConstructor
+    private static class RegionImage implements ImageValue {
+        public final TextureRegion region;
+        public int width() { return region.getRegionWidth(); }
+        public int height() { return region.getRegionHeight(); }
+    }
+}

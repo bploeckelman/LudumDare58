@@ -1,0 +1,5 @@
+package lando.systems.ld58.game.components.collision;
+
+public enum CollisionMask {
+      SOLID, PLAYER, PROJECTILE
+}
