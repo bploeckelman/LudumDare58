@@ -58,7 +58,7 @@ public class Tilemap implements Component {
         this.layers = StreamSupport.stream(map.getLayers().spliterator(), false)
             .filter(layer -> !layer.getName().equals("solid"))
             .filter(layer -> layer instanceof TiledMapTileLayer)
-            .map(TiledMapTileLayer.class::cast)
+            .map(layer -> (TiledMapTileLayer) layer)
             .collect(Collectors.toList());
         this.bounds = new Rectangle();
 

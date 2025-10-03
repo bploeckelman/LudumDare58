@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.game.components.collision.*;
 import lombok.RequiredArgsConstructor;
@@ -36,12 +37,13 @@ public class Collider implements Component {
         return collidesWith.contains(mask);
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends CollisionShape> T shape(Class<T> shapeClass) {
-        if (!shapeClass.isInstance(shape)) {
+        if (!ClassReflection.isInstance(shapeClass, shape)) {
             throw new GdxRuntimeException(Stringf.format("%s: %s is not an instance of %s",
                 TAG, shape.getClass().getSimpleName(), shapeClass.getSimpleName()));
         }
-        return shapeClass.cast(shape);
+        return (T) shape;
     }
 
     // ------------------------------------------------------------------------

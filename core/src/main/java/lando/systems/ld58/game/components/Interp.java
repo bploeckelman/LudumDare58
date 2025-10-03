@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Interpolation;
 import lando.systems.ld58.utils.Calc;
 
-import java.time.Duration;
-
 /**
  * Simple interpolation in a component for any {@code Entity} that can make use of a single interpolated parameter to
  * control value changes over time. If an {@code Entity} has more complicated interpolation needs; multiple values with
@@ -29,12 +27,8 @@ public class Interp implements Component {
      */
     public float speed;
 
-    public Interp(Duration duration) {
-        this(duration.toSeconds());
-    }
-
-    public Interp(float duration) {
-        this(duration, Interpolation.linear);
+    public Interp(float durationSecs) {
+        this(durationSecs, Interpolation.linear);
     }
 
     public Interp(float duration, Interpolation interpolation) {

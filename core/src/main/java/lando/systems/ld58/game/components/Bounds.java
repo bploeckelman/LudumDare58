@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Rectangle;
+import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.utils.Calc;
 
 import java.util.Optional;
@@ -78,6 +79,6 @@ public class Bounds implements Component {
 
     @Override
     public String toString() {
-        return "%s{origin=(%.1f, %.1f), size=%.1fx%.1f}".formatted(TAG, rect.x, rect.y, rect.width, rect.height);
+        return Stringf.format("%s{origin=(%.1f, %.1f), size=%.1fx%.1f}", TAG, rect.x, rect.y, rect.width, rect.height);
     }
 }

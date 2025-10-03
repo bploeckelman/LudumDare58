@@ -46,12 +46,13 @@ public class Components {
      * @param <T> The component type.
      * @return The component instance, or null if the entity does not have it.
      */
+    @SuppressWarnings("unchecked")
     public static <T extends Component> T get(Entity entity, Class<T> componentClass) {
         var mapper = mappers.get(componentClass);
         if (mapper == null) {
             throw new GdxRuntimeException("No mapper for component type: " + componentClass.getSimpleName());
         }
-        return componentClass.cast(mapper.get(entity));
+        return (T) mapper.get(entity);
     }
 
     /**
