@@ -1,0 +1,328 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	vis-open-sans-12px: {
+		file: vis-open-sans-12px.fnt
+		scaledSize: -1
+		markupEnabled: true
+		flip: false
+	}
+	vis-open-sans-24px: {
+		file: vis-open-sans-24px.fnt
+		scaledSize: -1
+		markupEnabled: true
+		flip: false
+	}
+	vis-open-sans-32px: {
+		file: vis-open-sans-32px.fnt
+		scaledSize: -1
+		markupEnabled: true
+		flip: false
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	black: {
+		hex: 000000ff
+	}
+	blue: {
+		hex: 0000ffff
+	}
+	blue-dark: {
+		hex: 000091ff
+	}
+	blue-light: {
+		hex: 5e8ce3ff
+	}
+	brown: {
+		hex: 8c593fff
+	}
+	chocolate: {
+		hex: 67381cff
+	}
+	cyan: {
+		hex: 00ffffff
+	}
+	gold: {
+		hex: f9d821ff
+	}
+	green: {
+		hex: 00ff17ff
+	}
+	green-dark: {
+		hex: 008711ff
+	}
+	green-light: {
+		hex: abfcafff
+	}
+	grey: {
+		hex: 7d8183ff
+	}
+	grey-dark: {
+		hex: 444849ff
+	}
+	grey-light: {
+		hex: d0d5d7ff
+	}
+	magenta: {
+		hex: f311f8ff
+	}
+	orange: {
+		hex: fd801bff
+	}
+	orange-dark: {
+		hex: 8e4200ff
+	}
+	orange-light: {
+		hex: ecbd9fff
+	}
+	purple: {
+		hex: bf00ffff
+	}
+	purple-dark: {
+		hex: 690090ff
+	}
+	purple-light: {
+		hex: ca95ebff
+	}
+	red: {
+		hex: fe0e13ff
+	}
+	red-dark: {
+		hex: 8f0009ff
+	}
+	red-light: {
+		hex: e9968cff
+	}
+	sage: {
+		hex: a7e5c6ff
+	}
+	silver: {
+		hex: b3b8b9ff
+	}
+	sky: {
+		hex: 00c1e2ff
+	}
+	tan: {
+		hex: cfb692ff
+	}
+	teal: {
+		hex: 007f81ff
+	}
+	white: {
+		hex: fbffffff
+	}
+	yellow: {
+		hex: fbff25ff
+	}
+	yellow-dark: {
+		hex: 848500ff
+	}
+	yellow-light: {
+		hex: f5ffb9ff
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	plus-black: {
+		name: plus
+		color: black
+	}
+	plus-sky: {
+		name: plus
+		color: sky
+	}
+	minus-black: {
+		name: minus
+		color: black
+	}
+	minus-sky: {
+		name: minus
+		color: sky
+	}
+	pixel-sky: {
+		name: white-pixel
+		color: sky
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: button_rectangle_depth_gradient
+		down: button_rectangle_gradient
+		over: button_rectangle_depth_border_blue
+		focused: button_rectangle_depth_line_blue
+		disabled: button_rectangle_depth_flat_inverted
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: {
+		parent: default
+		checkboxOn: check_square_grey_checkmark_blue
+		checkboxOff: check_square_grey
+		checkboxOver: check_square_grey_checkmark
+		font: vis-open-sans-24px
+		fontColor: black
+		overFontColor: grey-dark
+		disabledFontColor: grey-light
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageButton$ImageButtonStyle: {
+	default: {
+		parent: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+	default: {
+		parent: default
+		font: vis-open-sans-24px
+		fontColor: black
+		downFontColor: sky
+		overFontColor: sky
+		disabledFontColor: grey-dark
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: vis-open-sans-24px
+		fontColor: black
+	}
+	small: {
+		font: vis-open-sans-12px
+		fontColor: black
+	}
+	large: {
+		font: vis-open-sans-32px
+		fontColor: black
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: vis-open-sans-24px
+		fontColorSelected: black
+		fontColorUnselected: grey
+		selection: rectangle_line_blue
+		down: button_rectangle_line_blue
+		over: rectangle_line
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-horizontal: {
+		background: slide_horizontal_grey
+		disabledBackground: slide_horizontal_grey_inverted
+		knob: icon_circle
+		disabledKnob: icon_circle_inverted
+		knobBefore: slide_horizontal_blue_before
+	}
+	default-vertical: {
+		background: slide_vertical_grey
+		disabledBackground: slide_vertical_grey_inverted
+		knob: icon_circle
+		disabledKnob: icon_circle_inverted
+		knobBefore: slide_vertical_blue_before
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: rectangle_line
+		hScroll: slide_horizontal_grey
+		hScrollKnob: icon_circle
+		vScroll: slide_vertical_grey
+		vScrollKnob: icon_circle
+	}
+	panel-dark: {
+		background: panel_grey_dark
+		hScroll: slide_horizontal_grey
+		hScrollKnob: icon_circle
+		vScroll: slide_vertical_grey
+		vScrollKnob: icon_circle
+	}
+	panel-light: {
+		background: panel_grey
+		hScroll: slide_horizontal_grey
+		hScrollKnob: icon_circle
+		vScroll: slide_vertical_grey
+		vScrollKnob: icon_circle
+	}
+	panel-dark-simple: {
+		background: rectangle_line_dark
+		hScroll: slide_horizontal_grey_inverted
+		hScrollKnob: icon_circle
+		vScroll: slide_vertical_grey_inverted
+		vScrollKnob: icon_circle
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: vis-open-sans-24px
+		fontColor: black
+		overFontColor: sky
+		background: button_rectangle_depth_gloss
+		scrollStyle: default
+		listStyle: default
+		backgroundOver: button_rectangle_gloss
+		backgroundOpen: button_rectangle_depth_border_blue
+		backgroundDisabled: button_rectangle_depth_flat_inverted
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		parent: default-horizontal
+	}
+	default-vertical: {
+		parent: default-vertical
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
+	default-horizontal: {
+		handle: progress_vertical_blue
+	}
+	default-vertical: {
+		handle: progress_horizontal_blue
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		parent: default
+		font: vis-open-sans-24px
+		fontColor: black
+		downFontColor: grey
+		overFontColor: grey-dark
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
+	default: {
+		font: vis-open-sans-24px
+		fontColor: black
+		disabledFontColor: grey
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: small
+		background: panel_grey
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
+	default: {
+		background: panel_border_grey_grid
+		knob: icon_circle
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
+	default: {
+		plus: plus
+		minus: minus
+		plusOver: plus-sky
+		minusOver: minus-sky
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: {
+		background: button_square_header_large_square
+		titleFont: vis-open-sans-24px
+		titleFontColor: grey-dark
+	}
+}
+com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
+	default: {
+		parent: default
+	}
+}
+}

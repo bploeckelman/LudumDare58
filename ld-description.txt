@@ -1,0 +1,45 @@
+- ** [HTML/WebGL](https://lando.systems/games/ld58-LINKHERE) **
+- ** [Desktop/Java](https://lando.systems/games/ld58-LINKHERE) **
+- ** [Source](https://github.com/bploeckelman/LudumDare58) **
+# TITLEHERE #
+
+...DESCRIPTION....
+
+# Controls:
+---
+
+* WASD or controller
+* Space to jump
+* J or left-mouse for main attack
+* K or right-mouse for super attack
+
+
+# About the Team:
+---
+
+[LandoSystems](https://lando.systems) is a group of jammers from Madison, Wisconsin that varies in size from 2 to 12 people. This is the team's 33rd Ludum Dare game!! :tada:
+
+# Team Members:
+---
+
+Code:
+- Doug Graham [dsgraham](https://twitter.com/dsgraham) :elephant: [dsgraham on mastodon](https://mastodon.gamedev.place/@dsgraham)
+- Brian Ploeckelman [PalpatinesSmile](https://twitter.com/PalpatinesSmile) :elephant: [brian on mastodon](https://mastodon.gamedev.place/@brian)
+- Jeffrey Hwang :elephant: [jeffreyhwang on mastodon](https://mastodon.gamedev.place/@jeffreyhwang)
+- Brian Rossman
+
+Art:
+- Matt Neumann
+
+Music and Text:
+- Pete V
+
+Assorted Coolness:
+- Luke Bain
+- Clayton Mays
+- Melisa Erman
+
+
+### Attribution:
+---
+- The entire population of NES developers and the generation of gamers and asset-creators who have followed
