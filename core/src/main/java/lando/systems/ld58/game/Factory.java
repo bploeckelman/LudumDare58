@@ -113,6 +113,7 @@ public class Factory {
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
 
+        entity.add(new Outline(Color.RED, Color.CLEAR, 1f));
         var animOrigin = new Vector2(16, 12);
         entity.add(new Animator(AnimType.ANGRY_SUN, animOrigin));
 

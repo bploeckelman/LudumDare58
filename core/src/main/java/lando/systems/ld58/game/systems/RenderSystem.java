@@ -23,11 +23,6 @@ import java.util.Map;
 
 public class RenderSystem extends EntitySystem {
 
-    //
-    // TODO: eventually everything should go through here, backgrounds, overlays, maybe ui?
-    //  then it can be changed to an IteratingSystem and the rendering bit can be per-entity
-    //
-
     private final Map<Entity, TiledMapRenderer> mapRenderers;
 
     private ImmutableArray<Entity> entities;
@@ -44,57 +39,10 @@ public class RenderSystem extends EntitySystem {
 
     public void draw(SpriteBatch batch) {
         for (var entity : entities) {
+
+            renderImageWithOutline(batch, entity);
+
             var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
-            var outline = Components.optional(entity, Outline.class).orElse(Outline.CLEAR);
-
-            // Draw simple renderables
-            var image = Components.optional(entity, Image.class).orElse(null);
-            var animator = Components.optional(entity, Animator.class).orElse(null);
-
-            TextureRegion region = null;
-            Texture texture = null;
-            Rectangle rect = null;
-            Color tintColor = FramePool.color().set(Color.WHITE);
-            if (image != null) {
-                region = image.getTextureRegion();
-                texture = image.getTexture();
-                rect = image.rect(pos);
-                tintColor = image.tint;
-            }
-            if (animator != null) {
-                region = animator.keyframe();
-                rect = animator.rect(pos);
-                tintColor = animator.tint;
-            }
-
-            if (region != null) {
-                ShaderProgram outlineShader = Main.game.assets.outlineShader;
-                batch.setShader(outlineShader);
-                outlineShader.setUniformf("u_fill_color", outline.fillColor());
-                outlineShader.setUniformf("u_outline_color", outline.outlineColor());
-                outlineShader.setUniformf("u_thickness", outline.outlineThickness() / (float) region.getTexture().getWidth(),
-                    outline.outlineThickness() / (float) region.getTexture().getHeight());
-                Util.draw(batch, region, rect, tintColor);
-                batch.setShader(null);
-            }
-
-            if (texture != null) {
-                ShaderProgram outlineShader = Main.game.assets.outlineShader;
-                batch.setShader(outlineShader);
-                outlineShader.setUniformf("u_fill_color", outline.fillColor());
-                outlineShader.setUniformf("u_outline_color", outline.outlineColor());
-                outlineShader.setUniformf("u_thickness", outline.outlineThickness() / (float) texture.getWidth(),
-                    outline.outlineThickness() / (float) texture.getHeight());
-
-                var prevColor = FramePool.color().set(batch.getColor());
-                batch.setColor(tintColor);
-                batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
-                batch.setColor(prevColor);
-                batch.setShader(null);
-            }
-
-
-
             // Draw tilemaps, creating a renderer first if one doesn't already exist for a given map
             Components.optional(entity, Tilemap.class).ifPresent(tilemap -> {
                 var renderer = mapRenderers.computeIfAbsent(entity, e -> tilemap.newRenderer(batch));
@@ -108,5 +56,50 @@ public class RenderSystem extends EntitySystem {
                 }
             });
         }
+    }
+
+    private void renderImageWithOutline(SpriteBatch batch, Entity entity) {
+        var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
+        var outline = Components.optional(entity, Outline.class).orElse(Outline.CLEAR);
+
+        // Draw simple renderables
+        var image = Components.optional(entity, Image.class).orElse(null);
+        var animator = Components.optional(entity, Animator.class).orElse(null);
+
+        TextureRegion region = null;
+        Texture texture = null;
+        Rectangle rect = null;
+        Color tintColor = FramePool.color().set(Color.WHITE);
+        if (image != null) {
+            region = image.getTextureRegion();
+            texture = image.getTexture();
+            rect = image.rect(pos);
+            tintColor = image.tint;
+        }
+        if (animator != null) {
+            region = animator.keyframe();
+            rect = animator.rect(pos);
+            tintColor = animator.tint;
+        }
+
+        ShaderProgram outlineShader = Main.game.assets.outlineShader;
+        batch.setShader(outlineShader);
+        outlineShader.setUniformf("u_fill_color", outline.fillColor());
+        outlineShader.setUniformf("u_outline_color", outline.outlineColor());
+
+        var prevColor = FramePool.color().set(batch.getColor());
+        batch.setColor(tintColor);
+        if (texture != null) {
+            outlineShader.setUniformf("u_thickness", outline.outlineThickness() / (float) texture.getWidth(),
+                outline.outlineThickness() / (float) texture.getHeight());
+            batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
+        }
+        if (region != null) {
+            outlineShader.setUniformf("u_thickness", outline.outlineThickness() / (float) region.getTexture().getWidth(),
+                outline.outlineThickness() / (float) region.getTexture().getHeight());
+            Util.draw(batch, region, rect, tintColor);
+        }
+        batch.setColor(prevColor);
+        batch.setShader(null);
     }
 }
