@@ -24,7 +24,7 @@ public abstract class Renderable implements Component {
         return FramePool.rect(
             position.x - origin.x * scale.x,
             position.y - origin.y * scale.y,
-            size.x   * scale.x,
-            size.y   * scale.y);
+            size.x * scale.x,
+            size.y * scale.y);
     }
 }

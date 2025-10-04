@@ -15,11 +15,11 @@ public enum Flag {
     , LOG_DEBUG     (true)
     , LOG_WARN      (true)
     , LOG_INPUT     (false)
-    , DEBUG_RENDER  (false)
+    , DEBUG_RENDER  (true)
     , DEBUG_UI      (false)
     , FRAME_STEP    (false)
     , LAUNCH_SCREEN (false)
-    , GAME_SCREEN   (false)
+    , GAME_SCREEN   (true)
     ;
     //@formatter:on
 

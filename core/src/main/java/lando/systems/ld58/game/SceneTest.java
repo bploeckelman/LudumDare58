@@ -1,6 +1,7 @@
 package lando.systems.ld58.game;
 
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.Tilemap;
@@ -29,17 +30,22 @@ public class SceneTest extends Scene<GameScreen> {
         view = Factory.view();
         engine.addEntity(view);
 
-        // Load the background
-        var background = Factory.background(ImageType.BG_WARP_ROOM);
-        engine.addEntity(background);
-
-            // Load the map
+        // Load the map
         var mapPath = "maps/_test.tmx";
         map = Factory.map(mapPath);
+        var tilemap = Components.get(map, Tilemap.class);
+
+        // Load the background
+        var bgPosition = new Vector2();
+        // TODO: the size handling is wrong here, probably a bug in Image or Renderable
+        var bgSize = new Vector2(tilemap.cols * tilemap.tileSize, tilemap.rows * tilemap.tileSize);
+        var background = Factory.background(ImageType.BG_WARP_ROOM, bgPosition, bgSize);
+
+        // *** Order matters when adding renderables
+        engine.addEntity(background);
         engine.addEntity(map);
 
         // Create entities from mapObjects
-        var tilemap = Components.get(map, Tilemap.class);
         for (var mapObject : tilemap.objects) {
             engine.addEntity(TilemapObject.createEntity(tilemap, mapObject));
         }

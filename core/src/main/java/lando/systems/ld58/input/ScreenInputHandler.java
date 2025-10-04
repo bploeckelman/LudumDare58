@@ -2,8 +2,8 @@ package lando.systems.ld58.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
+import lando.systems.ld58.game.systems.ViewSystem;
 import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.Util;
 
@@ -35,6 +35,18 @@ public class ScreenInputHandler extends InputHandler {
             Util.log(TAG, "Toggled debug rendering by tab");
             Flag.DEBUG_RENDER.toggle();
             return true;
+        }
+
+        if (keycode == Input.Keys.Z) {
+            Util.log(TAG, "Toggled view system 'zoomFit'");
+            var viewSystem = screen.engine.getSystem(ViewSystem.class);
+            viewSystem.zoomFit = !viewSystem.zoomFit;
+        }
+
+        if (keycode == Input.Keys.B) {
+            Util.log(TAG, "Toggled view system 'stayWithinBounds'");
+            var viewSystem = screen.engine.getSystem(ViewSystem.class);
+            viewSystem.stayWithinBounds = !viewSystem.stayWithinBounds;
         }
 
         if (keycode == Input.Keys.NUM_1) {

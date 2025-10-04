@@ -18,6 +18,6 @@ public class InputControls {
     public int debug() { return debug; }
 
     public static InputControls forPlayer(Player player) {
-        return new InputControls(Input.Keys.A, Input.Keys.S, Input.Keys.Z, Input.Keys.E);
+        return new InputControls(Input.Keys.A, Input.Keys.D, Input.Keys.SPACE, Input.Keys.E);
     }
 }

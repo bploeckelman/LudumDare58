@@ -3,6 +3,7 @@ package lando.systems.ld58.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld58.assets.AnimType;
@@ -86,10 +87,17 @@ public class Factory {
         return entity;
     }
 
-    public static Entity background(ImageType imageType) {
+    public static Entity background(ImageType imageType, Vector2 pos, Vector2 size) {
         var entity = createEntity();
 
-        entity.add(new Image(imageType));
+        var position = new Position(pos);
+
+        var region = new TextureRegion(imageType.get());
+        var image = new Image(region, size);
+        image.tint.a = 0.75f;
+
+        entity.add(position);
+        entity.add(image);
 
         return entity;
     }

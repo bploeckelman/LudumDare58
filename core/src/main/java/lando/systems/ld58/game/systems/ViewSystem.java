@@ -21,6 +21,9 @@ public class ViewSystem extends IteratingSystem {
     private float ratchet; // TODO: have a better way to enable / disable ratchet
     private boolean initialized;
 
+    public boolean zoomFit;
+    public boolean stayWithinBounds;
+
     public ViewSystem() {
         super(Family.one(Viewer.class, Tilemap.class).get());
         this.map = null;
@@ -28,6 +31,8 @@ public class ViewSystem extends IteratingSystem {
         this.target = null;
         this.ratchet = 0;
         this.initialized = false;
+        this.zoomFit = true;
+        this.stayWithinBounds = true;
     }
 
     public void target(Entity entity)   { target(new Target.EntityPos(entity)); }
@@ -90,7 +95,9 @@ public class ViewSystem extends IteratingSystem {
         }
 
         // zoom to fit the boundary width
-        camera.zoom = bounds.rect.width / camera.viewportWidth;
+        if (zoomFit) {
+            camera.zoom = bounds.rect.width / camera.viewportWidth;
+        }
 
         // get half dimensions of the camera viewport, adjusted for the zoom factor
         var camHalfWidth  = viewer.width() / 2f;
@@ -101,13 +108,15 @@ public class ViewSystem extends IteratingSystem {
         var y = Calc.approach(camera.position.y, target.y(), delta * SPEED.y);
 
         // contain within boundary
-        var rect = bounds.rect;
-        var left   = rect.x + camHalfWidth;
-        var bottom = rect.y + camHalfHeight;
-        var right  = rect.x + rect.width  - camHalfWidth;
-        var top    = rect.y + rect.height - camHalfHeight;
-        x = Calc.clampf(x, left, right);
-        y = Calc.clampf(y, bottom, top);
+        if (stayWithinBounds) {
+            var rect = bounds.rect;
+            var left = rect.x + camHalfWidth;
+            var bottom = rect.y + camHalfHeight;
+            var right = rect.x + rect.width - camHalfWidth;
+            var top = rect.y + rect.height - camHalfHeight;
+            x = Calc.clampf(x, left, right);
+            y = Calc.clampf(y, bottom, top);
+        }
 
         // Ratchet up if appropriate, only really relevant for non-auto-scrolling targets
         // but doesn't hurt anything for now so leaving it alone until there's a reason to change

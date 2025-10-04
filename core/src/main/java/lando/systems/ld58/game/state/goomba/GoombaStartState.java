@@ -37,10 +37,10 @@ public class GoombaStartState extends PlayerState {
             new DelayAction(0.5f),
             new ParallelActions(
                 new MoveRelativeAction(1.5f, 0, 150),
-                new PlayAnimAction(AnimType.MARIO_ATTACK),
+                new PlayAnimAction(AnimType.GOOMBA_RAGE_IDLE),
                 new PlaySoundAction(SoundType.CLIMBER_BOUNCE)
             ),
-            new PlayAnimAction(AnimType.MARIO_FALL),
+            new PlayAnimAction(AnimType.GOOMBA_NORMAL_IDLE),
             new DelayAction(0.5f)
         );
 
