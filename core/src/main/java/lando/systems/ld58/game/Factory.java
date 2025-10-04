@@ -118,7 +118,7 @@ public class Factory {
 
         var radius = 8f;
         var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
-        entity.add(Collider.circ(CollisionMask.ENEMY, animOrigin.x, animOrigin.y, radius, collidesWith));
+        entity.add(Collider.circ(CollisionMask.ENEMY, 0, 0, radius, collidesWith));
 
         return entity;
     }

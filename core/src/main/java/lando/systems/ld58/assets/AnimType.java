@@ -12,7 +12,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
 
     // character animations -------------------------------------
     // -- angry sun ---------------------------------------------
-    , ANGRY_SUN(Path.CHAR_ANGRY_SUN)
+    , ANGRY_SUN(Path.CHAR_ANGRY_SUN, new Data(0.2f))
     // -- bullet bill -------------------------------------------
     , BULLET_BILL(Path.CHAR_BULLET_BILL)
     // -- koopa -------------------------------------------------
