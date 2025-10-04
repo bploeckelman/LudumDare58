@@ -18,7 +18,7 @@ public class ViewSystem extends IteratingSystem {
     private Entity map;
     private Entity view;
     private Target target;
-    private float ratchet;
+    private float ratchet; // TODO: have a better way to enable / disable ratchet
     private boolean initialized;
 
     public ViewSystem() {
@@ -80,9 +80,13 @@ public class ViewSystem extends IteratingSystem {
         // set initial values for ratchet height and target position
         if (!initialized) {
             initialized = true;
-            ratchet = bounds.rect.y + viewer.height() / 2f;
-            camera.position.set(target.x(), target.y(), 0);
-            camera.update();
+            if (target != null) {
+                if (target instanceof Target.Scroll) {
+                    ratchet = bounds.rect.y + viewer.height() / 2f;
+                }
+                camera.position.set(target.x(), target.y(), 0);
+                camera.update();
+            }
         }
 
         // zoom to fit the boundary width
@@ -107,10 +111,12 @@ public class ViewSystem extends IteratingSystem {
 
         // Ratchet up if appropriate, only really relevant for non-auto-scrolling targets
         // but doesn't hurt anything for now so leaving it alone until there's a reason to change
-        if (y < ratchet) {
-            y = ratchet;
-        } else {
-            ratchet = y;
+        if (target != null && target instanceof Target.Scroll) {
+            if (y < ratchet) {
+                y = ratchet;
+            } else {
+                ratchet = y;
+            }
         }
 
         // Update actual camera position

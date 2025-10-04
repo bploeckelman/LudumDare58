@@ -18,7 +18,7 @@ public enum Flag {
     , DEBUG_RENDER  (false)
     , DEBUG_UI      (false)
     , FRAME_STEP    (false)
-    , LAUNCH_SCREEN (true)
+    , LAUNCH_SCREEN (false)
     , GAME_SCREEN   (false)
     ;
     //@formatter:on

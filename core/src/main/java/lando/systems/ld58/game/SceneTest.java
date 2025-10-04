@@ -2,9 +2,9 @@ package lando.systems.ld58.game;
 
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import lando.systems.ld58.Config;
 import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.game.components.*;
+import lando.systems.ld58.game.components.Tilemap;
+import lando.systems.ld58.game.components.TilemapObject;
 import lando.systems.ld58.game.systems.ViewSystem;
 import lando.systems.ld58.screens.GameScreen;
 import lando.systems.ld58.utils.Util;
@@ -17,8 +17,8 @@ public class SceneTest extends Scene<GameScreen> {
         super(screen);
 
         // configure the camera to emulate a low res display
-        var width = Config.framebuffer_width;//240;
-        var height = Config.framebuffer_height;//160;
+        var width = 240;
+        var height = 160;
         var camera = screen.worldCamera;
         camera.setToOrtho(false, width, height);
         camera.update();
@@ -26,16 +26,14 @@ public class SceneTest extends Scene<GameScreen> {
         var engine = screen.engine;
 
         // Set up the map view
-        var startPaused = true;
-        var scrollDurationSecs = 5 * 60;
-        view = Factory.view(scrollDurationSecs, startPaused);
+        view = Factory.view();
         engine.addEntity(view);
 
         // Load the background
         var background = Factory.background(ImageType.BG_WARP_ROOM);
         engine.addEntity(background);
 
-        // Load the map
+            // Load the map
         var mapPath = "maps/_test.tmx";
         map = Factory.map(mapPath);
         engine.addEntity(map);
@@ -54,11 +52,8 @@ public class SceneTest extends Scene<GameScreen> {
         this.player = Factory.player(spawner);
         engine.addEntity(this.player);
 
-        // Init view system to scroll within the map bounds
+        // Init view system to follow the player
         var viewSystem = screen.engine.getSystem(ViewSystem.class);
-        var viewer = Components.optional(view, Viewer.class).orElseThrow();
-        var interp = Components.optional(view, Interp.class).orElseThrow();
-        var bounds = Components.optional(map, Bounds.class).orElseThrow();
-        viewSystem.target(viewer, interp, bounds);
+        viewSystem.target(player);
     }
 }

@@ -54,16 +54,16 @@ public class Factory {
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new Input());
 
-        var animatorOrigin = new Vector2(48, 0);
-        entity.add(new Animator(AnimType.GOOMBA_NORMAL_IDLE, animatorOrigin));
+        var animBounds = Constants.GOOMBA_ANIMATOR_BOUNDS;
+        var animOrigin = animBounds.getPosition(new Vector2());
+        entity.add(new Animator(AnimType.GOOMBA_NORMAL_IDLE, animOrigin));
 
         entity.add(new Cooldowns()
             .add("jump", 0.2f)
             .add("taunt", 0.2f));
 
-        var colliderBounds = new Rectangle(-17, 0, 34, 96);
         var collidesWith   = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
-        entity.add(Collider.rect(CollisionMask.PLAYER, colliderBounds, collidesWith));
+        entity.add(Collider.rect(CollisionMask.PLAYER, Constants.GOOMBA_COLLIDER_BOUNDS, collidesWith));
 
         return entity;
     }
@@ -89,7 +89,7 @@ public class Factory {
     public static Entity background(ImageType imageType) {
         var entity = createEntity();
 
-        entity.add(new Image(imageType, new Vector2(1080, 12_800)));
+        entity.add(new Image(imageType));
 
         return entity;
     }
@@ -116,15 +116,12 @@ public class Factory {
         return entity;
     }
 
-    public static Entity view(float scrollDurationSecs, boolean startPaused) {
+    public static Entity view() {
         var entity = createEntity();
 
         var name = new Name("view");
         var viewer = new Viewer(screen.worldCamera);
-        var interp = new Interp(scrollDurationSecs);
-        if (startPaused) {
-            interp.pause();
-        }
+        var interp = new Interp(1f);
 
         entity.add(name);
         entity.add(viewer);

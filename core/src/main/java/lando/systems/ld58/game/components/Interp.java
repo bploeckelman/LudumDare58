@@ -31,8 +31,8 @@ public class Interp implements Component {
         this(durationSecs, Interpolation.linear);
     }
 
-    public Interp(float duration, Interpolation interpolation) {
-        this.duration = duration;
+    public Interp(float durationSecs, Interpolation interpolation) {
+        this.duration = durationSecs;
         this.elapsed = 0;
         this.value = 0;
         this.paused = false;

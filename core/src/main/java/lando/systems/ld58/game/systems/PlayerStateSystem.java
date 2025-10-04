@@ -16,23 +16,21 @@ import lando.systems.ld58.game.state.PlayerState;
 import lando.systems.ld58.game.state.goomba.GoombaNormalState;
 import lando.systems.ld58.game.state.goomba.GoombaStartState;
 import lando.systems.ld58.screens.BaseScreen;
-import lando.systems.ld58.screens.GameScreen;
-import lando.systems.ld58.utils.Util;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerStateSystem<S extends BaseScreen> extends IteratingSystem implements Listener<StateEvent> {
+public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingSystem implements Listener<StateEvent> {
 
     public static final int PRIORITY = 10;
 
     private static final String TAG = PlayerStateSystem.class.getSimpleName();
 
-    private final S screen;
+    private final ScreenType screen;
     private final Map<Entity, Map<Class<? extends PlayerState>, PlayerState>> allStates;
     private final Map<Entity, PlayerState> currentStates;
 
-    public PlayerStateSystem(S screen) {
+    public PlayerStateSystem(ScreenType screen) {
         super(Family.all(Player.class).get(), PRIORITY);
         this.screen = screen;
         this.currentStates = new HashMap<>();
@@ -40,7 +38,7 @@ public class PlayerStateSystem<S extends BaseScreen> extends IteratingSystem imp
         Signals.changeState.add(this);
     }
 
-    public S screen() { return screen; }
+    public ScreenType screen() { return screen; }
 
     public PlayerState currentState(Entity entity) {
         return currentStates.get(entity);

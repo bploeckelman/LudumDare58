@@ -13,6 +13,7 @@ import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.systems.MovementSystem;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
+import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 
@@ -34,12 +35,14 @@ public class GameScreen extends BaseScreen {
 
         var mapBounds = Components.get(scene.map(), Bounds.class);
         Systems.movement.mapBounds(mapBounds);
+
+        Gdx.input.setInputProcessor(new ScreenInputHandler(this));
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (!transitioning && Gdx.input.justTouched()) {
+        if (!transitioning && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.justTouched()) {
             transitioning = true;
             game.setScreen(new EndingScreen());
         }
@@ -59,7 +62,7 @@ public class GameScreen extends BaseScreen {
         ScreenUtils.clear(backgroundColor);
 
         // TEMP
-        batch.setProjectionMatrix(worldCamera.combined);
+        batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
         {
             Util.draw(batch, gdx, FramePool.rect(
@@ -74,7 +77,7 @@ public class GameScreen extends BaseScreen {
         }
         batch.end();
 
-        batch.setProjectionMatrix(windowCamera.combined);
+        batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         {
             Systems.render.draw(batch);
