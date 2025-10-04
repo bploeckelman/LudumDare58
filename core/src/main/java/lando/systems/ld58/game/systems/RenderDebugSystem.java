@@ -118,7 +118,7 @@ public class RenderDebugSystem extends EntitySystem {
             else if (col.shape() instanceof CollisionRect) {
                 var rect = col.shape(CollisionRect.class);
                 var rectangle = rect.rectangle(pos);
-                shapes.rectangle(rectangle, Color.MAGENTA, 2f);
+                shapes.rectangle(rectangle, Color.MAGENTA, 1f);
             }
             else if (col.shape() instanceof CollisionGrid) {
                 var grid = col.shape(CollisionGrid.class);
@@ -130,7 +130,7 @@ public class RenderDebugSystem extends EntitySystem {
                                 pos.x + x * grid.cellSize(),
                                 pos.y + y * grid.cellSize(),
                                 grid.cellSize(), grid.cellSize());
-                            shapes.rectangle(gridCell, ColorType.DANGER.get(), 2f);
+                            shapes.rectangle(gridCell, ColorType.DANGER.get(), 1f);
                         }
                     }
                 }

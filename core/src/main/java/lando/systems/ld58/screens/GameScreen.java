@@ -8,9 +8,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.*;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
+import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.systems.MovementSystem;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
@@ -37,6 +39,8 @@ public class GameScreen extends BaseScreen {
         Systems.movement.mapBounds(mapBounds);
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
+
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.CASTLEVANIA, 0.25f));
     }
 
     @Override

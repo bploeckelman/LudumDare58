@@ -1,7 +1,6 @@
 package lando.systems.ld58.assets;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.utils.Util;
 
@@ -28,7 +27,7 @@ public enum MusicType implements AssetType<Music> {
     public static void load(Assets assets) {
         var mgr = assets.mgr;
         for (var type : MusicType.values()) {
-            mgr.load(type.path, Sound.class);
+            mgr.load(type.path, Music.class);
         }
     }
 

@@ -7,7 +7,7 @@ import lando.systems.ld58.utils.Util;
 import java.util.EnumMap;
 
 public enum SoundType implements AssetType<Sound> {
-      CLIMBER_BOUNCE  ("climber-bounce.wav")
+      JUMP("jump.ogg")
     ;
 
     private static final String TAG = SoundType.class.getSimpleName();

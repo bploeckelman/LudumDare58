@@ -56,6 +56,7 @@ public class Assets implements Disposable {
         assetClasses.add(FontType.class);
         assetClasses.add(IconType.class);
         assetClasses.add(ImageType.class);
+        assetClasses.add(MusicType.class);
         assetClasses.add(SkinType.class);
         assetClasses.add(SoundType.class);
 
