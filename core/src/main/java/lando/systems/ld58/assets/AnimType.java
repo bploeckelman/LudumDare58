@@ -8,22 +8,34 @@ import java.util.EnumMap;
 
 public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // object animations ----------------------------------------
-    SNOWBALL(Path.OBJECTS),
-    // hero animations ------------------------------------------
-    HERO_ATTACK_EFFECT(Path.HERO),
-    HERO_ATTACK(Path.HERO),
-    HERO_DEATH(Path.HERO),
-    HERO_FALL(Path.HERO),
-    HERO_IDLE(Path.HERO),
-    HERO_JUMP(Path.HERO),
-    HERO_LAND_EFFECT(Path.HERO),
-    HERO_RUN(Path.HERO),
-    // ----------------------------------------------------------
+    COIN(Path.OBJ_COIN)
+
+    // character animations -------------------------------------
+    // -- goomba ------------------------------------------------
+    , GOOMBA_NORMAL_IDLE(Path.CHAR_GOOMBA)
+    , GOOMBA_NORMAL_WALK(Path.CHAR_GOOMBA)
+    , GOOMBA_RAGE_IDLE(Path.CHAR_GOOMBA)
+    , GOOMBA_RAGE_WALK(Path.CHAR_GOOMBA)
+    , GOOMBA_SAD_IDLE(Path.CHAR_GOOMBA)
+    , GOOMBA_SQUISH(Path.CHAR_GOOMBA)
+    // -- mario -------------------------------------------------
+    , MARIO_ATTACK(Path.CHAR_MARIO)
+    , MARIO_FALL(Path.CHAR_MARIO)
+    , MARIO_FIREBALL(Path.CHAR_MARIO)
+    , MARIO_HURT(Path.CHAR_MARIO)
+    , MARIO_IDLE(Path.CHAR_MARIO)
+    , MARIO_JUMP(Path.CHAR_MARIO)
+    , MARIO_POWER_ATTACK(Path.CHAR_MARIO)
+    , MARIO_WALK(Path.CHAR_MARIO)
     ;
 
     private static class Path {
-        private static final String HERO = "character/hero/";
+        private static final String CHARACTERS = "characters/";
+        private static final String CHAR_GOOMBA = CHARACTERS + "goomba/";
+        private static final String CHAR_MARIO  = CHARACTERS + "mario/";
+
         private static final String OBJECTS = "objects/";
+        private static final String OBJ_COIN = OBJECTS + "coin/";
     }
 
     private static final String TAG = FontType.class.getSimpleName();
@@ -33,18 +45,9 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     private final String name;
     private final Data data;
 
-    AnimType(String path) {
-        this(path, null, null);
-    }
-
-    AnimType(String path, Data data) {
-        this(path, null, data);
-    }
-
-    AnimType(String path, String name) {
-        this(path, name, null);
-    }
-
+    AnimType(String path)              { this(path, null, null); }
+    AnimType(String path, Data data)   { this(path, null, data); }
+    AnimType(String path, String name) { this(path, name, null); }
     AnimType(String path, String name, Data data) {
         this.path = path;
         this.name = (name != null) ? name : name().toLowerCase().replace("_", "-");

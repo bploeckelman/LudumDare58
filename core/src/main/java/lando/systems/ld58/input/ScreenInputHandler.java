@@ -2,6 +2,7 @@ package lando.systems.ld58.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.Util;
@@ -33,6 +34,21 @@ public class ScreenInputHandler extends InputHandler {
         if (keycode == Input.Keys.TAB) {
             Util.log(TAG, "Toggled debug rendering by tab");
             Flag.DEBUG_RENDER.toggle();
+            return true;
+        }
+
+        if (keycode == Input.Keys.NUM_1) {
+            Flag.GLOBAL.toggle();
+            return true;
+        }
+
+        if (keycode == Input.Keys.NUM_2) {
+            Flag.DEBUG_RENDER.toggle();
+            return true;
+        }
+
+        if (keycode == Input.Keys.NUM_0) {
+            Flag.FRAME_STEP.toggle();
             return true;
         }
 

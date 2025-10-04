@@ -95,7 +95,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
 
             // Squash/stretch animations
             // TODO: this could be a unique animation, like a jump but with double middle fingers or something
-            Signals.animStart.dispatch(new AnimationEvent.Start(moverAnimator, AnimType.HERO_LAND_EFFECT));
+            Signals.animStart.dispatch(new AnimationEvent.Start(moverAnimator, AnimType.MARIO_IDLE));
             Signals.animScale.dispatch(new AnimationEvent.Scale(moverAnimator, 0.8f, 1.2f));
             Signals.animScale.dispatch(new AnimationEvent.Scale(targetAnimator, 1.2f, 0.8f));
 

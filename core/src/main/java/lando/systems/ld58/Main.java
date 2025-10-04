@@ -2,6 +2,7 @@ package lando.systems.ld58;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.TweenManager;
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -17,6 +18,7 @@ import com.kotcrab.vis.ui.VisUI;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.EffectType;
 import lando.systems.ld58.assets.SkinType;
+import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.screens.*;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Time;
@@ -34,6 +36,7 @@ public class Main extends Game {
     public FrameBuffer frameBuffer;
     public TextureRegion frameBufferRegion;
     public OrthographicCamera windowCamera;
+    public Engine engine;
 
     public BaseScreen currentScreen;
 
@@ -76,6 +79,9 @@ public class Main extends Game {
 
         VisUI.setSkipGdxVersionCheck(true);
         VisUI.load(SkinType.ZENDO.get());
+
+        engine = new Engine();
+        Systems.init(engine);
 
         var showLaunchScreen = (Gdx.app.getType() == ApplicationType.WebGL || Flag.LAUNCH_SCREEN.isEnabled());
         var startScreen = showLaunchScreen ? new LaunchScreen()

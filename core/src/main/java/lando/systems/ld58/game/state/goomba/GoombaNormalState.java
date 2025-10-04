@@ -45,7 +45,7 @@ public class GoombaNormalState extends PlayerState {
 
             var actuallyMoving = (moving && wantsToMove && !colliderBlocking);
 
-            var animType = actuallyMoving ? AnimType.HERO_RUN : AnimType.HERO_IDLE;
+            var animType = actuallyMoving ? AnimType.GOOMBA_NORMAL_WALK : AnimType.GOOMBA_NORMAL_IDLE;
             Signals.animStart.dispatch(new AnimationEvent.Play(animator(), animType));
         }
 
@@ -104,7 +104,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.HERO_JUMP));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.MARIO_JUMP));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.CLIMBER_BOUNCE));
             }
             else if (player.jumpState() == Player.JumpState.JUMPED) {
@@ -114,7 +114,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 1.2f, 1.2f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.HERO_IDLE));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.MARIO_IDLE));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.CLIMBER_BOUNCE));
             }
             else if (player.jumpState() == Player.JumpState.GRABBED) {
@@ -124,7 +124,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.HERO_JUMP));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.MARIO_JUMP));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.CLIMBER_BOUNCE));
             }
             // ...otherwise if it's a double jump do nothing until the player is grounded again

@@ -15,6 +15,7 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.FontType;
+import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Systems;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -41,7 +42,7 @@ public abstract class BaseScreen implements Screen {
         this.shapes = game.assets.shapes;
         this.tween = game.tween;
         this.windowCamera = game.windowCamera;
-        this.engine = new Engine();
+        this.engine = game.engine;
 
         var viewport = new ScreenViewport(windowCamera);
         this.uiStage = new Stage(viewport);
@@ -56,7 +57,7 @@ public abstract class BaseScreen implements Screen {
         font.markup(getClass().getSimpleName(), layout);
         font.regenerateLayout(layout);
 
-        Systems.init(this);
+        Factory.init(this);
     }
 
     /** Called when this screen becomes the current screen for a {@link Game}. */

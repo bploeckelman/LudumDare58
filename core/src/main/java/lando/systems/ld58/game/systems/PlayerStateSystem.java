@@ -123,6 +123,6 @@ public class PlayerStateSystem<S extends BaseScreen> extends IteratingSystem imp
 //        statesByPlayerEntity.putIfAbsent(CharacterChangeState.class, new CharacterChangeState(engine, entity));
 
         statesByPlayerEntity.putIfAbsent(GoombaNormalState.class, new GoombaNormalState(engine, entity));
-        statesByPlayerEntity.putIfAbsent(GoombaStartState.class,  new GoombaNormalState(engine, entity));
+        statesByPlayerEntity.putIfAbsent(GoombaStartState.class,  new GoombaStartState(engine, entity));
     }
 }

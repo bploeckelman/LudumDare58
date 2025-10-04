@@ -31,7 +31,7 @@ public class Tilemap implements Component {
         textureMagFilter = Texture.TextureFilter.MipMapLinearLinear;
     }};
 
-    public static final String DEFAULT_OBJECT_LAYER_NAME = "Objects";
+    public static final String DEFAULT_OBJECT_LAYER_NAME = "objects";
     public static final String DEFAULT_COLLISION_LAYER_NAME = "solid";
     public static final float UNIT_SCALE = 1f;
 

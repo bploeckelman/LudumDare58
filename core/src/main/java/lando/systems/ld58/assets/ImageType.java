@@ -11,6 +11,7 @@ import java.util.EnumMap;
 public enum ImageType implements AssetType<Texture> {
     //@formatter:off
       GDX("libgdx.png")
+    , BG_WARP_ROOM("bg_00_warp_room.png")
     ;
     //@formatter:on
 

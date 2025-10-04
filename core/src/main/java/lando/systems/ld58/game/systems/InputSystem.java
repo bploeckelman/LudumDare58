@@ -35,12 +35,6 @@ public class InputSystem extends IteratingSystem {
     protected void processEntity(Entity entity, float delta) {
         var player = Components.optional(entity, Player.class).orElseThrow();
         var input  = Components.optional(entity, Input.class).orElseThrow();
-
-        // Skip input processing for computer-controlled players
-        if (player.controlledBy() == Player.ControlledBy.COMPUTER) {
-            return;
-        }
-
         var controls = InputControls.forPlayer(player);
 
         // Collect key input --------------------------------------------------
@@ -50,8 +44,7 @@ public class InputSystem extends IteratingSystem {
         input.isMoveRightHeld  = Gdx.input.isKeyPressed(controls.right());
 
         // Collect controller input -------------------------------------------
-        var onlyPlayer1 = (player.number == 1);
-        if (controller != null && onlyPlayer1) {
+        if (controller != null) {
             var deadzone = 0.2f;
             var mapping = controller.getMapping();
 
