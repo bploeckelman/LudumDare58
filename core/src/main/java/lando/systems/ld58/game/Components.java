@@ -26,6 +26,7 @@ public class Components {
         entry(Input.class,          ComponentMapper.getFor(Input.class)),
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
+        entry(Outline.class,        ComponentMapper.getFor(Outline.class)),
         entry(Player.class,         ComponentMapper.getFor(Player.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),

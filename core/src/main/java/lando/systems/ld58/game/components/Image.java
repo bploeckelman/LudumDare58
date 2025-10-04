@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 
 public class Image extends Renderable {
 
-    private final Color prevColor = Color.WHITE.cpy();
     private ImageValue value;
 
     public Image(ImageType type)                     { this(type, type.get(), null); }
@@ -39,26 +38,18 @@ public class Image extends Renderable {
     public void set(Texture texture)      { value = new TextureImage(texture); }
     public void set(TextureRegion region) { value = new RegionImage(region); }
 
-    @Override
-    public void render(SpriteBatch batch, Position position) {
-        if (value == null) return;
-
-        batch.setColor(tint);
-
-        var bounds = rect(position);
+    public TextureRegion getTextureRegion() {
         if (value instanceof RegionImage) {
-            var image = (RegionImage) value;
-            Util.draw(batch, image.region, bounds, tint);
-        } else if (value instanceof TextureImage) {
-            var image = (TextureImage) value;
-            var texture = image.texture;
-            // repeat texture as much as needed to fill the draw bounds
-            float u2 = bounds.width / texture.getWidth();
-            float v2 = bounds.height / texture.getHeight();
-            batch.draw(texture, bounds.x, bounds.y, bounds.width, bounds.height, 0, 0, u2, -v2);
+            return ((RegionImage) value).region;
         }
+        return null;
+    }
 
-        batch.setColor(prevColor);
+    public Texture getTexture() {
+        if (value instanceof TextureImage) {
+            return ((TextureImage) value).texture;
+        }
+        return null;
     }
 
     // ------------------------------------------------------------------------

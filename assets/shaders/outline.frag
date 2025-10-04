@@ -3,8 +3,7 @@ precision mediump float;
 #endif
 
 uniform sampler2D u_texture;
-uniform float u_time;
-uniform vec4 u_color1;
+uniform vec4 u_outline_color;
 uniform vec2 u_thickness;
 uniform vec4 u_fill_color;
 
@@ -30,7 +29,7 @@ void main() {
     }
     texColor = mix(texColor, u_fill_color, u_fill_color.a * texColor.a);
 
-    texColor = mix(texColor, u_color1, outline);
+    texColor = mix(texColor, u_outline_color, outline);
 
     gl_FragColor = texColor * v_color;
 }

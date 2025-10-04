@@ -18,8 +18,6 @@ public abstract class Renderable implements Component {
     public final Vector2 scale            = defaultScale.cpy();
     public final float   scaleReturnSpeed = 4f;
 
-    public abstract void render(SpriteBatch batch, Position position);
-
     public Rectangle rect(Position position) {
         return FramePool.rect(
             position.x - origin.x * scale.x,

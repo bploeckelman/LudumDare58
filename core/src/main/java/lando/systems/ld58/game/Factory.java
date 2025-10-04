@@ -62,7 +62,7 @@ public class Factory {
         var animBounds = Constants.GOOMBA_ANIMATOR_BOUNDS;
         var animOrigin = animBounds.getPosition(new Vector2());
         entity.add(new Animator(AnimType.GOOMBA_NORMAL_IDLE, animOrigin));
-
+        entity.add(new Outline(Color.YELLOW, Color.CLEAR, 1f));
         entity.add(new Cooldowns()
             .add("jump", 0.2f)
             .add("taunt", 0.2f));
