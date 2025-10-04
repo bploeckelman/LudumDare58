@@ -1,10 +1,10 @@
 package lando.systems.ld58.game.scenes;
 
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
+import lando.systems.ld58.game.components.Position;
+import lando.systems.ld58.game.components.TileLayer;
 import lando.systems.ld58.game.components.Tilemap;
 import lando.systems.ld58.game.components.TilemapObject;
 import lando.systems.ld58.game.systems.ViewSystem;
@@ -37,16 +37,27 @@ public class SceneTest extends Scene<GameScreen> {
         var mapPath = "maps/test.tmx";
         map = Factory.map(mapPath);
         var tilemap = Components.get(map, Tilemap.class);
+        var mapPosition = Components.get(map, Position.class);
 
         // Load the background
         // TODO: the size handling is wrong here, probably a bug in Image or Renderable
-        var bgPosition = new Vector2(0f, -1.65f * height);
-        var bgSize = new Vector2((tilemap.cols+2) * tilemap.tileSize, (tilemap.rows+16) * tilemap.tileSize);
-        var background = Factory.background(ImageType.BG_WARP_ROOM, bgPosition, bgSize);
+        // TODO: map backgrounds should just be a map image layer and have their own renderable
+        //  otherwise it's hard to handle ordering of map tile layers and other renderables
+//        var bgPosition = new Vector2(0f, -1.65f * height);
+//        var bgSize = new Vector2((tilemap.cols+2) * tilemap.tileSize, (tilemap.rows+16) * tilemap.tileSize);
+//        var background = Factory.background(ImageType.BG_WARP_ROOM, bgPosition, bgSize);
 
         // *** Order matters when adding renderables
-        engine.addEntity(background);
+//        engine.addEntity(background);
         engine.addEntity(map);
+
+        // Create entities from tile layers
+        for (var tileLayer : tilemap.layers) {
+            var entity = Factory.createEntity();
+            entity.add(new Position(mapPosition));
+            entity.add(new TileLayer(tilemap, tileLayer));
+            engine.addEntity(entity);
+        }
 
         // Create entities from mapObjects
         for (var mapObject : tilemap.objects) {

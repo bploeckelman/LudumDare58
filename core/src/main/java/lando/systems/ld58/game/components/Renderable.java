@@ -1,13 +1,11 @@
 package lando.systems.ld58.game.components;
 
-import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld58.utils.FramePool;
 
-public abstract class Renderable implements Component {
+public abstract class Renderable {
 
     public final Color tint = Color.WHITE.cpy();
 

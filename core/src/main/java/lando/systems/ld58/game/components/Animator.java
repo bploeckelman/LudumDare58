@@ -1,16 +1,12 @@
 package lando.systems.ld58.game.components;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
-import lando.systems.ld58.Main;
 import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.utils.Util;
 
-public class Animator extends Renderable {
+public class Animator extends Renderable implements Component {
 
     public AnimType type = null;
     public TextureRegion keyframe = null;

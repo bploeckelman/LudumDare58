@@ -32,6 +32,7 @@ public class Components {
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
         entry(Sensors.class,        ComponentMapper.getFor(Sensors.class)),
+        entry(TileLayer.class,      ComponentMapper.getFor(TileLayer.class)),
         entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
