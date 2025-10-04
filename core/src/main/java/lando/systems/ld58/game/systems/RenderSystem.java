@@ -83,8 +83,8 @@ public class RenderSystem extends EntitySystem {
                 batch.setShader(outlineShader);
                 outlineShader.setUniformf("u_fill_color", outline.fillColor());
                 outlineShader.setUniformf("u_outline_color", outline.outlineColor());
-                outlineShader.setUniformf("u_thickness", outline.outlineThickness() / (float) region.getTexture().getWidth(),
-                    outline.outlineThickness() / (float) region.getTexture().getHeight());
+                outlineShader.setUniformf("u_thickness", outline.outlineThickness() / (float) texture.getWidth(),
+                    outline.outlineThickness() / (float) texture.getHeight());
 
                 var prevColor = FramePool.color().set(batch.getColor());
                 batch.setColor(tintColor);
