@@ -12,9 +12,7 @@ public class Outline implements Component {
 
 
     public Outline(){
-        outlineColor = new Color(Color.CLEAR);
-        fillColor = new Color(Color.CLEAR);
-        outlineThickness = .5f;
+        this(Color.CLEAR, Color.CLEAR, .5f);
     }
 
     public Outline(Color outlineColor, Color fillColor, float outlineThickness) {
