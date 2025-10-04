@@ -2,6 +2,7 @@ package lando.systems.ld58.game;
 
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+import lando.systems.ld58.Config;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.systems.ViewSystem;
@@ -16,8 +17,8 @@ public class SceneTest extends Scene<GameScreen> {
         super(screen);
 
         // configure the camera to emulate a low res display
-        var width = 240;
-        var height = 160;
+        var width = Config.framebuffer_width;//240;
+        var height = Config.framebuffer_height;//160;
         var camera = screen.worldCamera;
         camera.setToOrtho(false, width, height);
         camera.update();
