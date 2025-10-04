@@ -7,79 +7,115 @@ import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Systems;
-import lando.systems.ld58.game.components.Animator;
-import lando.systems.ld58.game.components.Collider;
-import lando.systems.ld58.game.components.Enemy;
-import lando.systems.ld58.game.components.Velocity;
+import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionRect;
+import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
+import lando.systems.ld58.game.components.enemies.EnemyMario;
 import lando.systems.ld58.utils.FramePool;
 
 public class EnemySystem extends IteratingSystem {
 
+    private static final Family SCENE = Family.one(SceneContainer.class).get();
+
     public EnemySystem() {
-        super(Family.one(Enemy.class).get());
+        super(Family.one(EnemyMario.class, EnemyAngrySun.class).get());
     }
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-        var enemy = Components.get(entity, Enemy.class);
-
-        // Progress simple state machine
-        enemy.stateTime += delta;
-
-        // Act on state machine
-        if (enemy.type == Enemy.Type.MARIO) {
-            updateMario(entity, enemy, delta);
+        if (Components.has(entity, EnemyMario.class)) {
+            var mario = Components.get(entity, EnemyMario.class);
+            updateMario(entity, mario, delta);
+        }
+        else if (Components.has(entity, EnemyAngrySun.class)) {
+            var sun = Components.get(entity, EnemyAngrySun.class);
+            updateAngrySun(entity, sun, delta);
         }
     }
 
-    private void updateMario(Entity entity, Enemy enemy, float delta) {
+    private void updateMario(Entity entity, EnemyMario mario, float delta) {
         var anim = Components.get(entity, Animator.class);
         var vel = Components.get(entity, Velocity.class);
         var col = Components.get(entity, Collider.class);
         var speed = 300f;
 
-        switch (enemy.state) {
+        switch (mario.state) {
             case IDLE: {
-                if (enemy.stateTime < 2f) {
+                if (mario.stateTime < 2f) {
                     vel.stop();
                     anim.play(AnimType.MARIO_IDLE);
                 } else {
-                    enemy.stateTime = 0f;
-                    enemy.state = Enemy.State.PATROL;
-                    enemy.direction = MathUtils.randomSign();
+                    mario.stateTime = 0f;
+                    mario.state = EnemyMario.State.PATROL;
+                    mario.direction = MathUtils.randomSign();
                 }
             } break;
             case PATROL: {
-                if (enemy.stateTime < 4f) {
+                if (mario.stateTime < 4f) {
                     // Optionally get offset for collider, to look ahead at the collider edges for a platform edge
                     var colOffset = FramePool.pi2();
                     if (col != null && col.shape instanceof CollisionRect) {
                         var r = col.shape(CollisionRect.class).rectangle;
-                        var x = (enemy.direction == +1) ? r.x + r.width
-                              : (enemy.direction == -1) ? r.x : 0f;
+                        var x = (mario.direction == +1) ? r.x + r.width
+                              : (mario.direction == -1) ? r.x : 0f;
                         colOffset.set(x, 0);
                     }
 
                     // Move forward until hitting a wall or edge, then turn around
-                    var nearEdge = !Systems.collisionCheck.check(entity, enemy.direction + colOffset.x, -1);
-                    var hitWall = Systems.collisionCheck.check(entity, enemy.direction, 0);
+                    var nearEdge = !Systems.collisionCheck.check(entity, mario.direction + colOffset.x, -1);
+                    var hitWall = Systems.collisionCheck.check(entity, mario.direction, 0);
                     if (hitWall || nearEdge) {
-                        enemy.direction = -enemy.direction;
+                        mario.direction = -mario.direction;
                         vel.stopX();
                     }
 
-                    anim.facing = enemy.direction;
+                    anim.facing = mario.direction;
                     anim.play(AnimType.MARIO_WALK);
 
-                    var accel = speed * enemy.direction;
+                    var accel = speed * mario.direction;
                     vel.value.x += accel * delta;
                 } else {
-                    enemy.stateTime = 0f;
-                    enemy.state = Enemy.State.IDLE;
-                    enemy.direction = 0;
+                    mario.stateTime = 0f;
+                    mario.state = EnemyMario.State.IDLE;
+                    mario.direction = 0;
                 }
             } break;
         }
+    }
+
+    private void updateAngrySun(Entity entity, EnemyAngrySun sun, float delta) {
+        // TODO: flesh this out with swoop behavior instead of just spiraling towards the player
+        var pos = Components.get(entity, Position.class);
+        var vel = Components.get(entity, Velocity.class);
+
+        var player = getPlayerEntity();
+        if (player == null) {
+            vel.stop();
+            return;
+        }
+
+        // Chase velocity - slowly move toward player
+        var playerPos = Components.get(player, Position.class);
+        var chaseVel = FramePool.vec2(playerPos.x, playerPos.y)
+            .sub(pos.x, pos.y)
+            .nor()
+            .scl(EnemyAngrySun.CHASE_SPEED);
+
+        // Circular velocity - perpendicular to chase direction
+        sun.angle += EnemyAngrySun.CIRCLE_SPEED * delta;
+        var circleVel = FramePool.vec2(-MathUtils.sin(sun.angle), MathUtils.cos(sun.angle))
+            .scl(EnemyAngrySun.CIRCLE_RADIUS * EnemyAngrySun.CIRCLE_SPEED);
+
+        // Combine velocities
+        vel.value.set(chaseVel).add(circleVel);
+    }
+
+    private Entity getPlayerEntity() {
+        var sceneEntities = getEngine().getEntitiesFor(SCENE);
+        if (sceneEntities.size() == 1) {
+            var scene = Components.get(sceneEntities.get(0), SceneContainer.class).scene;
+            return scene.player;
+        }
+        return null;
     }
 }

@@ -1,9 +1,10 @@
-package lando.systems.ld58.game;
+package lando.systems.ld58.game.scenes;
 
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.game.Components;
+import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.components.Tilemap;
 import lando.systems.ld58.game.components.TilemapObject;
 import lando.systems.ld58.game.systems.ViewSystem;
@@ -60,12 +61,14 @@ public class SceneTest extends Scene<GameScreen> {
             if ("mario".equals(spawner.type)) {
                 var mario = Factory.mario(spawner);
                 engine.addEntity(mario);
+            } else if ("sun".equals(spawner.type)) {
+                var angrySun = Factory.angrySun(spawner);
+                engine.addEntity(angrySun);
             } else {
                 this.player = Factory.player(spawner);
                 engine.addEntity(this.player);
             }
         }
-
 
         // Init view system to follow the player
         var viewSystem = screen.engine.getSystem(ViewSystem.class);

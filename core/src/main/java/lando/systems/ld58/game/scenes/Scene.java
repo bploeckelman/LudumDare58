@@ -1,16 +1,13 @@
-package lando.systems.ld58.game;
+package lando.systems.ld58.game.scenes;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.utils.GdxRuntimeException;
-import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.game.components.*;
-import lando.systems.ld58.game.systems.ViewSystem;
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;
+import lando.systems.ld58.game.signals.EntityEvent;
 import lando.systems.ld58.screens.BaseScreen;
-import lando.systems.ld58.utils.Util;
 
-public abstract class Scene<ScreenType extends BaseScreen> {
+public abstract class Scene<ScreenType extends BaseScreen> implements Listener<EntityEvent> {
 
     public final ScreenType screen;
 
@@ -27,4 +24,11 @@ public abstract class Scene<ScreenType extends BaseScreen> {
     public Entity player()     { return player; }
     public Entity map()        { return map; }
     public Entity view()       { return view; }
+
+    public void receive(Signal<EntityEvent> signal, EntityEvent event) {
+        if (event instanceof EntityEvent.Remove) {
+            var remove = (EntityEvent.Remove) event;
+            engine().removeEntity(remove.entity);
+        }
+    }
 }

@@ -10,11 +10,11 @@ import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.ColorType;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Scene;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionCirc;
 import lando.systems.ld58.game.components.collision.CollisionGrid;
 import lando.systems.ld58.game.components.collision.CollisionRect;
+import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 import space.earlygrey.shapedrawer.JoinType;
@@ -28,11 +28,11 @@ public class RenderDebugSystem extends EntitySystem {
     private ImmutableArray<Entity> entities;
     private Scene<?> scene;
 
-    public boolean drawEntityPositions = true;
-    public boolean drawEntityAnimators = true;
-    public boolean drawEntityColliders = true;
-    public boolean drawEntityGravities = false; // NOTE: currently gravity is constant for just the player, doesn't really pay to draw it
-    public boolean drawEntityVelocities = true;
+    public boolean drawPositions = true;
+    public boolean drawAnimators = true;
+    public boolean drawColliders = true;
+    public boolean drawGravities = false; // NOTE: currently gravity is constant for just the player, doesn't really pay to draw it
+    public boolean drawVelocities = true;
 
     @Override
     public void addedToEngine(Engine engine) {
@@ -48,15 +48,15 @@ public class RenderDebugSystem extends EntitySystem {
             .findFirst().orElse(null);
         if (scene == null) return;
 
-        drawEntityPositions(shapes);
-        drawEntityAnimators(shapes);
-        drawEntityColliders(shapes);
-        drawEntityGravities(shapes);
-        drawEntityVelocities(shapes);
+        drawPositions(shapes);
+        drawAnimators(shapes);
+        drawColliders(shapes);
+        drawGravities(shapes);
+        drawVelocities(shapes);
     }
 
-    private void drawEntityPositions(ShapeDrawer shapes) {
-        if (!drawEntityPositions) return;
+    private void drawPositions(ShapeDrawer shapes) {
+        if (!drawPositions) return;
 
         var triangleOffset = FramePool.vec2(4f, 8f);
 
@@ -80,8 +80,8 @@ public class RenderDebugSystem extends EntitySystem {
         shapes.setColor(prevColor);
     }
 
-    private void drawEntityAnimators(ShapeDrawer shapes) {
-        if (!drawEntityAnimators) return;
+    private void drawAnimators(ShapeDrawer shapes) {
+        if (!drawAnimators) return;
 
         var prevColor = shapes.getPackedColor();
         for (var entity : entities) {
@@ -96,8 +96,8 @@ public class RenderDebugSystem extends EntitySystem {
         shapes.setColor(prevColor);
     }
 
-    private void drawEntityColliders(ShapeDrawer shapes) {
-        if (!drawEntityColliders) return;
+    private void drawColliders(ShapeDrawer shapes) {
+        if (!drawColliders) return;
 
         var joinType = JoinType.SMOOTH;
         var gridCell = FramePool.rect();
@@ -139,8 +139,8 @@ public class RenderDebugSystem extends EntitySystem {
         shapes.setColor(prevColor);
     }
 
-    private void drawEntityGravities(ShapeDrawer shapes) {
-        if (!drawEntityGravities) return;
+    private void drawGravities(ShapeDrawer shapes) {
+        if (!drawGravities) return;
 
         var gravityLength = 10f;
         var endpoint = FramePool.vec2();
@@ -175,8 +175,8 @@ public class RenderDebugSystem extends EntitySystem {
         shapes.setColor(prevColor);
     }
 
-    private void drawEntityVelocities(ShapeDrawer shapes) {
-        if (!drawEntityVelocities) return;
+    private void drawVelocities(ShapeDrawer shapes) {
+        if (!drawVelocities) return;
 
         var start = FramePool.vec2();
         var endpoint = FramePool.vec2();

@@ -17,4 +17,6 @@ public class Signals {
     public static final Signal<CooldownEvent> cooldownReset = new Signal<>();
 
     public static final Signal<StateEvent> changeState = new Signal<>();
+
+    public static final Signal<EntityEvent> removeEntity = new Signal<>();
 }

@@ -5,6 +5,8 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.game.components.*;
+import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
+import lando.systems.ld58.game.components.enemies.EnemyMario;
 
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +20,6 @@ public class Components {
         entry(Bounds.class,         ComponentMapper.getFor(Bounds.class)),
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
-        entry(Enemy.class,          ComponentMapper.getFor(Enemy.class)),
         entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
         entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
         entry(Id.class,             ComponentMapper.getFor(Id.class)),
@@ -30,9 +31,13 @@ public class Components {
         entry(Player.class,         ComponentMapper.getFor(Player.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
+        entry(Sensors.class,        ComponentMapper.getFor(Sensors.class)),
         entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
+
+        entry(EnemyMario.class,     ComponentMapper.getFor(EnemyMario.class)),
+        entry(EnemyAngrySun.class,  ComponentMapper.getFor(EnemyAngrySun.class)),
 
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
         entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class))

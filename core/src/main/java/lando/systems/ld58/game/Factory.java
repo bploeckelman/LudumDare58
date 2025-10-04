@@ -12,6 +12,8 @@ import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
+import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
+import lando.systems.ld58.game.components.enemies.EnemyMario;
 import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.Util;
 
@@ -67,21 +69,21 @@ public class Factory {
             .add("jump", 0.2f)
             .add("taunt", 0.2f));
 
-        var collidesWith   = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        var collidesWith   = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.ENEMY };
         entity.add(Collider.rect(CollisionMask.PLAYER, Constants.GOOMBA_COLLIDER_BOUNDS, collidesWith));
 
         return entity;
     }
 
     public static Entity mario(TilemapObject.Spawner spawner) {
-        if (!spawner.type.equals("mario")) {
+        if (!"mario".equals(spawner.type)) {
             throw new GdxRuntimeException(TAG + ": tried to create mario from spawner without mario type");
         }
 
         var entity = createEntity();
 
         entity.add(new Name("Mario"));
-        entity.add(new Enemy(Enemy.Type.MARIO));
+        entity.add(new EnemyMario());
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -93,7 +95,30 @@ public class Factory {
         entity.add(new Animator(AnimType.MARIO_IDLE, animOrigin));
 
         var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
-        entity.add(Collider.rect(CollisionMask.PLAYER, Constants.MARIO_COLLIDER_BOUNDS, collidesWith));
+        entity.add(Collider.rect(CollisionMask.ENEMY, Constants.MARIO_COLLIDER_BOUNDS, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity angrySun(TilemapObject.Spawner spawner) {
+        if (!"sun".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create angry sun from spawner without angry sun type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Sun"));
+        entity.add(new EnemyAngrySun());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+
+        var animOrigin = new Vector2(16, 12);
+        entity.add(new Animator(AnimType.ANGRY_SUN, animOrigin));
+
+        var radius = 8f;
+        var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
+        entity.add(Collider.circ(CollisionMask.ENEMY, animOrigin.x, animOrigin.y, radius, collidesWith));
 
         return entity;
     }
