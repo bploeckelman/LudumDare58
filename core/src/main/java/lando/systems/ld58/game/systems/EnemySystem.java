@@ -8,8 +8,11 @@ import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Animator;
+import lando.systems.ld58.game.components.Collider;
 import lando.systems.ld58.game.components.Enemy;
 import lando.systems.ld58.game.components.Velocity;
+import lando.systems.ld58.game.components.collision.CollisionRect;
+import lando.systems.ld58.utils.FramePool;
 
 public class EnemySystem extends IteratingSystem {
 
@@ -33,6 +36,7 @@ public class EnemySystem extends IteratingSystem {
     private void updateMario(Entity entity, Enemy enemy, float delta) {
         var anim = Components.get(entity, Animator.class);
         var vel = Components.get(entity, Velocity.class);
+        var col = Components.get(entity, Collider.class);
         var speed = 300f;
 
         switch (enemy.state) {
@@ -48,10 +52,21 @@ public class EnemySystem extends IteratingSystem {
             } break;
             case PATROL: {
                 if (enemy.stateTime < 4f) {
+                    // Optionally get offset for collider, to look ahead at the collider edges for a platform edge
+                    var colOffset = FramePool.pi2();
+                    if (col != null && col.shape instanceof CollisionRect) {
+                        var r = col.shape(CollisionRect.class).rectangle;
+                        var x = (enemy.direction == +1) ? r.x + r.width
+                              : (enemy.direction == -1) ? r.x : 0f;
+                        colOffset.set(x, 0);
+                    }
+
                     // Move forward until hitting a wall or edge, then turn around
-                    var hit = Systems.collisionCheck.check(entity, vel.xSign(), 0);
-                    if (hit) {
+                    var nearEdge = !Systems.collisionCheck.check(entity, enemy.direction + colOffset.x, -1);
+                    var hitWall = Systems.collisionCheck.check(entity, enemy.direction, 0);
+                    if (hitWall || nearEdge) {
                         enemy.direction = -enemy.direction;
+                        vel.stopX();
                     }
 
                     anim.facing = enemy.direction;
