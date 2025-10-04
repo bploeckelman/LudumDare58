@@ -6,6 +6,7 @@ pipeline {
     agent any
 
     triggers {
+        githubPush()
         pollSCM('H/5 * * * *') //polling for changes, here every 5 min
     }
 
@@ -38,6 +39,13 @@ pipeline {
                 }
             }
         }
+        stage("Build TeaVM") {
+            steps {
+                script {
+                    sh './gradlew teavm:build'
+                }
+            }
+        }
         stage("Upload to Host") {
             steps{
                 script {
@@ -51,6 +59,11 @@ pipeline {
                                                             sourceFiles: "html/build/dist/**",
                                                             removePrefix: "html/build/dist/",
                                                             remoteDirectory: "${env.REMOTE_DIR}",
+                                                    ),
+                                                    sshTransfer(
+                                                            sourceFiles: "teavm/build/dist/webapp/**",
+                                                            removePrefix: "teavm/build/dist/webapp/",
+                                                            remoteDirectory: "${env.REMOTE_DIR}/teavm",
                                                     )
                                             ])
                             ])
