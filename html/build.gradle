@@ -32,6 +32,12 @@ gwt {
   sourceLevel = 1.11
 }
 
+compileJava {
+  options.incremental = true
+  dependsOn processResources
+}
+
+
 dependencies {
   implementation "com.badlogicgames.ashley:ashley:$ashleyVersion:sources"
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion:sources"

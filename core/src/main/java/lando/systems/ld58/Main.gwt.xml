@@ -4,7 +4,13 @@
   <!-- Paths to source are relative to this file and separated by slashes ('/'). -->
   <source path="" />
 
-  <!-- Reflection includes may be needed for your code or library code. Each value is separated by periods ('.'). -->
+  <!-- Exclude the aseprite package from GWT compilation -->
+  <source path="">
+      <exclude name="**/utils/aseprite/**"/>
+  </source>
+
+
+    <!-- Reflection includes may be needed for your code or library code. Each value is separated by periods ('.'). -->
   <!-- You can include a full package by not including the name of a type at the end. -->
   <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.assets" />
   <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.game.components" />
