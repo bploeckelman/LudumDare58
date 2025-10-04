@@ -10,6 +10,8 @@ import lando.systems.ld58.game.systems.ViewSystem;
 import lando.systems.ld58.screens.GameScreen;
 import lando.systems.ld58.utils.Util;
 
+import java.util.stream.Collectors;
+
 public class SceneTest extends Scene<GameScreen> {
 
     public static final Family SPAWNERS = Family.one(TilemapObject.Spawner.class).get();
@@ -36,9 +38,9 @@ public class SceneTest extends Scene<GameScreen> {
         var tilemap = Components.get(map, Tilemap.class);
 
         // Load the background
-        var bgPosition = new Vector2();
         // TODO: the size handling is wrong here, probably a bug in Image or Renderable
-        var bgSize = new Vector2(tilemap.cols * tilemap.tileSize, tilemap.rows * tilemap.tileSize);
+        var bgPosition = new Vector2(0f, -1.65f * height);
+        var bgSize = new Vector2((tilemap.cols+2) * tilemap.tileSize, (tilemap.rows+16) * tilemap.tileSize);
         var background = Factory.background(ImageType.BG_WARP_ROOM, bgPosition, bgSize);
 
         // *** Order matters when adding renderables
@@ -50,13 +52,20 @@ public class SceneTest extends Scene<GameScreen> {
             engine.addEntity(TilemapObject.createEntity(tilemap, mapObject));
         }
 
-        var spawner = Util.streamOf(engine.getEntitiesFor(SPAWNERS))
+        var spawners = Util.streamOf(engine.getEntitiesFor(SPAWNERS))
             .map(e -> Components.get(e, TilemapObject.Spawner.class))
-            .findFirst()
-            .orElseThrow(() -> new GdxRuntimeException("no spawner found in map:" + mapPath));
+            .collect(Collectors.toList());
 
-        this.player = Factory.player(spawner);
-        engine.addEntity(this.player);
+        for (var spawner : spawners) {
+            if ("mario".equals(spawner.type)) {
+                var mario = Factory.mario(spawner);
+                engine.addEntity(mario);
+            } else {
+                this.player = Factory.player(spawner);
+                engine.addEntity(this.player);
+            }
+        }
+
 
         // Init view system to follow the player
         var viewSystem = screen.engine.getSystem(ViewSystem.class);

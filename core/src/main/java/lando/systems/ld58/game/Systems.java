@@ -11,6 +11,7 @@ public class Systems {
     public static CollisionCheckSystem   collisionCheck;
     public static CollisionHandlerSystem collisionHandler;
     public static CooldownSystem         cooldown;
+    public static EnemySystem            enemies;
     public static InputSystem            input;
     public static InterpSystem           interp;
     public static MovementSystem         movement;
@@ -26,6 +27,7 @@ public class Systems {
         Systems.collisionCheck   = new CollisionCheckSystem();
         Systems.collisionHandler = new CollisionHandlerSystem();
         Systems.cooldown         = new CooldownSystem();
+        Systems.enemies          = new EnemySystem();
         Systems.input            = new InputSystem();
         Systems.interp           = new InterpSystem();
         Systems.movement         = new MovementSystem();
@@ -38,6 +40,7 @@ public class Systems {
         engine.addSystem(collisionCheck);
         engine.addSystem(collisionHandler);
         engine.addSystem(cooldown);
+        engine.addSystem(enemies);
         engine.addSystem(input);
         engine.addSystem(interp);
         engine.addSystem(movement);

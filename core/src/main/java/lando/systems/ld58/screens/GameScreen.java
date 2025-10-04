@@ -65,28 +65,31 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         ScreenUtils.clear(backgroundColor);
 
-        // TEMP
+        // TEMP: libgdx background
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
-        {
-            Util.draw(batch, gdx, FramePool.rect(
-                (windowCamera.viewportWidth - gdx.getRegionWidth()) / 2f,
-                (windowCamera.viewportHeight - gdx.getRegionHeight()) / 2f,
-                gdx.getRegionWidth(), gdx.getRegionHeight()));
-
-            var pos = FramePool.vec2(
-                (windowCamera.viewportWidth - layout.getWidth()) / 2f,
-                windowCamera.viewportHeight - layout.getHeight());
-            font.drawGlyphs(batch, layout, pos.x, pos.y);
-        }
+        Util.draw(batch, gdx, FramePool.rect(
+            (windowCamera.viewportWidth - gdx.getRegionWidth()) / 2f,
+            (windowCamera.viewportHeight - gdx.getRegionHeight()) / 2f,
+            gdx.getRegionWidth(), gdx.getRegionHeight()));
         batch.end();
 
+        // Draw scene
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         {
             Systems.render.draw(batch);
             Systems.renderDebug.draw(shapes);
         }
+        batch.end();
+
+        // Screen name overlay
+        batch.setProjectionMatrix(windowCamera.combined);
+        batch.begin();
+        var pos = FramePool.vec2(
+            (windowCamera.viewportWidth - layout.getWidth()) / 2f,
+            windowCamera.viewportHeight - layout.getHeight());
+        font.drawGlyphs(batch, layout, pos.x, pos.y);
         batch.end();
     }
 }

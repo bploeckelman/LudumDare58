@@ -23,6 +23,7 @@ public class AudioSystem extends EntitySystem implements Listener<AudioEvent> {
             var play = (AudioEvent.PlayMusic) event;
             var music = play.musicType.get();
             music.setVolume(play.volume);
+            music.setLooping(true);
             music.play();
         }
     }

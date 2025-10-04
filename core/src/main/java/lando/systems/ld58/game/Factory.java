@@ -6,14 +6,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.screens.BaseScreen;
+import lando.systems.ld58.utils.Util;
 
 public class Factory {
+
+    private static final String TAG = Factory.class.getSimpleName();
 
     private static BaseScreen screen;
     private static Engine engine;
@@ -65,6 +69,31 @@ public class Factory {
 
         var collidesWith   = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
         entity.add(Collider.rect(CollisionMask.PLAYER, Constants.GOOMBA_COLLIDER_BOUNDS, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity mario(TilemapObject.Spawner spawner) {
+        if (!spawner.type.equals("mario")) {
+            throw new GdxRuntimeException(TAG + ": tried to create mario from spawner without mario type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Mario"));
+        entity.add(new Enemy(Enemy.Type.MARIO));
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        var animBounds = Constants.MARIO_ANIMATOR_BOUNDS;
+        var animOrigin = animBounds.getPosition(new Vector2());
+        entity.add(new Animator(AnimType.MARIO_IDLE, animOrigin));
+
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.PLAYER, Constants.MARIO_COLLIDER_BOUNDS, collidesWith));
 
         return entity;
     }
