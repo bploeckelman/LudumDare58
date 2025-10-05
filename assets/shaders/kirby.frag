@@ -29,15 +29,16 @@ vec4 getTexture(vec2 offset) {
 }
 
 void main() {
+    vec4 noise = texture2D(u_texture, v_texCoord);
     vec2 p = (vec2(v_texCoord)-.5) * 2.;
     float dist = length(p);
 
-    float lines = 4.;
+    float lines = 8.;
     float humps = 6.;
     float degree = atan(p.x, p.y) + u_time * 3.;
     float movedDist = dist + .05 * cos(degree * humps);
     vec4 texColor = vec4(0);
-    texColor += mix(vec4(0.),vec4(hsv2rgb(vec3(movedDist+ u_time* 1.4, 1., 1.)), .7), cubicPulse(mod(-u_time * 1.,1./lines), .02, mod(movedDist, 1./lines)));
+    texColor += mix(vec4(0.),vec4(hsv2rgb(vec3(movedDist+ u_time* 1.4, noise.r, 1.)), .7), cubicPulse(mod(-u_time * 1.,1./lines), .02, mod(movedDist, 1./lines)));
 
     float alpha = smoothstep(1., .8, dist) * u_strength;
     texColor.a *= alpha;

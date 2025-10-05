@@ -12,6 +12,7 @@ public enum ImageType implements AssetType<Texture> {
     //@formatter:off
       GDX("libgdx.png")
     , BG_WARP_ROOM("bg_00_warp_room.png")
+    , NOISE("noise.png")
     ;
     //@formatter:on
 
@@ -40,10 +41,10 @@ public enum ImageType implements AssetType<Texture> {
 
         var mgr = assets.mgr;
         for (var type : ImageType.values()) {
-            var isBackground = type.textureName.contains("background");
+//            var isBackground = type.textureName.contains("background");
 
-            var params = isBackground ? texParamsRepeat : texParamsNormal;
-            mgr.load(type.textureName, Texture.class, params);
+//            var params = isBackground ? texParamsRepeat : texParamsNormal;
+            mgr.load(type.textureName, Texture.class, texParamsRepeat);
 
             Util.log(TAG, Stringf.format("texture '%s' loaded for type '%s'", type.textureName, type.name()));
         }
