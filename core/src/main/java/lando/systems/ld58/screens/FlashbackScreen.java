@@ -31,13 +31,16 @@ import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
+import lando.systems.ld58.utils.accessors.ColorAccessor;
 import lando.systems.ld58.utils.accessors.RectangleAccessor;
+import lando.systems.ld58.utils.accessors.Vector3Accessor;
 
 public class FlashbackScreen extends BaseScreen {
 
     private final Color backgroundColor = new Color(0x111111ff);
     private final FrameBuffer fbo;
     private Texture screenTexture;
+    float accum;
     private float skipTimer = 0;
     private static final float SKIP_TIME = .8f;
     private float deBounce = .2f;
@@ -47,7 +50,7 @@ public class FlashbackScreen extends BaseScreen {
     private Texture background;
     private Array<FlashbackObject> objects = new Array<>();
     private Array<String> messages =  new Array<>();
-    public MutableFloat saturation = new MutableFloat(0);
+    public MutableFloat flashback = new MutableFloat(0);
 
     public Layout layout = new Layout();
     public Font font;
@@ -69,20 +72,27 @@ public class FlashbackScreen extends BaseScreen {
     }
 
     public void setUpPhase() {
+        messages.clear();
         dialog.restart("");
         switch(currentStage) {
             case PRESENT_DAY:
                 background = ImageType.BEDROOM.get();
                 messages.add("Wow... 10 years already?");
-//                messages.add("Feels like it was only yesterday...");
-                Rectangle billyBounds = new Rectangle(14, 2, 1, 1);
-                var billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(), billyBounds);
+                messages.add("Feels like it was only yesterday...");
+                var billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(),  new Rectangle(14, 2, 1, 1));
                 Tween.to(billy.bounds, RectangleAccessor.X, 3f)
                         .target(17).repeatYoyo(100, 1f).start(tween);
                 objects.add(billy);
                 break;
             case WIFE_LEAVES:
                 deBounce = .5f;
+                var misty = new FlashbackObject(AnimType.MISTY.get(),   new Rectangle(6, 2, 1, 1));
+                misty.tintColor.a = 0;
+                objects.add(misty);
+                var kids = new FlashbackObject(AnimType.KIDS.get(),    new Rectangle(8, 2, 1, 1));
+                kids.tintColor.a = 0;
+                Tween.to(kids.bounds, RectangleAccessor.Y, .3f).target(3).repeatYoyo(1000, .1f).start(tween);
+                objects.add(kids);
                 Timeline.createSequence()
                         .pushPause(.5f)
                     .push(Tween.call((type, source) -> {
@@ -93,13 +103,23 @@ public class FlashbackScreen extends BaseScreen {
                         dialog.restart(messages.get(0));
                         messages.removeIndex(0);
                     }))
-                        .push(Tween.to(saturation, 1, .5f).target(.8f).ease(Linear.INOUT))
+                    .beginParallel()
+                        .push(Tween.to(flashback, 1, .5f).target(1f).ease(Linear.INOUT))
+                        .push(Tween.to(misty.tintColor, ColorAccessor.A, .5f).target(1f).ease(Linear.INOUT))
+                        .push(Tween.to(kids.tintColor, ColorAccessor.A, .5f).target(1f).ease(Linear.INOUT))
+                    .end()
+                    .pushPause(.5f)
+                    .beginParallel()
+                        .push(Tween.to(misty.bounds, RectangleAccessor.X, 5f).target(-3f).ease(Linear.INOUT))
+                        .push(Tween.to(kids.bounds, RectangleAccessor.X, 5f).target(-1f).ease(Linear.INOUT))
+
+                    .end()
                     .start(tween);
                 break;
             case MUSHROOM:
+                backgroundColor.set(107/255f, 140/255f, 255/255f, 1.0f);
                 objects.clear();
                 worldCamera.position.x = 25;
-                worldCamera.update();
                 background = ImageType.FLASHBACK_MUSHROOM.get();
                 messages.add("That mushroom changed my whole perspective");
                 messages.add("I got Super powers...");
@@ -109,10 +129,37 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add("Secrets...");
                 break;
             case MARIO:
+                placeObjectsInMarioWorld();
+                backgroundColor.set(.25f, .25f, .25f, 1.0f);
+                worldCamera.position.x = 84;
+                billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(),  new Rectangle(86, 2, 1, 1));
+
+                objects.add(billy);
                 background = ImageType.FLASHBACK_MARIOS.get();
 
+                Timeline.createSequence().pushPause(.5f)
+                    .push(Tween.call((type, source) -> {
+                        messages.add("Later, I found a strange factory");
+                        messages.add("They were creating clones of this person");
+                        messages.add("I had to go deeper to learn what was happening");
+
+                        dialog.restart(messages.get(0));
+                        messages.removeIndex(0);
+                    }))
+                    .beginParallel()
+                       .push(Tween.to(worldCamera.position, Vector3Accessor.X, 15f).target(20))
+                       .push(Tween.to(billy.bounds, RectangleAccessor.X, 15f).target(22))
+
+                    .end()
+                    .pushPause(5f)
+                    .push(Tween.call((type, source) -> {nextStage();}))
+                    .start(tween);
                 break;
             case SANCTUM:
+                objects.clear();
+                tween.killAll();
+                backgroundColor.set(330/255f, 20/255f, 60/255f, 1.0f);
+                worldCamera.position.x = 10;
                 background = ImageType.CADRE_ROOM.get();
                 messages.add(
                     "A cabal of boss enemies from across a wide range of game franchises");
@@ -129,8 +176,10 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add("Wow... 10 years already?");
                 break;
             case EXIT:
+                Tween.to(flashback,1, .5f).target(0).start(tween);
                 break;
         }
+        worldCamera.update();
         if (messages.size > 0) {
             dialog.restart(messages.get(0));
             messages.removeIndex(0);
@@ -165,6 +214,7 @@ public class FlashbackScreen extends BaseScreen {
 
     @Override
     public void update(float delta) {
+        accum += delta;
         deBounce = MathUtils.clamp(deBounce-delta, 0, 1f);
         super.update(delta);
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
@@ -201,14 +251,15 @@ public class FlashbackScreen extends BaseScreen {
     @Override
     public void renderOffscreenBuffers(SpriteBatch batch) {
         fbo.begin();
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL30.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(backgroundColor);
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         batch.draw(background, 0, 0, background.getWidth()/16f, background.getHeight()/16f);
         for (FlashbackObject object : objects) {
+            batch.setColor(object.tintColor);
             object.render(batch);
         }
+        batch.setColor(Color.WHITE);
         batch.end();
         fbo.end();
     }
@@ -221,10 +272,10 @@ public class FlashbackScreen extends BaseScreen {
         batch.setShader(shader);
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
-        shader.setUniformf("u_time", 1f);
+        shader.setUniformf("u_time", accum);
         shader.setUniformf("u_res", Config.window_width, Config.window_height);
         shader.setUniformf("u_fade", 1f);
-        shader.setUniformf("u_saturation", saturation.floatValue());
+        shader.setUniformf("u_flashback", flashback.floatValue());
         batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());
         batch.end();
         batch.setShader(null);
@@ -235,12 +286,20 @@ public class FlashbackScreen extends BaseScreen {
         batch.enableBlending();
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
+        if (!dialog.getOriginalText().toString().isEmpty()) {
+            batch.setColor(0, 0, 0, .4f);
+            batch.draw(assets.pixel, dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight());
+            batch.setColor(Color.WHITE);
+        }
         dialog.draw(batch, 1f);
         var pos = FramePool.vec2(
             (windowCamera.viewportWidth - layout.getWidth()) / 2f,
             windowCamera.viewportHeight - layout.getHeight());
         font.drawGlyphs(batch, layout, pos.x, pos.y);
 
+        batch.setColor(0,0,0,.5f);
+        batch.draw(assets.pixel, Config.window_width - 260, 10, 250, 60);
+        batch.setColor(Color.WHITE);
         batch.end();
         var progressShader = assets.progressShader;
         batch.setShader(progressShader);
@@ -249,5 +308,29 @@ public class FlashbackScreen extends BaseScreen {
         batch.draw(ImageType.SKIP.get(), Config.window_width - 260, 10, 250, 60);
         batch.end();
         batch.setShader(null);
+    }
+
+    private void placeObjectsInMarioWorld() {
+        objects.clear();
+        objects.add(new FlashbackObject(AnimType.MARIO_TUBE_SMALL.get(), new Rectangle(64, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_TUBE_SMALL.get(), new Rectangle(66, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_TUBE_SMALL.get(), new Rectangle(68, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_TUBE_LARGE.get(), new Rectangle(70, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_TUBE_LARGE.get(), new Rectangle(72, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_TUBE_LARGE.get(), new Rectangle(74, 5, 1, 2)));
+
+        objects.add(new FlashbackObject(AnimType.MARIO_EMBRYO.get(), new Rectangle(50, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_EMBRYO.get(), new Rectangle(52, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_EMBRYO.get(), new Rectangle(54, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_EMBRYO.get(), new Rectangle(56, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_EMBRYO.get(), new Rectangle(58, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_EMBRYO.get(), new Rectangle(60, 5, 1, 2)));
+
+        objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(36, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(38, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(40, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(42, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(44, 5, 1, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(46, 5, 1, 2)));
     }
 }

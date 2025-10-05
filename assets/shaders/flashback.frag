@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 uniform sampler2D u_texture;
-uniform float u_saturation;
+uniform float u_flashback;
 uniform float u_time;
 uniform float u_fade;
 uniform vec3 u_res;
@@ -22,7 +22,7 @@ vec4 desaturate(vec3 color, float factor)
 void main() {
     vec4 texColor = texture2D(u_texture, v_texCoord);
 
-    texColor = desaturate(texColor.rgb, u_saturation);
+    texColor = desaturate(texColor.rgb, u_flashback *  .8);
 
     gl_FragColor = texColor * v_color;
 
