@@ -22,10 +22,7 @@ import com.github.tommyettinger.textra.Layout;
 import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
-import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.FontType;
-import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.assets.MusicType;
+import lando.systems.ld58.assets.*;
 import lando.systems.ld58.flashback.FlashbackObject;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
@@ -158,6 +155,13 @@ public class FlashbackScreen extends BaseScreen {
             case SANCTUM:
                 objects.clear();
                 tween.killAll();
+                objects.add(new FlashbackObject(AnimType.GANNON.get(), new Rectangle(.5f, 2, 2, 4)));
+                objects.add(new FlashbackObject(AnimType.HIPPO.get(), new Rectangle(2.5f, 2, 2, 4)));
+                objects.add(new FlashbackObject(AnimType.MOTHER_BRAIN.get(), new Rectangle(6, 2, 8, 4)));
+                objects.add(new FlashbackObject(AnimType.DRACULA.get(), new Rectangle(13, 2, 2, 4)));
+                objects.add(new FlashbackObject(AnimType.LUIGI.get(), new Rectangle(16, 2, 2, 4)));
+                objects.add(new FlashbackObject(AnimType.WILLY.get(), new Rectangle(18, 2, 2, 4)));
+
                 backgroundColor.set(330/255f, 20/255f, 60/255f, 1.0f);
                 worldCamera.position.x = 10;
                 background = ImageType.CADRE_ROOM.get();
@@ -168,7 +172,7 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add(
                     "Which is a premise so absurd it could only have come out of Ludum Dare 33");
                 messages.add(
-                    "Where the theme \"you are the monster\" inspired a plucky team of developers to create a game where you are a goomba whose wife left him, inspiring him toward adventure");
+                    "{Size=70%}Where the theme \"you are the monster\" inspired a plucky team of developers to create a game where you are a goomba whose wife left him, inspiring him toward adventure");
                 messages.add("Anyway, I was that goomba.");
                 messages.add("I ate a mushroom, hijinks ensued, and I ended up " +
                     "getting inducted into the cabal.");
@@ -176,7 +180,17 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add("Wow... 10 years already?");
                 break;
             case EXIT:
-                Tween.to(flashback,1, .5f).target(0).start(tween);
+                deBounce = .5f;
+                Timeline.createSequence().pushPause(.5f)
+                    .push(Tween.to(flashback,1, .5f).target(0))
+                    .push(Tween.call((type, source) -> {
+                        messages.add("Now that we are back in the present.");
+                        messages.add("Things aren't as good as I thought they should be.");
+
+                        dialog.restart(messages.get(0));
+                        messages.removeIndex(0);
+                    }))
+                    .start(tween);
                 break;
         }
         worldCamera.update();
@@ -206,7 +220,7 @@ public class FlashbackScreen extends BaseScreen {
             case EXIT:
                 transitioning = true;
                 Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
-                game.setScreen(new IntroScreen());
+                game.setScreen(new IntroScreen(), EffectType.DREAMY);
                 break;
         }
 
@@ -288,12 +302,7 @@ public class FlashbackScreen extends BaseScreen {
         batch.enableBlending();
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
-        if (!dialog.getOriginalText().toString().isEmpty()) {
-            batch.setColor(0, 0, 0, .4f);
-            batch.draw(assets.pixel, dialog.getX(), dialog.getY(), dialog.getWidth(), dialog.getHeight());
-            batch.setColor(Color.WHITE);
-        }
-        dialog.draw(batch, 1f);
+        drawDialog(batch, delta);
         var pos = FramePool.vec2(
             (windowCamera.viewportWidth - layout.getWidth()) / 2f,
             windowCamera.viewportHeight - layout.getHeight());
@@ -310,6 +319,15 @@ public class FlashbackScreen extends BaseScreen {
         batch.draw(ImageType.SKIP.get(), Config.window_width - 260, 10, 250, 60);
         batch.end();
         batch.setShader(null);
+    }
+
+    private void drawDialog(SpriteBatch batch, float delta) {
+        if (!dialog.getOriginalText().toString().isEmpty()) {
+            batch.setColor(0, 0, 0, .4f);
+            batch.draw(assets.pixel, dialog.getX()- 5, dialog.getY()-5, dialog.getWidth()+10, dialog.getHeight()+10);
+            batch.setColor(Color.WHITE);
+        }
+        dialog.draw(batch, 1f);
     }
 
     private void placeObjectsInMarioWorld() {
