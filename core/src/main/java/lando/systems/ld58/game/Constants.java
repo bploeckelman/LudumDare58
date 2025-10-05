@@ -20,8 +20,9 @@ public class Constants {
 
     public static final float GRAVITY = -500f;
 
-    public static final int BACKROUND_Z_LEVEL = -100;
-    public static final int FOREGROUND_Z_LEVEL = 100;
+    public static final int Z_DEPTH_BACKGROUND = -100;
+    public static final int Z_DEPTH_DEFAULT    = 0;
+    public static final int Z_DEPTH_FOREGROUND = 100;
 
     public static final Rectangle BILLY_ANIMATOR_BOUNDS = new Rectangle(16, 0, 32, 32);
     public static final Rectangle BILLY_COLLIDER_BOUNDS = new Rectangle(-8, 0, 16, 20);
@@ -34,4 +35,13 @@ public class Constants {
 
     public static final Rectangle BOWSER_ANIMATOR_BOUNDS = new Rectangle(42, 0, 84, 162);
     public static final Rectangle BOWSER_COLLIDER_BOUNDS = new Rectangle(-27, 0, 54, 135);
+
+    public static final float scale = 2f / 3f;
+    public static final float louWidth = scale * 192f;
+    public static final float louHeight = scale * 176f;
+    public static final Rectangle CAPTAIN_LOU_ANIMATOR_BOUNDS = new Rectangle(louWidth / 2f, scale * 15f, louWidth, louHeight);
+    public static final Rectangle CAPTAIN_LOU_COLLIDER_BOUNDS = new Rectangle(-(scale * 150f) / 2f, 0f, scale * 150f, scale * 85f);
+
+    public static final Rectangle GOOMBA_CYBORG_ANIMATOR_BOUNDS = new Rectangle(16, 8, 32, 32);
+    public static final Rectangle GOOMBA_CYBORG_COLLIDER_BOUNDS = new Rectangle(-8, 0, 16, 20);
 }
