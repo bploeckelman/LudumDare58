@@ -16,8 +16,7 @@ import lando.systems.ld58.utils.Util;
 
 import java.util.stream.Collectors;
 
-import static lando.systems.ld58.game.Constants.BACKROUND_Z_LEVEL;
-import static lando.systems.ld58.game.Constants.FOREGROUND_Z_LEVEL;
+import static lando.systems.ld58.game.Constants.*;
 
 public class SceneTest extends Scene<GameScreen> {
 
@@ -61,9 +60,9 @@ public class SceneTest extends Scene<GameScreen> {
             var entity = Factory.createEntity();
             float depth = 0;
             switch (tileLayer.getName()) {
-                case "background": depth = BACKROUND_Z_LEVEL; break;
-                case "middle": depth = 0; break;
-                case "foreground": depth = FOREGROUND_Z_LEVEL; break;
+                case "background": depth = Z_DEPTH_BACKGROUND; break;
+                case "middle":     depth = Z_DEPTH_DEFAULT;    break;
+                case "foreground": depth = Z_DEPTH_FOREGROUND; break;
             }
             entity.add(new Position(mapPosition.x,  mapPosition.y));
 
@@ -81,16 +80,18 @@ public class SceneTest extends Scene<GameScreen> {
             .collect(Collectors.toList());
 
         for (var spawner : spawners) {
-            if ("mario".equals(spawner.type)) {
-                var mario = Factory.mario(spawner);
-                engine.addEntity(mario);
-            } else if ("sun".equals(spawner.type)) {
-                var angrySun = Factory.angrySun(spawner);
-                engine.addEntity(angrySun);
-            } else {
-                this.player = Factory.player(spawner);
-                engine.addEntity(this.player);
+            //@formatter:off
+            switch (spawner.type) {
+                case "mario":  engine.addEntity(Factory.mario(spawner));        break;
+                case "sun":    engine.addEntity(Factory.angrySun(spawner));     break;
+                case "goomba": engine.addEntity(Factory.goombaCyborg(spawner)); break;
+                case "lou":    engine.addEntity(Factory.captainLou(spawner));   break;
+                default: {
+                    this.player = Factory.player(spawner);
+                    engine.addEntity(this.player);
+                } break;
             }
+            //@formatter:on
         }
 
         // Init view system to follow the player

@@ -116,7 +116,7 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
             renderable.tint.set(data.rStart, data.gStart, data.bStart, data.aStart);
             renderable.origin.set(data.widthStart/2f, data.heightStart/2f);
             renderable.size.set(data.widthStart, data.heightStart);
-            renderable.depth = Constants.FOREGROUND_Z_LEVEL;
+            renderable.depth = Constants.Z_DEPTH_FOREGROUND;
         }
         return entity;
     }

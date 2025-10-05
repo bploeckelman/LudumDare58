@@ -14,6 +14,8 @@ import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
+import lando.systems.ld58.game.components.enemies.EnemyCaptainLou;
+import lando.systems.ld58.game.components.enemies.EnemyGoombaCyborg;
 import lando.systems.ld58.game.components.enemies.EnemyMario;
 import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.Image;
@@ -87,7 +89,7 @@ public class Factory {
 
     public static Entity mario(TilemapObject.Spawner spawner) {
         if (!"mario".equals(spawner.type)) {
-            throw new GdxRuntimeException(TAG + ": tried to create mario from spawner without mario type");
+            throw new GdxRuntimeException(TAG + ": tried to create mario from spawner without matching type");
         }
 
         var entity = createEntity();
@@ -112,7 +114,7 @@ public class Factory {
 
     public static Entity angrySun(TilemapObject.Spawner spawner) {
         if (!"sun".equals(spawner.type)) {
-            throw new GdxRuntimeException(TAG + ": tried to create angry sun from spawner without angry sun type");
+            throw new GdxRuntimeException(TAG + ": tried to create angry sun from spawner without matching type");
         }
 
         var entity = createEntity();
@@ -132,6 +134,64 @@ public class Factory {
         var radius = 8f;
         var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
         entity.add(Collider.circ(CollisionMask.ENEMY, 0, 0, radius, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity goombaCyborg(TilemapObject.Spawner spawner) {
+        if (!"goomba".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create goomba-cyborg from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("GoombaCyborg"));
+        entity.add(new EnemyGoombaCyborg());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
+        var animBounds = Constants.GOOMBA_CYBORG_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.GOOMBA_CYBORG_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.GOOMBA_CYBORG_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity captainLou(TilemapObject.Spawner spawner) {
+        if (!"lou".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create captain-lou from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("CaptainLou"));
+        entity.add(new EnemyCaptainLou());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.RED, Color.CLEAR, 1f));
+        var animBounds = Constants.CAPTAIN_LOU_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.CAPTAIN_LOU_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.CAPTAIN_LOU_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
 
         return entity;
     }
