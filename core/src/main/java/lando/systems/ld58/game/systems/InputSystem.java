@@ -38,7 +38,7 @@ public class InputSystem extends IteratingSystem {
         var controls = InputControls.forPlayer(player);
 
         // Collect key input --------------------------------------------------
-        input.wasActionPressed = Gdx.input.isKeyJustPressed(controls.jump());
+        input.wasJumpJustPressed = Gdx.input.isKeyJustPressed(controls.jump());
         input.isJumpHeld     = Gdx.input.isKeyPressed(controls.jump());
         input.isMoveLeftHeld   = Gdx.input.isKeyPressed(controls.left());
         input.isMoveRightHeld  = Gdx.input.isKeyPressed(controls.right());
@@ -52,7 +52,7 @@ public class InputSystem extends IteratingSystem {
             var jump = !input.wasControllerJumpButtonDown && jumpButtonDown;
 
             input.wasControllerJumpButtonDown = jumpButtonDown;
-            input.wasActionPressed              = input.wasActionPressed || jump;
+            input.wasJumpJustPressed              = input.wasJumpJustPressed || jump;
 
             var moveLeft  = controller.getButton(mapping.buttonDpadLeft)  || controller.getAxis(mapping.axisLeftX) < -deadzone;
             var moveRight = controller.getButton(mapping.buttonDpadRight) || controller.getAxis(mapping.axisLeftX) >  deadzone;

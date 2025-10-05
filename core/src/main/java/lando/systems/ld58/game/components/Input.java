@@ -10,7 +10,7 @@ public class Input implements Component {
     public boolean isJumpHeld;
     public boolean isMoveLeftHeld;
     public boolean isMoveRightHeld;
-    public boolean wasActionPressed;
+    public boolean wasJumpJustPressed;
     public boolean wasControllerJumpButtonDown;
 
     public Input() {}
@@ -20,7 +20,7 @@ public class Input implements Component {
         this.isMoveLeftHeld = isMoveLeftHeld;
         this.isMoveRightHeld = isMoveRightHeld;
         this.isJumpHeld = isActionHeld;
-        this.wasActionPressed = wasActionPressed;
+        this.wasJumpJustPressed = wasActionPressed;
         this.wasControllerJumpButtonDown = false;
     }
 
@@ -32,7 +32,7 @@ public class Input implements Component {
         isMoveLeftHeld = false;
         isMoveRightHeld = false;
         isJumpHeld = false;
-        wasActionPressed = false;
+        wasJumpJustPressed = false;
         wasControllerJumpButtonDown = false;
         moveDirX = 0;
     }

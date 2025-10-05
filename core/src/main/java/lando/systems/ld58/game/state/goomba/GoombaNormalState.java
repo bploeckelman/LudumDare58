@@ -2,6 +2,7 @@ package lando.systems.ld58.game.state.goomba;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Constants;
@@ -20,6 +21,7 @@ public class GoombaNormalState extends PlayerState {
     private boolean isGrounded;
     private boolean wasGrounded;
     private float lastOnGround;
+    private float jumpTime;
 
     public GoombaNormalState(Engine engine, Entity entity) {
         super(engine, entity);
@@ -56,7 +58,7 @@ public class GoombaNormalState extends PlayerState {
         }
 
         handleMovement(delta);
-        handleJumping();
+        handleJumping(delta);
     }
 
     private void handleMovement(float delta) {
@@ -93,17 +95,20 @@ public class GoombaNormalState extends PlayerState {
         }
     }
 
-    private void handleJumping() {
+    private void handleJumping(float delta) {
         var player    = player();
         var input     = input();
         var animator  = animator();
         var cooldowns = cooldowns();
         var velocity  = velocity();
 
-        var jumpRequested = input.wasActionPressed;
+        jumpTime += delta;
+
+        var jumpRequested = input.wasJumpJustPressed;
         if (jumpRequested && cooldowns.isReady("jump")) {
             if ((isGrounded || lastOnGround < COYOTE_TIME) && player.jumpState() == Player.JumpState.GROUNDED) {
                 // start a new jump!
+                jumpTime = 0;
                 player.jumpState(Player.JumpState.JUMPED);
 
                 velocity.value.y = Constants.JUMP_ACCEL_SINGLE;
@@ -143,6 +148,13 @@ public class GoombaNormalState extends PlayerState {
             // For now just boop the player a bit to indicate they tried to move
             if (input.moveDirX != 0) {
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 1.1f, animator.scale.y));
+            }
+        }
+
+        if (player.jumpState() == Player.JumpState.JUMPED) {
+            if (input.isJumpHeld) {
+                float jumpAccelAmount = MathUtils.clamp(.5f - jumpTime, 0f, 1f);
+                velocity.value.y += jumpAccelAmount * Constants.JUMP_HELD_ACCEL;
             }
         }
     }
