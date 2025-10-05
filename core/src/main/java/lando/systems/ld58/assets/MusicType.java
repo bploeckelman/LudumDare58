@@ -7,7 +7,8 @@ import lando.systems.ld58.utils.Util;
 import java.util.EnumMap;
 
 public enum MusicType implements AssetType<Music> {
-      CASTLEVANIA("castlevania.ogg")
+      CASTLEVANIA("castlevania.ogg"),
+      MAIN("music1.ogg"),
     ;
 
     private static final String TAG = MusicType.class.getSimpleName();

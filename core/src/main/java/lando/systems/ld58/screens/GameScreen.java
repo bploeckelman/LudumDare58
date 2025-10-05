@@ -40,7 +40,8 @@ public class GameScreen extends BaseScreen {
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.CASTLEVANIA, 0.25f));
+//        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.CASTLEVANIA, 0.25f));
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN, 0.25f));
     }
 
     @Override
