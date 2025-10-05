@@ -5,8 +5,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.game.components.*;
-import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
-import lando.systems.ld58.game.components.enemies.EnemyMario;
+import lando.systems.ld58.game.components.enemies.*;
 import lando.systems.ld58.game.components.renderable.*;
 
 import java.util.Map;
@@ -38,13 +37,20 @@ public class Components {
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
 
         entry(Animator.class,              ComponentMapper.getFor(Animator.class)),
-        entry(FlameShaderRenderable.class,   ComponentMapper.getFor(FlameShaderRenderable.class)),
+        entry(FlameShaderRenderable.class, ComponentMapper.getFor(FlameShaderRenderable.class)),
         entry(Image.class,                 ComponentMapper.getFor(Image.class)),
         entry(KirbyShaderRenderable.class, ComponentMapper.getFor(KirbyShaderRenderable.class)),
         entry(Outline.class,               ComponentMapper.getFor(Outline.class)),
 
-        entry(EnemyMario.class,     ComponentMapper.getFor(EnemyMario.class)),
-        entry(EnemyAngrySun.class,  ComponentMapper.getFor(EnemyAngrySun.class)),
+        entry(EnemyAngrySun.class,     ComponentMapper.getFor(EnemyAngrySun.class)),
+        entry(EnemyBulletBill.class,   ComponentMapper.getFor(EnemyBulletBill.class)),
+        entry(EnemyCaptainLou.class,   ComponentMapper.getFor(EnemyCaptainLou.class)),
+        entry(EnemyGoombaCyborg.class, ComponentMapper.getFor(EnemyGoombaCyborg.class)),
+        entry(EnemyHammerBro.class,    ComponentMapper.getFor(EnemyHammerBro.class)),
+        entry(EnemyKoopa.class,        ComponentMapper.getFor(EnemyKoopa.class)),
+        entry(EnemyLakitu.class,       ComponentMapper.getFor(EnemyLakitu.class)),
+        entry(EnemyMario.class,        ComponentMapper.getFor(EnemyMario.class)),
+        entry(EnemyMisty.class,        ComponentMapper.getFor(EnemyMario.class)),
 
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
         entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class))
