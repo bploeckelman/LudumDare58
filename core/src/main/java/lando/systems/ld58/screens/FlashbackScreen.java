@@ -332,5 +332,10 @@ public class FlashbackScreen extends BaseScreen {
         objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(42, 5, 1, 2)));
         objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(44, 5, 1, 2)));
         objects.add(new FlashbackObject(AnimType.MARIO_SPINE.get(), new Rectangle(46, 5, 1, 2)));
+
+        objects.add(new FlashbackObject(AnimType.MARIO_SCREEN.get(),  new Rectangle(78, 5, 2, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SCREEN.get(),  new Rectangle(81, 5, 2, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SCREEN.get(),  new Rectangle(84, 5, 2, 2)));
+        objects.add(new FlashbackObject(AnimType.MARIO_SCREEN.get(),  new Rectangle(87, 5, 2, 2)));
     }
 }

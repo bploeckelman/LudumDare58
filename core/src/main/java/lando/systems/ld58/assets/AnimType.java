@@ -62,7 +62,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , KIDS(Path.FLASHBACK, "kids")
     , LUIGI(Path.FLASHBACK, "luigi")
     , MARIO_EMBRYO(Path.FLASHBACK, "mario-embryo")
-    , MARIO_SCREEN(Path.FLASHBACK, "mario-screen")
+    , MARIO_SCREEN(Path.FLASHBACK, "mario-screen", new Data(.5f))
     , MARIO_SPINE(Path.FLASHBACK, "mario-spine")
     , MARIO_TUBE_LARGE(Path.FLASHBACK, "mario-tube-large")
     , MARIO_TUBE_SMALL(Path.FLASHBACK, "mario-tube-small")
