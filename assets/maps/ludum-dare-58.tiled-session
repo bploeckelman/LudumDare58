@@ -19,11 +19,11 @@
             }
         },
         "test.tmx": {
-            "scale": 2.4719791666666664,
-            "selectedLayer": 0,
+            "scale": 2,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 239.88875310774938,
-                "y": 240.09102018456872
+                "x": 203.25,
+                "y": 246.25
             }
         },
         "tilesets/mario.tsx": {
@@ -32,10 +32,11 @@
         }
     },
     "last.imagePath": "C:/Users/Brian/Projects/LudumDare/LudumDare58/assets/maps/tilesets",
-    "map.height": 30,
+    "map.height": 25,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
     "map.tileWidth": 16,
+    "map.width": 160,
     "openFiles": [
     ],
     "project": "ludum-dare-58.tiled-project",
@@ -44,7 +45,7 @@
         "_test.tmx"
     ],
     "tileset.lastUsedFormat": "tsx",
-    "tileset.spacing": 1,
+    "tileset.spacing": 0,
     "tileset.tileSize": {
         "height": 16,
         "width": 16

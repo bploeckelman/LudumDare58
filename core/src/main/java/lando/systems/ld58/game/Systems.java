@@ -2,6 +2,7 @@ package lando.systems.ld58.game;
 
 import com.badlogic.ashley.core.Engine;
 import lando.systems.ld58.game.systems.*;
+import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.screens.GameScreen;
 
 public class Systems {
@@ -20,7 +21,7 @@ public class Systems {
     public static RenderSystem           render;
     public static ViewSystem             view;
 
-    public static PlayerStateSystem<GameScreen> playerState;
+    public static PlayerStateSystem<? extends BaseScreen> playerState;
 
     public static void init(Engine engine) {
         Systems.animation        = new AnimationSystem();
