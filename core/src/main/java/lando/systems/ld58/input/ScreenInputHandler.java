@@ -2,14 +2,9 @@ package lando.systems.ld58.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import lando.systems.ld58.Flag;
-import lando.systems.ld58.assets.EmitterType;
-import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.systems.ViewSystem;
-import lando.systems.ld58.particles.effects.TestEffect;
 import lando.systems.ld58.screens.BaseScreen;
-import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 
 public class ScreenInputHandler extends InputHandler {
@@ -75,18 +70,6 @@ public class ScreenInputHandler extends InputHandler {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
-
-        if (pointer == Input.Buttons.LEFT) {
-            var pos = FramePool.vec3(screenX, screenY);
-            screen.worldCamera.unproject(pos);
-
-            var params = new TestEffect.Params(pos.x, pos.y, Color.MAGENTA);
-            var emitter = Factory.emitter(EmitterType.TEST, params);
-            screen.engine.addEntity(emitter);
-
-            return true;
-        }
-
         return false;
     }
 

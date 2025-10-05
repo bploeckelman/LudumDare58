@@ -1,6 +1,8 @@
 package lando.systems.ld58.game.scenes;
 
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.graphics.Color;
+import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.components.Position;
@@ -8,6 +10,7 @@ import lando.systems.ld58.game.components.TileLayer;
 import lando.systems.ld58.game.components.Tilemap;
 import lando.systems.ld58.game.components.TilemapObject;
 import lando.systems.ld58.game.systems.ViewSystem;
+import lando.systems.ld58.particles.effects.TestEffect;
 import lando.systems.ld58.screens.GameScreen;
 import lando.systems.ld58.utils.Util;
 
@@ -22,6 +25,7 @@ public class SceneTest extends Scene<GameScreen> {
 
     public SceneTest(GameScreen screen) {
         super(screen);
+        var engine = screen.engine;
 
         // configure the camera to emulate a low res display
         var width = 240;
@@ -29,8 +33,6 @@ public class SceneTest extends Scene<GameScreen> {
         var camera = screen.worldCamera;
         camera.setToOrtho(false, width, height);
         camera.update();
-
-        var engine = screen.engine;
 
         // Set up the map view
         view = Factory.view();
@@ -92,7 +94,13 @@ public class SceneTest extends Scene<GameScreen> {
         }
 
         // Init view system to follow the player
-        var viewSystem = screen.engine.getSystem(ViewSystem.class);
+        var viewSystem = engine.getSystem(ViewSystem.class);
         viewSystem.target(player);
+
+        // TEST: Attach a test particle emitter to the player
+        var target = Components.get(player, Position.class);
+        var params = new TestEffect.Params(target, Color.RED, 0.2f);
+        var emitter = Factory.emitter(EmitterType.TEST, params);
+        engine.addEntity(emitter);
     }
 }

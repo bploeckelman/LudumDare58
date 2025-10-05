@@ -9,9 +9,13 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.assets.MusicType;
-import lando.systems.ld58.game.*;
+import lando.systems.ld58.game.Components;
+import lando.systems.ld58.game.Factory;
+import lando.systems.ld58.game.Signals;
+import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
+import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.scenes.SceneTest;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
@@ -24,11 +28,13 @@ public class GameScreen extends BaseScreen {
     private final Color backgroundColor = new Color(0x225522ff);
     private final TextureRegion gdx;
 
+    public final Scene<GameScreen> scene;
+
     public GameScreen() {
         this.gdx = new TextureRegion(ImageType.GDX.get());
 
         var entity = Factory.createEntity();
-        var scene = new SceneTest(this);
+        this.scene = new SceneTest(this);
         entity.add(new SceneContainer(scene));
         engine.addEntity(entity);
 
@@ -40,8 +46,10 @@ public class GameScreen extends BaseScreen {
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
-//        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.CASTLEVANIA, 0.25f));
         Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN, 0.25f));
+
+        // Tick the engine for one frame first to get everything initialized
+        engine.update(0f);
     }
 
     @Override
@@ -85,12 +93,14 @@ public class GameScreen extends BaseScreen {
         batch.end();
 
         // Screen name overlay
-        batch.setProjectionMatrix(windowCamera.combined);
-        batch.begin();
-        var pos = FramePool.vec2(
-            (windowCamera.viewportWidth - layout.getWidth()) / 2f,
-            windowCamera.viewportHeight - layout.getHeight());
-        font.drawGlyphs(batch, layout, pos.x, pos.y);
-        batch.end();
+        if (Flag.DEBUG_RENDER.isEnabled()) {
+            batch.setProjectionMatrix(windowCamera.combined);
+            batch.begin();
+            var pos = FramePool.vec2(
+                (windowCamera.viewportWidth - layout.getWidth()) / 2f,
+                windowCamera.viewportHeight - layout.getHeight());
+            font.drawGlyphs(batch, layout, pos.x, pos.y);
+            batch.end();
+        }
     }
 }

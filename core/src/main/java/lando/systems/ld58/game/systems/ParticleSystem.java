@@ -3,12 +3,13 @@ package lando.systems.ld58.game.systems;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld58.game.Components;
+import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.Emitter;
@@ -16,6 +17,8 @@ import lando.systems.ld58.game.components.Particle;
 import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.Image;
+import lando.systems.ld58.game.components.renderable.Outline;
+import lando.systems.ld58.game.components.renderable.Renderable;
 import lando.systems.ld58.game.signals.EntityEvent;
 import lando.systems.ld58.particles.ParticleData;
 
@@ -98,8 +101,23 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
         var entity = Factory.createEntity();
         entity.add(new Particle(data));
         entity.add(new Position(data.xStart, data.yStart));
-        if      (data.animation != null) entity.add(new Animator(data.animation));
-        else if (data.keyframe  != null) entity.add(new Image(data.keyframe, new Vector2(data.widthStart, data.heightStart)));
+        entity.add(new Outline(Color.DARK_GRAY, Color.CLEAR_WHITE, 4f));
+
+        Renderable renderable = null;
+        if (data.animation != null) {
+            renderable = new Animator(data.animation);
+            entity.add((Animator) renderable);
+        }
+        else if (data.keyframe  != null) {
+            renderable = new Image(data.keyframe);
+            entity.add((Image) renderable);
+        }
+        if (renderable != null) {
+            renderable.tint.set(data.rStart, data.gStart, data.bStart, data.aStart);
+            renderable.origin.set(data.widthStart/2f, data.heightStart/2f);
+            renderable.size.set(data.widthStart, data.heightStart);
+            renderable.depth = Constants.FOREGROUND_Z_LEVEL;
+        }
         return entity;
     }
 
@@ -161,8 +179,10 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
         data.width  = MathUtils.lerp(data.widthStart,  data.widthEnd,  progress);
         data.height = MathUtils.lerp(data.heightStart, data.heightEnd, progress);
         if (animator != null) {
+            animator.origin.set(data.width/2f, data.height/2f);
             animator.size.set(data.width, data.height);
         } else if (image != null) {
+            image.origin.set(data.width/2f, data.height/2f);
             image.size.set(data.width, data.height);
         }
 

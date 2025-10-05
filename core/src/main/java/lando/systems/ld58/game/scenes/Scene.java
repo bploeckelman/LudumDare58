@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
+import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.EntityEvent;
 import lando.systems.ld58.screens.BaseScreen;
 
@@ -17,6 +18,7 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<E
 
     public Scene(ScreenType screen) {
         this.screen = screen;
+        Signals.removeEntity.add(this);
     }
 
     public ScreenType screen() { return screen; }

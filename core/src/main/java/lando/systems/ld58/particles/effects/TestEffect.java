@@ -4,60 +4,61 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.IconType;
 import lando.systems.ld58.game.Systems;
+import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.particles.ParticleData;
 import lando.systems.ld58.particles.ParticleEffect;
 import lando.systems.ld58.particles.ParticleEffectParams;
+import lando.systems.ld58.utils.Time;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TestEffect implements ParticleEffect {
 
     public static class Params implements ParticleEffectParams {
-        public float startX;
-        public float startY;
+        public Position target;
         public Color startColor;
-        public boolean once;
+        public float interval;
+        public float timer;
 
-        public Params(float x, float y, Color startColor) {
-            this.startX = x;
-            this.startY = y;
+        public Params(Position target, Color startColor, float interval) {
+            this.target = target;
             this.startColor = startColor;
-            this.once = false;
+            this.interval = interval;
+            this.timer = interval;
         }
     }
-
-    // TODO: still need a way to potentially limit these
-    //  to X particles per Y time, maybe add as a Param field?
 
     @Override
     public List<ParticleData> spawn(ParticleEffectParams parameters) {
         var params = (Params) parameters;
-        if (params.once) return Collections.emptyList();
-        params.once = true;
+
+        params.timer = MathUtils.clamp(params.timer - Time.delta, 0, params.interval);
+        if (params.timer == 0f) {
+            params.timer = params.interval;
+        } else {
+            return Collections.emptyList();
+        }
+
+        var angle = MathUtils.random(0f, 360f);
+        var yVel = MathUtils.random(100f, 150f);
+        var endRot = MathUtils.random(angle - 360f, angle + 360f);
+        var startSize = MathUtils.random(10f, 20f);
+        var ttl = MathUtils.random(.3f, .6f);
 
         var pool = Systems.particles.pool;
-        return IntStream.range(0, 100).boxed().map(i -> {
-            var angle = MathUtils.random(0f, 360f);
-            var speed = MathUtils.random(50f, 100f);
-            var endRot = MathUtils.random(angle - 360f, angle + 360f);
-            var startSize = MathUtils.random(10f, 20f);
-            return ParticleData.initializer(pool.obtain())
-                .keyframe(IconType.HEART.get())
-                .startPos(params.startX, params.startY)
-                .startRotation(angle)
-                .endRotation(endRot)
-                .velocity(
-                    MathUtils.cosDeg(angle) * speed,
-                    MathUtils.sinDeg(angle) * speed)
-                .startColor(params.startColor)
-                .startSize(startSize)
-                .endSize(0f, startSize * 2f)
-                .timeToLive(MathUtils.random(.25f, .5f))
-                .init();
-        })
-        .collect(Collectors.toList());
+        var p = ParticleData.initializer(pool.obtain())
+            .keyframe(IconType.HEART.get())
+            .startPos(params.target.x, params.target.y)
+            .startRotation(angle)
+            .endRotation(endRot)
+            .velocity(0f, yVel)
+            .startColor(params.startColor)
+            .startSize(startSize)
+            .endSize(startSize/4f, startSize/4f)
+            .timeToLive(ttl)
+            .init();
+
+        return Collections.singletonList(p);
     }
 }
