@@ -52,7 +52,12 @@ public class IntroScreen extends BaseScreen {
         // TODO: trigger when player reaches a checkpoint
         if (!transitioning && Gdx.input.justTouched()){
             transitioning = true;
+
+            // Cleanup ECS stuff from this screen before moving to the next screen/scene
+            Signals.changeState.remove(Systems.playerState);
             engine.removeSystem(Systems.playerState);
+            engine.removeAllEntities();
+
             game.setScreen(new GameScreen());
         }
 

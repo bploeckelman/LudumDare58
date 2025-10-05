@@ -3,7 +3,6 @@ package lando.systems.ld58.game;
 import com.badlogic.ashley.core.Engine;
 import lando.systems.ld58.game.systems.*;
 import lando.systems.ld58.screens.BaseScreen;
-import lando.systems.ld58.screens.GameScreen;
 
 public class Systems {
 
