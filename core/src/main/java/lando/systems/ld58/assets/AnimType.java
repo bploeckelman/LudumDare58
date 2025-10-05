@@ -13,6 +13,11 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // character animations -------------------------------------
     // -- angry sun ---------------------------------------------
     , ANGRY_SUN(Path.CHAR_ANGRY_SUN, new Data(0.2f))
+    // -- billy the goomba --------------------------------------
+    , BILLY_IDLE(Path.CHAR_BILLY)
+    , BILLY_JUMP(Path.CHAR_BILLY)
+    , BILLY_WALK(Path.CHAR_BILLY)
+    , BILLY_YELL(Path.CHAR_BILLY)
     // -- bullet bill -------------------------------------------
     , BULLET_BILL(Path.CHAR_BULLET_BILL)
     // -- koopa -------------------------------------------------
@@ -40,6 +45,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     private static class Path {
         private static final String CHARACTERS = "characters/";
         private static final String CHAR_ANGRY_SUN = CHARACTERS + "angry-sun/";
+        private static final String CHAR_BILLY = CHARACTERS + "billy/";
         private static final String CHAR_BULLET_BILL = CHARACTERS + "bullet-bill/";
         private static final String CHAR_GOOMBA = CHARACTERS + "goomba/";
         private static final String CHAR_KOOPA  = CHARACTERS + "koopa/";

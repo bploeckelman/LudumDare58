@@ -51,7 +51,7 @@ public class GoombaNormalState extends PlayerState {
 
             var actuallyMoving = (moving && wantsToMove && !colliderBlocking);
 
-            var animType = actuallyMoving ? AnimType.GOOMBA_NORMAL_WALK : AnimType.GOOMBA_NORMAL_IDLE;
+            var animType = actuallyMoving ? AnimType.BILLY_WALK : AnimType.BILLY_IDLE;
             Signals.animStart.dispatch(new AnimationEvent.Play(animator(), animType));
         } else {
             lastOnGround += delta;
@@ -115,7 +115,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.GOOMBA_NORMAL_IDLE));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_JUMP));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
             else if (player.jumpState() == Player.JumpState.JUMPED) {
@@ -125,7 +125,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 1.2f, 1.2f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.GOOMBA_RAGE_IDLE));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_YELL));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
             else if (player.jumpState() == Player.JumpState.GRABBED) {
@@ -135,7 +135,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.GOOMBA_NORMAL_IDLE));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_JUMP));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
             // ...otherwise if it's a double jump do nothing until the player is grounded again

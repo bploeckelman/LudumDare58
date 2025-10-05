@@ -37,10 +37,13 @@ public class GoombaStartState extends PlayerState {
             new DelayAction(0.5f),
             new ParallelActions(
                 new MoveRelativeAction(0.5f, 0, 50),
-                new PlayAnimAction(AnimType.GOOMBA_RAGE_IDLE),
+                new PlayAnimAction(AnimType.BILLY_JUMP),
                 new PlaySoundAction(SoundType.JUMP)
             ),
-            new PlayAnimAction(AnimType.GOOMBA_NORMAL_IDLE),
+            new DelayAction(0.3f),
+            new PlayAnimAction(AnimType.BILLY_YELL),
+            new DelayAction(0.2f),
+            new PlayAnimAction(AnimType.BILLY_IDLE),
             new DelayAction(0.5f)
         );
 

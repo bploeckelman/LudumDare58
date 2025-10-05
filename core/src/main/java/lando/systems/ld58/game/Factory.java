@@ -15,7 +15,10 @@ import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
 import lando.systems.ld58.game.components.enemies.EnemyMario;
-import lando.systems.ld58.game.components.renderable.*;
+import lando.systems.ld58.game.components.renderable.Animator;
+import lando.systems.ld58.game.components.renderable.Image;
+import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
+import lando.systems.ld58.game.components.renderable.Outline;
 import lando.systems.ld58.particles.ParticleEffectParams;
 import lando.systems.ld58.screens.BaseScreen;
 
@@ -63,20 +66,21 @@ public class Factory {
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new Input());
 
-        var animBounds = Constants.GOOMBA_ANIMATOR_BOUNDS;
+        var animBounds = Constants.BILLY_ANIMATOR_BOUNDS;
         var animOrigin = animBounds.getPosition(new Vector2());
-        var animator = new Animator(AnimType.GOOMBA_NORMAL_IDLE, animOrigin);
+        var animator = new Animator(AnimType.BILLY_IDLE, animOrigin);
+        animator.size.set(animBounds.width, animBounds.height);
         animator.depth = 1;
         entity.add(animator);
         entity.add(new Outline(Color.YELLOW, Color.CLEAR, 1f));
         entity.add(new KirbyShaderRenderable());
-        entity.add(new FlameShaderRenderable(animator));
+//        entity.add(new FlameShaderRenderable(animator));
         entity.add(new Cooldowns()
             .add("jump", 0.2f)
             .add("taunt", 0.2f));
 
         var collidesWith   = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.ENEMY };
-        entity.add(Collider.rect(CollisionMask.PLAYER, Constants.GOOMBA_COLLIDER_BOUNDS, collidesWith));
+        entity.add(Collider.rect(CollisionMask.PLAYER, Constants.BILLY_COLLIDER_BOUNDS, collidesWith));
 
         return entity;
     }
