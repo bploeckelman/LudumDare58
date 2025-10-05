@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
+import lando.systems.ld58.assets.EffectType;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
@@ -56,7 +57,7 @@ public class TitleScreen extends BaseScreen {
         super.update(delta);
         if (!transitioning && Gdx.input.justTouched()){
             transitioning = true;
-            game.setScreen(new IntroScreen());
+            game.setScreen(new FlashbackScreen(), EffectType.DREAMY);
         }
     }
 

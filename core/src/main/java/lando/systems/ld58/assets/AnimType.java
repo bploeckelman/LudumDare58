@@ -9,7 +9,7 @@ import java.util.EnumMap;
 public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // object animations ----------------------------------------
     COIN(Path.OBJ_COIN)
-
+    , COIN_BLOCK(Path.FLASHBACK, "coin-block")
     // character animations -------------------------------------
     // -- angry sun ---------------------------------------------
     , ANGRY_SUN(Path.CHAR_ANGRY_SUN, new Data(0.2f))
@@ -47,6 +47,23 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // -- misty -------------------------------------------------
     , MISTY_IDLE(Path.CHAR_MISTY)
     , MISTY_TALK(Path.CHAR_MISTY)
+    // -- flash back --------------------------------------------
+    , YOUNG_BILLY_NORMAL(Path.FLASHBACK, "billy-normal")
+    , YOUNG_BILLY_RAGE(Path.FLASHBACK, "billy-rage")
+    , DRACULA(Path.FLASHBACK, "dracula")
+    , GANNON(Path.FLASHBACK, "gannon")
+    , HIPPO(Path.FLASHBACK, "hippo")
+    , KIDS(Path.FLASHBACK, "kids")
+    , LUIGI(Path.FLASHBACK, "luigi")
+    , MARIO_EMBRYO(Path.FLASHBACK, "mario-embryo")
+    , MARIO_SCREEN(Path.FLASHBACK, "mario-screen")
+    , MARIO_SPINE(Path.FLASHBACK, "mario-spine")
+    , MARIO_TUBE_LARGE(Path.FLASHBACK, "mario-tube-large")
+    , MARIO_TUBE_SMALL(Path.FLASHBACK, "mario-tube-small")
+    , MISTY(Path.FLASHBACK, "misty")
+    , MOTHER_BRAIN(Path.FLASHBACK, "mother-brain")
+    , MUSHROOM(Path.FLASHBACK, "mushroom")
+    , WILLY(Path.FLASHBACK, "willy")
     ;
 
     private static class Path {
@@ -63,6 +80,9 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
 
         private static final String OBJECTS = "objects/";
         private static final String OBJ_COIN = OBJECTS + "coin/";
+
+        private static final String FLASHBACK = "flashback/";
+
     }
 
     private static final String TAG = FontType.class.getSimpleName();
