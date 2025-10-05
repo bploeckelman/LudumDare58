@@ -1,13 +1,10 @@
-package lando.systems.ld58.game.components;
+package lando.systems.ld58.game.components.renderable;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.utils.Util;
 import lombok.AllArgsConstructor;
 
 public class Image extends Renderable implements Component {

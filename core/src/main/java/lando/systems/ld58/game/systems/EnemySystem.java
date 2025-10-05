@@ -11,6 +11,7 @@ import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionRect;
 import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
 import lando.systems.ld58.game.components.enemies.EnemyMario;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.utils.FramePool;
 
 public class EnemySystem extends IteratingSystem {

@@ -1,4 +1,4 @@
-package lando.systems.ld58.game.components;
+package lando.systems.ld58.game.components.renderable;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.Color;

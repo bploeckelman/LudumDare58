@@ -6,6 +6,7 @@ import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.actions.ActionGroup;
 import lando.systems.ld58.game.components.*;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.systems.CollisionCheckSystem;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.utils.Util;

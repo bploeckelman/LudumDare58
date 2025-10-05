@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import lando.systems.ld58.game.Components;
+import lando.systems.ld58.game.components.renderable.Renderable;
 
 public class TileLayer extends Renderable implements Component {
 

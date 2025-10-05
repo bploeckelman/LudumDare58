@@ -2,7 +2,7 @@ package lando.systems.ld58.game.signals;
 
 import com.badlogic.gdx.math.Vector2;
 import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.game.components.Animator;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.utils.FramePool;
 import lombok.AllArgsConstructor;
 

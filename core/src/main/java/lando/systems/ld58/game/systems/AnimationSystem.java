@@ -7,7 +7,8 @@ import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.components.Animator;
+import lando.systems.ld58.game.components.renderable.Animator;
+import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
 import lando.systems.ld58.game.signals.AnimationEvent;
 import lando.systems.ld58.utils.Calc;
 import lando.systems.ld58.utils.Util;
@@ -38,6 +39,13 @@ public class AnimationSystem extends IteratingSystem implements Listener<Animati
 
         // Apply facing
         anim.scale.set(anim.facing * sx, sy);
+
+        var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
+        if (kirby != null) {
+            // This should go somewhere else I think.
+            kirby.accum += delta;
+            kirby.strength((float)Math.cos(kirby.accum));
+        }
     }
 
     @Override

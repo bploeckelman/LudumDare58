@@ -7,6 +7,10 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
 import lando.systems.ld58.game.components.enemies.EnemyMario;
+import lando.systems.ld58.game.components.renderable.Animator;
+import lando.systems.ld58.game.components.renderable.Image;
+import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
+import lando.systems.ld58.game.components.renderable.Outline;
 
 import java.util.Map;
 import java.util.Optional;
@@ -16,18 +20,15 @@ import static java.util.Map.entry;
 public class Components {
 
     private static final Map<Class<? extends Component>, ComponentMapper<?>> mappers = Map.ofEntries(
-        entry(Animator.class,       ComponentMapper.getFor(Animator.class)),
         entry(Bounds.class,         ComponentMapper.getFor(Bounds.class)),
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
         entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
         entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
         entry(Id.class,             ComponentMapper.getFor(Id.class)),
-        entry(Image.class,          ComponentMapper.getFor(Image.class)),
         entry(Input.class,          ComponentMapper.getFor(Input.class)),
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
-        entry(Outline.class,        ComponentMapper.getFor(Outline.class)),
         entry(Player.class,         ComponentMapper.getFor(Player.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
@@ -36,6 +37,11 @@ public class Components {
         entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
+
+        entry(Animator.class,              ComponentMapper.getFor(Animator.class)),
+        entry(Image.class,                 ComponentMapper.getFor(Image.class)),
+        entry(KirbyShaderRenderable.class, ComponentMapper.getFor(KirbyShaderRenderable.class)),
+        entry(Outline.class,               ComponentMapper.getFor(Outline.class)),
 
         entry(EnemyMario.class,     ComponentMapper.getFor(EnemyMario.class)),
         entry(EnemyAngrySun.class,  ComponentMapper.getFor(EnemyAngrySun.class)),

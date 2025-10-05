@@ -14,6 +14,7 @@ import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionCirc;
 import lando.systems.ld58.game.components.collision.CollisionGrid;
 import lando.systems.ld58.game.components.collision.CollisionRect;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;

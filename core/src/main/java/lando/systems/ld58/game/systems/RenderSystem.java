@@ -15,6 +15,10 @@ import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.components.*;
+import lando.systems.ld58.game.components.renderable.Animator;
+import lando.systems.ld58.game.components.renderable.Image;
+import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
+import lando.systems.ld58.game.components.renderable.Outline;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 
@@ -48,6 +52,24 @@ public class RenderSystem extends EntitySystem {
         renderRenderables(batch);
 
         Util.streamOf(tileLayers).filter(TileLayer::isForeground).findFirst().ifPresent(tileLayer -> renderTileLayer(batch, tileLayer));
+    }
+
+    private void renderKirbyShader(SpriteBatch batch, Entity entity) {
+        var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
+        var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
+        if (kirby == null) return;
+        ShaderProgram shader = kirby.shaderProgram;
+        batch.setShader(shader);
+        var rect = kirby.rect(pos);
+
+
+        shader.setUniformf("u_strength", kirby.strength());
+        shader.setUniformf("u_time", kirby.accum);
+
+        batch.draw(kirby.texture, rect.x, rect.y, rect.width, rect.height);
+
+        batch.setShader(null);
+
     }
 
     private void renderTileLayer(SpriteBatch batch, Entity entity) {
@@ -116,6 +138,8 @@ public class RenderSystem extends EntitySystem {
             }
             batch.setColor(prevColor);
             batch.setShader(null);
+
+            renderKirbyShader(batch, entity);
         }
     }
 }

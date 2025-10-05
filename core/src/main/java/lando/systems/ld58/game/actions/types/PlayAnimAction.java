@@ -7,7 +7,7 @@ import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.actions.Action;
-import lando.systems.ld58.game.components.Animator;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.Id;
 import lando.systems.ld58.game.signals.AnimationEvent;
 import lando.systems.ld58.utils.Util;
