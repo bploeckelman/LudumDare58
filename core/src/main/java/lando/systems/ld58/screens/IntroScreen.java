@@ -54,6 +54,7 @@ public class IntroScreen extends BaseScreen {
             transitioning = true;
 
             // Cleanup ECS stuff from this screen before moving to the next screen/scene
+            Signals.removeEntity.remove(scene);
             Signals.changeState.remove(Systems.playerState);
             engine.removeSystem(Systems.playerState);
             engine.removeAllEntities();
