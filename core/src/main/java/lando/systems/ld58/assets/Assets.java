@@ -44,6 +44,7 @@ public class Assets implements Disposable {
     public TextureRegion pixelRegion;
     public ShaderProgram outlineShader;
     public ShaderProgram kirbyShader;
+    public ShaderProgram flameShader;
 
     public Assets() {
         this(Load.SYNC);
@@ -122,6 +123,7 @@ public class Assets implements Disposable {
 
         outlineShader = Util.loadShader("shaders/default.vert", "shaders/outline.frag");
         kirbyShader = Util.loadShader("shaders/default.vert",  "shaders/kirby.frag");
+        flameShader = Util.loadShader("shaders/default.vert", "shaders/flame.frag");
 
         atlas = mgr.get("sprites/sprites.atlas");
         strings = mgr.get("i18n/strings");

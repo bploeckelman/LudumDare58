@@ -7,10 +7,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
 import lando.systems.ld58.game.components.enemies.EnemyMario;
-import lando.systems.ld58.game.components.renderable.Animator;
-import lando.systems.ld58.game.components.renderable.Image;
-import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
-import lando.systems.ld58.game.components.renderable.Outline;
+import lando.systems.ld58.game.components.renderable.*;
 
 import java.util.Map;
 import java.util.Optional;
@@ -39,6 +36,7 @@ public class Components {
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
 
         entry(Animator.class,              ComponentMapper.getFor(Animator.class)),
+        entry(FlameShaderRenderable.class,   ComponentMapper.getFor(FlameShaderRenderable.class)),
         entry(Image.class,                 ComponentMapper.getFor(Image.class)),
         entry(KirbyShaderRenderable.class, ComponentMapper.getFor(KirbyShaderRenderable.class)),
         entry(Outline.class,               ComponentMapper.getFor(Outline.class)),

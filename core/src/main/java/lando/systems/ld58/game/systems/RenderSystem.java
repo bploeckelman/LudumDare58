@@ -59,6 +59,11 @@ public class RenderSystem extends SortedIteratingSystem {
             kirby.accum += deltaTime;
             kirby.strength((float)Math.cos(kirby.accum));
         }
+
+        var flames = Components.optional(entity, FlameShaderRenderable.class).orElse(null);
+        if (flames != null) {
+            flames.accum += deltaTime;
+        }
     }
 
     public void draw(SpriteBatch batch) {
@@ -73,7 +78,26 @@ public class RenderSystem extends SortedIteratingSystem {
             renderTileLayer(batch, entity);
             renderRenderables(batch, entity);
             renderKirbyShader(batch, entity);
+            renderFlameShader(batch, entity);
         }
+    }
+
+    private void renderFlameShader(SpriteBatch batch, Entity entity) {
+        var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
+        var flame = Components.optional(entity, FlameShaderRenderable.class).orElse(null);
+        if (flame == null) return;
+        ShaderProgram shader = flame.shaderProgram;
+        batch.setShader(shader);
+        var rect = flame.rect(pos);
+
+
+        shader.setUniformf("u_color1", flame.color1);
+        shader.setUniformf("u_color2", flame.color2);
+        shader.setUniformf("u_time", flame.accum);
+
+        batch.draw(flame.texture, rect.x, rect.y, rect.width, rect.height);
+
+        batch.setShader(null);
     }
 
     private void renderKirbyShader(SpriteBatch batch, Entity entity) {
