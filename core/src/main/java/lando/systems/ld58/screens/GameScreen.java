@@ -46,7 +46,8 @@ public class GameScreen extends BaseScreen {
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN, 0.25f));
+//        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN, 0.25f));
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.DIRGE, 0.25f));
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);

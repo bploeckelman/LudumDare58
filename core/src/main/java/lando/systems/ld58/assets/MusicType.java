@@ -9,6 +9,7 @@ import java.util.EnumMap;
 public enum MusicType implements AssetType<Music> {
       CASTLEVANIA("castlevania.ogg"),
       MAIN("music1.ogg"),
+      DIRGE("mario-dirge.ogg"),
     ;
 
     private static final String TAG = MusicType.class.getSimpleName();
