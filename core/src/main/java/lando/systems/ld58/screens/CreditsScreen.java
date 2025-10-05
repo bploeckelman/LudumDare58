@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.game.Signals;
+import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 
@@ -22,6 +24,7 @@ public class CreditsScreen extends BaseScreen {
         super.update(delta);
         if (!transitioning && Gdx.input.justTouched()){
             transitioning = true;
+            Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
             game.setScreen(new LaunchScreen());
         }
     }

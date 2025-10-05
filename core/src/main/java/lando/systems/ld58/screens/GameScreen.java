@@ -15,6 +15,7 @@ import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.scenes.*;
+import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
@@ -55,6 +56,7 @@ public class GameScreen extends BaseScreen {
                 engine.removeSystem(Systems.playerState);
                 engine.removeAllEntities();
 
+                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
                 game.setScreen(new EndingScreen());
             }
         }

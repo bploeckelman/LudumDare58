@@ -10,6 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.assets.EffectType;
 import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.game.Signals;
+import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 import lando.systems.ld58.utils.accessors.RectangleAccessor;
@@ -57,6 +59,7 @@ public class TitleScreen extends BaseScreen {
         super.update(delta);
         if (!transitioning && Gdx.input.justTouched()){
             transitioning = true;
+            Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
             game.setScreen(new FlashbackScreen(), EffectType.DREAMY);
         }
     }

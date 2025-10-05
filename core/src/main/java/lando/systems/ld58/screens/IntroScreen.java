@@ -59,6 +59,7 @@ public class IntroScreen extends BaseScreen {
             engine.removeSystem(Systems.playerState);
             engine.removeAllEntities();
 
+            Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
             game.setScreen(new GameScreen());
         }
 

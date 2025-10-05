@@ -11,6 +11,7 @@ public class Signals {
 
     public static final Signal<AudioEvent> playSound = new Signal<>();
     public static final Signal<AudioEvent> playMusic = new Signal<>();
+    public static final Signal<AudioEvent> stopMusic = new Signal<>();
 
     public static final Signal<CollisionEvent> collision = new Signal<>();
 

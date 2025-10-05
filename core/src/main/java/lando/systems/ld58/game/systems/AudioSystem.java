@@ -3,6 +3,7 @@ package lando.systems.ld58.game.systems;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
+import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 
@@ -11,6 +12,7 @@ public class AudioSystem extends EntitySystem implements Listener<AudioEvent> {
     public AudioSystem() {
         Signals.playSound.add(this);
         Signals.playMusic.add(this);
+        Signals.stopMusic.add(this);
     }
 
     @Override
@@ -25,6 +27,19 @@ public class AudioSystem extends EntitySystem implements Listener<AudioEvent> {
             music.setVolume(play.volume);
             music.setLooping(true);
             music.play();
+        }
+        else if (event instanceof AudioEvent.StopMusic) {
+            var stop = (AudioEvent.StopMusic) event;
+            if (stop.musicType != null) {
+                // Stop the specified music
+                var music = stop.musicType.get();
+                music.stop();
+            } else {
+                // Stop all musics
+                for (var type : MusicType.values()) {
+                    type.get().stop();
+                }
+            }
         }
     }
 }

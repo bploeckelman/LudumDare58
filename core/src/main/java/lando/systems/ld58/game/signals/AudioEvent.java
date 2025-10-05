@@ -27,4 +27,17 @@ public abstract class AudioEvent {
             this(musicType, 1f);
         }
     }
+
+    @AllArgsConstructor
+    public static final class StopMusic extends AudioEvent {
+
+        public final MusicType musicType;
+
+        /**
+         * Stop all music that's been started as a {@link MusicType}
+         */
+        public StopMusic() {
+            this(null);
+        }
+    }
 }
