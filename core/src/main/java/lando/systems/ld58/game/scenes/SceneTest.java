@@ -13,6 +13,9 @@ import lando.systems.ld58.utils.Util;
 
 import java.util.stream.Collectors;
 
+import static lando.systems.ld58.game.Constants.BACKROUND_Z_LEVEL;
+import static lando.systems.ld58.game.Constants.FOREGROUND_Z_LEVEL;
+
 public class SceneTest extends Scene<GameScreen> {
 
     public static final Family SPAWNERS = Family.one(TilemapObject.Spawner.class).get();
@@ -54,8 +57,15 @@ public class SceneTest extends Scene<GameScreen> {
         // Create entities from tile layers
         for (var tileLayer : tilemap.layers) {
             var entity = Factory.createEntity();
-            entity.add(new Position(mapPosition));
-            entity.add(new TileLayer(tilemap, tileLayer));
+            float depth = 0;
+            switch (tileLayer.getName()) {
+                case "background": depth = BACKROUND_Z_LEVEL; break;
+                case "middle": depth = 0; break;
+                case "foreground": depth = FOREGROUND_Z_LEVEL; break;
+            }
+            entity.add(new Position(mapPosition.x,  mapPosition.y));
+
+            entity.add(new TileLayer(tilemap, tileLayer, depth));
             engine.addEntity(entity);
         }
 

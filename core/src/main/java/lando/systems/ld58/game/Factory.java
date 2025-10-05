@@ -67,6 +67,7 @@ public class Factory {
         var animBounds = Constants.GOOMBA_ANIMATOR_BOUNDS;
         var animOrigin = animBounds.getPosition(new Vector2());
         var animator = new Animator(AnimType.GOOMBA_NORMAL_IDLE, animOrigin);
+        animator.depth = 1;
         entity.add(animator);
         entity.add(new Outline(Color.YELLOW, Color.CLEAR, 1f));
         entity.add(new KirbyShaderRenderable());
@@ -120,7 +121,9 @@ public class Factory {
 
         entity.add(new Outline(Color.RED, Color.CLEAR, 1f));
         var animOrigin = new Vector2(16, 12);
-        entity.add(new Animator(AnimType.ANGRY_SUN, animOrigin));
+        var anim = new Animator(AnimType.ANGRY_SUN, animOrigin);
+        anim.depth = 1000;
+        entity.add(anim);
 
         var radius = 8f;
         var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
@@ -150,11 +153,12 @@ public class Factory {
     public static Entity background(ImageType imageType, Vector2 pos, Vector2 size) {
         var entity = createEntity();
 
-        var position = new Position(pos);
+        var position = new Position(pos.x, pos.y);
 
         var region = new TextureRegion(imageType.get());
         var image = new Image(region, size);
         image.tint.a = 0.75f;
+        image.depth = -1000;
 
         entity.add(position);
         entity.add(image);

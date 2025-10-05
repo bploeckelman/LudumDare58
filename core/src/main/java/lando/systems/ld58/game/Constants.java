@@ -19,6 +19,9 @@ public class Constants {
 
     public static final float GRAVITY = -500f;
 
+    public static final int BACKROUND_Z_LEVEL = -100;
+    public static final int FOREGROUND_Z_LEVEL = 100;
+
     public static final Rectangle GOOMBA_ANIMATOR_BOUNDS = new Rectangle(8, 0, 16, 16);
     public static final Rectangle GOOMBA_COLLIDER_BOUNDS = new Rectangle(-5, 0, 10, 14);
 

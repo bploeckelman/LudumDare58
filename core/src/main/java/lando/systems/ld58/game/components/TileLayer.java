@@ -11,9 +11,10 @@ public class TileLayer extends Renderable implements Component {
     public final Tilemap tilemap;
     public final TiledMapTileLayer tileLayer;
 
-    public TileLayer(Tilemap tilemap, TiledMapTileLayer tileLayer) {
+    public TileLayer(Tilemap tilemap, TiledMapTileLayer tileLayer, float depth) {
         this.tilemap = tilemap;
         this.tileLayer = tileLayer;
+        this.depth = depth;
     }
 
     public boolean isBackground() { return tileLayer.getName().equals("background"); }
