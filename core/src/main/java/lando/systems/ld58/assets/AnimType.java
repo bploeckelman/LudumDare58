@@ -19,7 +19,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , BILLY_WALK(Path.CHAR_BILLY)
     , BILLY_YELL(Path.CHAR_BILLY)
     // -- bullet bill -------------------------------------------
-    , BULLET_BILL(Path.CHAR_BULLET_BILL)
+    , BULLET_BILL_IDLE(Path.CHAR_BULLET_BILL)
     // -- captain-lou -------------------------------------------
     , CAPTAIN_LOU_IDLE(Path.CHAR_CAPTAIN_LOU)
     // -- koopa -------------------------------------------------
@@ -35,6 +35,12 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , GOOMBA_SQUISH(Path.CHAR_GOOMBA)
     // -- goomba-cyborg -----------------------------------------
     , GOOMBA_CYBORG_IDLE(Path.CHAR_GOOMBA_CYBORG)
+    // -- hammer-bro --------------------------------------------
+    , HAMMER_BRO_IDLE(Path.CHAR_HAMMER_BRO)
+    // -- koopa -------------------------------------------------
+    , KOOPA_IDLE(Path.CHAR_KOOPA)
+    // -- lakitu ------------------------------------------------
+    , LAKITU_IDLE(Path.CHAR_LAKITU)
     // -- mario -------------------------------------------------
     , MARIO_ATTACK(Path.CHAR_MARIO)
     , MARIO_FALL(Path.CHAR_MARIO)
@@ -74,7 +80,9 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
         private static final String CHAR_CAPTAIN_LOU   = CHARACTERS + "captain-lou/";
         private static final String CHAR_GOOMBA        = CHARACTERS + "goomba/";
         private static final String CHAR_GOOMBA_CYBORG = CHARACTERS + "goomba-cyborg/";
+        private static final String CHAR_HAMMER_BRO    = CHARACTERS + "hammer-bro/";
         private static final String CHAR_KOOPA         = CHARACTERS + "koopa/";
+        private static final String CHAR_LAKITU        = CHARACTERS + "lakitu/";
         private static final String CHAR_MARIO         = CHARACTERS + "mario/";
         private static final String CHAR_MISTY         = CHARACTERS + "misty/";
 

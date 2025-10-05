@@ -222,6 +222,121 @@ public class Factory {
         return entity;
     }
 
+    // TODO: fixup anim and collider bounds -------------------------------------------------------
+    public static Entity bulletBill(TilemapObject.Spawner spawner) {
+        if (!"bullet".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create bullet from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("BulletBill"));
+        entity.add(new EnemyBulletBill());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
+        var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.BULLET_BILL_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.MISTY_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+
+        return entity;
+    }
+    public static Entity hammerBro(TilemapObject.Spawner spawner) {
+        if (!"hammer".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create hammer-bro from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("HammerBro"));
+        entity.add(new EnemyHammerBro());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
+        var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.HAMMER_BRO_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.MISTY_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+
+        return entity;
+    }
+    public static Entity koopa(TilemapObject.Spawner spawner) {
+        if (!"koopa".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create koopa from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Koopa"));
+        entity.add(new EnemyKoopa());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
+        var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.KOOPA_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.MISTY_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+
+        return entity;
+    }
+    public static Entity lakitu(TilemapObject.Spawner spawner) {
+        if (!"lakitu".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create lakitu from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Lakitu"));
+        entity.add(new EnemyLakitu());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
+        var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.LAKITU_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.MISTY_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+
+        return entity;
+    }
+    // TODO: fixup anim and collider bounds -------------------------------------------------------
+
     public static Entity solid(String name, int x, int y, int w, int h) {
         var entity = createEntity();
 

@@ -96,7 +96,11 @@ public class ViewSystem extends IteratingSystem {
 
         // zoom to fit the boundary width
         if (zoomFit) {
-            camera.zoom = bounds.rect.width / camera.viewportWidth;
+            if (bounds.rect.width < camera.viewportWidth) {
+                camera.zoom = bounds.rect.width / camera.viewportWidth;
+            } else {
+                camera.zoom = 1.0f;
+            }
         }
 
         // get half dimensions of the camera viewport, adjusted for the zoom factor

@@ -27,8 +27,12 @@ public class SceneTest extends Scene<GameScreen> {
         var engine = screen.engine;
 
         // configure the camera to emulate a low res display
-        var width = 240;
-        var height = 160;
+        // TODO: continue playing with some options here,
+        //  probably best to stick with integer multiples of window size (1280x720)
+//        var width  = 360; // window size / 4  ;  // old: 240;
+//        var height = 180; // window size / 4  ;  // old: 160;
+        var width  = 640;
+        var height = 360;
         var camera = screen.worldCamera;
         camera.setToOrtho(false, width, height);
         camera.update();
@@ -88,6 +92,10 @@ public class SceneTest extends Scene<GameScreen> {
                 case "goomba": engine.addEntity(Factory.goombaCyborg(spawner)); break;
                 case "lou":    engine.addEntity(Factory.captainLou(spawner));   break;
                 case "misty":  engine.addEntity(Factory.misty(spawner));        break;
+                case "bullet": engine.addEntity(Factory.bulletBill(spawner));   break;
+                case "hammer": engine.addEntity(Factory.hammerBro(spawner));    break;
+                case "koopa":  engine.addEntity(Factory.koopa(spawner));        break;
+                case "lakitu": engine.addEntity(Factory.lakitu(spawner));       break;
                 default: {
                     this.player = Factory.player(spawner);
                     engine.addEntity(this.player);
