@@ -39,7 +39,8 @@ public class SceneTest extends Scene<GameScreen> {
         engine.addEntity(view);
 
         // Load the map
-        var mapPath = "maps/test.tmx";
+//        var mapPath = "maps/test.tmx";
+        var mapPath = "maps/test2.tmx";
         map = Factory.map(mapPath);
         var tilemap = Components.get(map, Tilemap.class);
         var mapPosition = Components.get(map, Position.class);
