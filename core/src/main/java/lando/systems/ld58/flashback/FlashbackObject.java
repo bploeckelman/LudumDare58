@@ -6,10 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class FlashbackObject {
-    public Rectangle bounds;
+    public Rectangle bounds = new Rectangle();
     public Animation<TextureRegion> animation;
     public float accum;
 
+    public FlashbackObject(Animation<TextureRegion> animation, Rectangle bounds) {
+        this.animation = animation;
+        this.bounds.set(bounds);
+    }
 
     public void update(float dt) {
         accum += dt;

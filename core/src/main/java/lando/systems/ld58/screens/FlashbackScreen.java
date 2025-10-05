@@ -1,6 +1,6 @@
 package lando.systems.ld58.screens;
 
-import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.*;
 import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -21,11 +22,13 @@ import com.github.tommyettinger.textra.Layout;
 import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
+import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.flashback.FlashbackObject;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
+import lando.systems.ld58.utils.accessors.RectangleAccessor;
 
 public class FlashbackScreen extends BaseScreen {
 
@@ -63,16 +66,36 @@ public class FlashbackScreen extends BaseScreen {
     }
 
     public void setUpPhase() {
+        dialog.restart("");
         switch(currentStage) {
             case PRESENT_DAY:
                 background = ImageType.BEDROOM.get();
                 messages.add("It was 10 years ago");
                 messages.add("I remember it all fondly");
+                Rectangle billyBounds = new Rectangle(14, 2, 1, 1);
+                var billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(), billyBounds);
+                Tween.to(billy.bounds, RectangleAccessor.X, 3f)
+                        .target(17).repeatYoyo(100, 1f).start(tween);
+                objects.add(billy);
                 break;
             case WIFE_LEAVES:
-                Tween.to(saturation, 1, .5f).target(.8f).ease(Linear.INOUT).start(tween);
+                deBounce = .5f;
+                Timeline.createSequence()
+                        .pushPause(.5f)
+                    .push(Tween.call((type, source) -> {
+                        messages.add("Misty left with the kids");
+                        messages.add("I didn't know how I would keep going.");
+
+                        dialog.restart(messages.get(0));
+                        messages.removeIndex(0);
+                    }))
+                        .push(Tween.to(saturation, 1, .5f).target(.8f).ease(Linear.INOUT))
+                    .start(tween);
                 break;
             case MUSHROOM:
+                objects.clear();
+                worldCamera.position.x = 25;
+                worldCamera.update();
                 background = ImageType.FLASHBACK_MUSHROOM.get();
                 break;
             case MARIO:
