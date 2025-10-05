@@ -15,6 +15,7 @@ public class Systems {
     public static InputSystem            input;
     public static InterpSystem           interp;
     public static MovementSystem         movement;
+    public static ParticleSystem         particles;
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
     public static ViewSystem             view;
@@ -31,6 +32,7 @@ public class Systems {
         Systems.input            = new InputSystem();
         Systems.interp           = new InterpSystem();
         Systems.movement         = new MovementSystem();
+        Systems.particles        = new ParticleSystem();
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
         Systems.view             = new ViewSystem();
@@ -44,6 +46,7 @@ public class Systems {
         engine.addSystem(input);
         engine.addSystem(interp);
         engine.addSystem(movement);
+        engine.addSystem(particles);
         engine.addSystem(renderDebug);
         engine.addSystem(render);
         engine.addSystem(view);
