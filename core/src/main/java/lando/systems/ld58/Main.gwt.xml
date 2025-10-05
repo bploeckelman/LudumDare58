@@ -15,6 +15,8 @@
   <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.assets" />
   <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.game.components" />
   <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.game.components.collision" />
+  <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.particles" />
+  <extend-configuration-property name="gdx.reflect.include" value="lando.systems.ld58.particles.effects" />
   <extend-configuration-property name="gdx.reflect.include" value="com.github.tommyettinger.gdcrux" />
 
 </module>

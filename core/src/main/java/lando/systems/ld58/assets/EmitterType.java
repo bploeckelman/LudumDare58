@@ -27,7 +27,6 @@ public enum EmitterType implements AssetType<ParticleEffect> {
         return container.get(this);
     }
 
-
     public static void init(Assets assets) {
         for (var type : EmitterType.values()) {
             try {

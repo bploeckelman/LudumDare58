@@ -58,6 +58,7 @@ public class Assets implements Disposable {
         assetClasses.add(AnimType.class);
         assetClasses.add(ColorType.class);
         assetClasses.add(EffectType.class);
+        assetClasses.add(EmitterType.class);
         assetClasses.add(FontType.class);
         assetClasses.add(IconType.class);
         assetClasses.add(ImageType.class);

@@ -9,12 +9,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.Assets;
+import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
 import lando.systems.ld58.game.components.enemies.EnemyMario;
 import lando.systems.ld58.game.components.renderable.*;
+import lando.systems.ld58.particles.ParticleEffectParams;
 import lando.systems.ld58.screens.BaseScreen;
 
 public class Factory {
@@ -196,6 +198,18 @@ public class Factory {
         entity.add(name);
         entity.add(viewer);
         entity.add(interp);
+
+        return entity;
+    }
+
+    public static Entity emitter(EmitterType type, ParticleEffectParams params) {
+        var entity = createEntity();
+
+        var name = new Name("emitter-"+type.name().toLowerCase());
+        var emitter = new Emitter(type, params);
+
+        entity.add(name);
+        entity.add(emitter);
 
         return entity;
     }

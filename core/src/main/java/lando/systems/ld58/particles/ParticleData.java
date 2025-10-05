@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
 import lando.systems.ld58.utils.SimplePath;
 
-public class Particle implements Pool.Poolable {
+public class ParticleData implements Pool.Poolable {
 
     // TODO: add additional interpolators so that some properties can be interpolated independent of others (alpha vs anim for exaample)
     // TODO: add a 'drop shadow' flag to particle and initializer to improve readability for things like text particles
@@ -19,135 +19,76 @@ public class Particle implements Pool.Poolable {
     // eg. sizes[{10,10}, {20, 20}, {10, 10}] would interpolate to twice the size by halfway through its lifetime, then back down to initial size by the end, scale this across an arbitrary number of values
 
 
-    public static Initializer initializer(Particle particle) {
-        return new Initializer(particle);
+    public static Initializer initializer(ParticleData particleData) {
+        return new Initializer(particleData);
     }
 
-    private SimplePath path;
-    private Interpolation interpolation;
+    public SimplePath path;
+    public Interpolation interpolation;
 
-    private TextureRegion keyframe;
+    public TextureRegion keyframe;
 
-    private Animation<TextureRegion> animation;
-    private float animTime;
-    private boolean animUnlocked;
+    public Animation<TextureRegion> animation;
+    public float animTime;
+    public boolean animUnlocked;
 
-    private float xStart;
-    private float yStart;
-    private Vector2 position;
+    public float xStart;
+    public float yStart;
 
-    private boolean targeted;
-    private float xTarget;
-    private float yTarget;
+    public boolean targeted;
+    public float xTarget;
+    public float yTarget;
 
-    private Vector2 velocity;
-    private float bounceScale;
+    public Vector2 velocity;
+    public float bounceScale;
 
-    private Vector2 accel;
-    private float accDamp;
+    public Vector2 accel;
+    public float accDamp;
 
-    private float widthStart;
-    private float widthEnd;
-    private float width;
+    public float widthStart;
+    public float widthEnd;
+    public float width;
 
-    private float heightStart;
-    private float heightEnd;
-    private float height;
+    public float heightStart;
+    public float heightEnd;
+    public float height;
 
-    private float rotationStart;
-    private float rotationEnd;
-    private float rotation;
+    public float rotationStart;
+    public float rotationEnd;
+    public float rotation;
 
-    private float rStart, gStart, bStart, aStart;
-    private float rEnd, gEnd, bEnd, aEnd;
-    private float r, g, b, a;
+    public float rStart, gStart, bStart, aStart;
+    public float rEnd, gEnd, bEnd, aEnd;
+    public float r, g, b, a;
 
-    private boolean timed;
+    public boolean timed;
     public float ttlMax;
     public float ttl;
 
-    private boolean dead;
-    private boolean persistent;
-    private Circle collisionBounds;
-    private Rectangle collisionRect;
+    public boolean dead;
+    public boolean persistent;
+    public Circle collisionBounds;
+    public Rectangle collisionRect;
 
-    public Particle() {
+    public ParticleData() {
         velocity = new Vector2();
-        position = new Vector2();
         accel = new Vector2();
         collisionBounds = new Circle();
         collisionRect = new Rectangle();
         reset();
     }
 
-    public void update(float dt) {
-        float lifetime, progress;
-        if (timed) {
-            ttl -= dt;
-            if (ttl <= 0f && !persistent) {
-                dead = true;
-            }
-            lifetime = MathUtils.clamp(ttl / ttlMax , 0f, 1f);
-        } else {
-            ttl += dt;
-            lifetime = MathUtils.clamp(ttl, 0f, 1f);
-        }
-        progress = interpolation.apply(0f, 1f, MathUtils.clamp(1f - lifetime, 0f, 1f));
-
-        if (animation != null) {
-            if (!persistent && !animUnlocked && timed) {
-                animTime = progress * animation.getAnimationDuration();
-            } else {
-                animTime += dt;
-            }
-            keyframe = animation.getKeyFrame(animTime);
-        }
-
-        if (path != null) {
-            // https://github.com/libgdx/libgdx/wiki/Path-interface-and-Splines#make-the-sprite-traverse-at-constant-speed
-            Vector2 pathPos = path.derivativeAt(progress);
-            float arcLengthProgress = progress + (dt * ttl / path.spanCount()) / pathPos.len();
-            pathPos.set(path.valueAt(arcLengthProgress));
-            position.x = pathPos.x;
-            position.y = pathPos.y;
-        } else if (targeted) {
-            position.x = MathUtils.lerp(xStart, xTarget, progress);
-            position.y = MathUtils.lerp(yStart, yTarget, progress);
-        } else {
-            accel.x *= accDamp;
-            accel.y *= accDamp;
-            if (MathUtils.isEqual(accel.x, 0f, 0.01f)) accel.x = 0f;
-            if (MathUtils.isEqual(accel.y, 0f, 0.01f)) accel.y = 0f;
-
-            velocity.x += accel.x * dt;
-            velocity.y += accel.y * dt;
-
-            position.x += velocity.x * dt;
-            position.y += velocity.y * dt;
-        }
-
-        width  = MathUtils.lerp(widthStart,  widthEnd,  progress);
-        height = MathUtils.lerp(heightStart, heightEnd, progress);
-
-        rotation = MathUtils.lerp(rotationStart, rotationEnd, progress);
-
-        r = MathUtils.lerp(rStart, rEnd, progress);
-        g = MathUtils.lerp(gStart, gEnd, progress);
-        b = MathUtils.lerp(bStart, bEnd, progress);
-        a = MathUtils.lerp(aStart, aEnd, progress);
-        collisionRect.set(position.x - width/2, position.y - height/2, width, height);
-    }
-
-    public void render(SpriteBatch batch) {
-        if (keyframe == null) return;
-        batch.setColor(r, g, b, a);
-        batch.draw(keyframe,
-            position.x - width / 2f, position.y - height / 2f,
-            width / 2f, height / 2f,
-            width, height, 1f, 1f,
-            rotation);
-        batch.setColor(1f, 1f, 1f, 1f);
-    }
+//    @Deprecated(since = "use renderable component")
+//    public void render(SpriteBatch batch) {
+//        if (keyframe == null) return;
+//        batch.setColor(r, g, b, a);
+//        batch.draw(keyframe,
+//            position.x - width / 2f, position.y - height / 2f,
+//            width / 2f, height / 2f,
+//            width, height, 1f, 1f,
+//            rotation);
+//        batch.setColor(1f, 1f, 1f, 1f);
+//    }
 
     public boolean isDead() {
         return dead;
@@ -166,7 +107,6 @@ public class Particle implements Pool.Poolable {
 
         this.xStart = 0f;
         this.yStart = 0f;
-        this.position.set(0,0);
 
         this.targeted = false;
         this.xTarget = 0f;
@@ -216,7 +156,7 @@ public class Particle implements Pool.Poolable {
 
     public static class Initializer {
 
-        private final Particle particle;
+        private final ParticleData particleData;
 
         private SimplePath path = null;
         private TextureRegion keyframe = null;
@@ -267,9 +207,9 @@ public class Particle implements Pool.Poolable {
         private boolean timed = false;
         private float ttlMax = 0f;
 
-        public Initializer(Particle particle) {
-            this.particle = particle;
-            this.particle.reset();
+        public Initializer(ParticleData particleData) {
+            this.particleData = particleData;
+            this.particleData.reset();
         }
 
         public Initializer interpolation(Interpolation interpolation) {
@@ -428,84 +368,83 @@ public class Particle implements Pool.Poolable {
             return this;
         }
 
-        public Particle init() {
+        public ParticleData init() {
             if (keyframe  != null) {
-                particle.keyframe  = keyframe;
+                particleData.keyframe  = keyframe;
             }
             if (animation != null) {
-                particle.animation = animation;
-                particle.animTime = 0f;
-                particle.animUnlocked = animUnlocked;
+                particleData.animation = animation;
+                particleData.animTime = 0f;
+                particleData.animUnlocked = animUnlocked;
             }
             if (path != null) {
                 if (!timed) {
                     throw new GdxRuntimeException("Particles with a path must also have a time to live, is your Particle.Initializer missing a call to timeToLive()?");
                 }
-                particle.path = path;
+                particleData.path = path;
             }
             if (interpolation != null) {
-                particle.interpolation = interpolation;
+                particleData.interpolation = interpolation;
             }
 
-            particle.xStart = xStart;
-            particle.yStart = yStart;
-            particle.position.set(xStart, yStart);
+            particleData.xStart = xStart;
+            particleData.yStart = yStart;
 
-            particle.targeted = targeted;
-            particle.xTarget = xTarget;
-            particle.yTarget = yTarget;
+            particleData.targeted = targeted;
+            particleData.xTarget = xTarget;
+            particleData.yTarget = yTarget;
             if (targeted && !timed) {
                 throw new GdxRuntimeException("Particles with a target must also have a time to live, is your Particle.Initializer missing a call to timeToLive()?");
             }
 
-            particle.velocity.set(xVel, yVel);
-            particle.bounceScale = bounceScale;
+            particleData.velocity.set(xVel, yVel);
+            particleData.bounceScale = bounceScale;
 
-            particle.accel.set(xAcc, yAcc);
-            particle.accDamp = accDamp;
+            particleData.accel.set(xAcc, yAcc);
+            particleData.accDamp = accDamp;
 
-            particle.widthStart = widthStart;
-            particle.widthEnd = (setWidthEnd) ? widthEnd : widthStart;
-            particle.width = widthStart;
+            particleData.widthStart = widthStart;
+            particleData.widthEnd = (setWidthEnd) ? widthEnd : widthStart;
+            particleData.width = widthStart;
 
-            particle.heightStart = heightStart;
-            particle.heightEnd = (setHeightEnd) ? heightEnd : heightStart;
-            particle.height = heightStart;
+            particleData.heightStart = heightStart;
+            particleData.heightEnd = (setHeightEnd) ? heightEnd : heightStart;
+            particleData.height = heightStart;
 
-            if ((particle.widthStart  == 0f && particle.widthEnd  == 0f)
-                || (particle.heightStart == 0f && particle.heightEnd == 0f)) {
+            if ((particleData.widthStart  == 0f && particleData.widthEnd  == 0f)
+                || (particleData.heightStart == 0f && particleData.heightEnd == 0f)) {
                 Gdx.app.log("WARN", "A particle has been created with degenerate size (starting and ending width or height both equal zero), you probably didn't mean to do this as this means the particle won't be visible");
             }
 
-            particle.rotationStart = rotationStart;
-            particle.rotationEnd = (setRotationEnd) ? rotationEnd : rotationStart;
-            particle.rotation = rotationStart;
+            particleData.rotationStart = rotationStart;
+            particleData.rotationEnd = (setRotationEnd) ? rotationEnd : rotationStart;
+            particleData.rotation = rotationStart;
 
-            particle.rStart = rStart;
-            particle.gStart = gStart;
-            particle.bStart = bStart;
-            particle.aStart = aStart;
-            particle.rEnd = (setColorEnd) ? rEnd : rStart;
-            particle.gEnd = (setColorEnd) ? gEnd : gStart;
-            particle.bEnd = (setColorEnd) ? bEnd : bStart;
-            particle.aEnd = (setColorEnd || setAlphaEnd) ? aEnd : aStart;
-            particle.r = rStart;
-            particle.g = gStart;
-            particle.b = bStart;
-            particle.a = aStart;
+            particleData.rStart = rStart;
+            particleData.gStart = gStart;
+            particleData.bStart = bStart;
+            particleData.aStart = aStart;
+            particleData.rEnd = (setColorEnd) ? rEnd : rStart;
+            particleData.gEnd = (setColorEnd) ? gEnd : gStart;
+            particleData.bEnd = (setColorEnd) ? bEnd : bStart;
+            particleData.aEnd = (setColorEnd || setAlphaEnd) ? aEnd : aStart;
+            particleData.r = rStart;
+            particleData.g = gStart;
+            particleData.b = bStart;
+            particleData.a = aStart;
 
-            if (particle.aStart == 0f && particle.aEnd == 0f) {
+            if (particleData.aStart == 0f && particleData.aEnd == 0f) {
                 Gdx.app.log("WARN", "A particle has been created with degenerate alpha (starting and ending alpha both equal zero), you probably didn't mean to do this as this means the particle won't be visible");
             }
 
-            particle.timed = timed;
-            particle.ttlMax = ttlMax;
-            particle.ttl = ttlMax;
+            particleData.timed = timed;
+            particleData.ttlMax = ttlMax;
+            particleData.ttl = ttlMax;
 
-            particle.persistent = persistent;
-            particle.dead = false;
+            particleData.persistent = persistent;
+            particleData.dead = false;
 
-            return particle;
+            return particleData;
         }
 
     }

@@ -2,7 +2,8 @@ package lando.systems.ld58.game.components;
 
 import com.badlogic.ashley.core.Component;
 import lando.systems.ld58.assets.EmitterType;
-import lando.systems.ld58.particles.Particle;
+import lando.systems.ld58.game.components.renderable.Renderable;
+import lando.systems.ld58.particles.ParticleData;
 import lando.systems.ld58.particles.ParticleEffect;
 import lando.systems.ld58.particles.ParticleEffectParams;
 
@@ -21,7 +22,7 @@ public class Emitter extends Renderable implements Component {
         this.params = params;
     }
 
-    public List<Particle> spawn() {
+    public List<ParticleData> spawn() {
         return effect.spawn(params);
     }
 }
