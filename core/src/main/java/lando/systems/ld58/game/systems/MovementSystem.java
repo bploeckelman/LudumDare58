@@ -77,9 +77,6 @@ public class MovementSystem extends IteratingSystem {
             moveTotal.x - movePixelsX,
             moveTotal.y - movePixelsY);
 
-        // Some entities can wrap around the screen horizontally, is this one?
-        var canScreenWrap = (mapBounds != null) && Components.has(entity, Player.class);
-
         // X-Axis: try to move, a pixel at a time -----------------------------
         if (collider.isEmpty()) {
             position.x += movePixelsX;
@@ -89,24 +86,6 @@ public class MovementSystem extends IteratingSystem {
             var sign = Calc.sign(movePixelsX);
             while (movePixelsX != 0) {
                 var hitEntity = collisionCheckSystem.getFirstOverlappingEntity(entity, sign, 0);
-
-                // Also check for collision on the opposite side of the screen
-                // if this is a player that has moved across a screen edge
-                if (hitEntity == null && canScreenWrap) {
-                    var nextX = position.x + sign;
-
-                    // If moving would take us past left edge, check for collisions on the right side
-                    if (nextX < mapBounds.left()) {
-                        var wrapX = (int) mapBounds.right();
-                        hitEntity = collisionCheckSystem.getFirstOverlappingEntity(entity, wrapX - position.x, 0);
-                    }
-                    // If moving would take us past right edge, check for collisions on the left side
-                    else if (nextX > mapBounds.right()) {
-                        var wrapX = (int) mapBounds.left();
-                        hitEntity = collisionCheckSystem.getFirstOverlappingEntity(entity, wrapX - position.x, 0);
-                    }
-                }
-
                 if (hitEntity != null) {
                     var collisionEvent = CollisionEvent.move(entity, hitEntity, sign, 0);
                     Signals.collision.dispatch(collisionEvent);
@@ -116,16 +95,7 @@ public class MovementSystem extends IteratingSystem {
                 }
 
                 movePixelsX -= sign;
-
-                // Move to next x position, but wrap around the screen if appropriate
-                var nextX = position.x + sign;
-                if (canScreenWrap) {
-                    if      (nextX < mapBounds.left())  position.x = (int) mapBounds.right();
-                    else if (nextX > mapBounds.right()) position.x = (int) mapBounds.left();
-                    else                                position.x = nextX;
-                } else {
-                    position.x = nextX;
-                }
+                position.x += sign;
             }
         }
 
