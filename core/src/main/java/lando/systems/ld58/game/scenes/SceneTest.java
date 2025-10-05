@@ -38,8 +38,8 @@ public class SceneTest extends Scene<GameScreen> {
         engine.addEntity(view);
 
         // Load the map
-//        var mapPath = "maps/test.tmx";
-        var mapPath = "maps/test2.tmx";
+        var mapPath = "maps/test.tmx";
+//        var mapPath = "maps/test2.tmx";
         map = Factory.map(mapPath);
         var tilemap = Components.get(map, Tilemap.class);
         var mapPosition = Components.get(map, Position.class);
@@ -87,6 +87,7 @@ public class SceneTest extends Scene<GameScreen> {
                 case "sun":    engine.addEntity(Factory.angrySun(spawner));     break;
                 case "goomba": engine.addEntity(Factory.goombaCyborg(spawner)); break;
                 case "lou":    engine.addEntity(Factory.captainLou(spawner));   break;
+                case "misty":  engine.addEntity(Factory.misty(spawner));        break;
                 default: {
                     this.player = Factory.player(spawner);
                     engine.addEntity(this.player);

@@ -13,10 +13,7 @@ import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
-import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
-import lando.systems.ld58.game.components.enemies.EnemyCaptainLou;
-import lando.systems.ld58.game.components.enemies.EnemyGoombaCyborg;
-import lando.systems.ld58.game.components.enemies.EnemyMario;
+import lando.systems.ld58.game.components.enemies.*;
 import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.Image;
 import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
@@ -190,6 +187,35 @@ public class Factory {
         entity.add(anim);
 
         var colliderBounds = Constants.CAPTAIN_LOU_COLLIDER_BOUNDS;
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity misty(TilemapObject.Spawner spawner) {
+        if (!"misty".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create misty from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Misty"));
+        entity.add(new EnemyMisty());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Velocity(0, 0));
+        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Gravity(Constants.GRAVITY));
+
+        entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
+        var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
+        var anim = new Animator(AnimType.MISTY_IDLE);
+        anim.origin.set(animBounds.x, animBounds.y);
+        anim.size.set(animBounds.width, animBounds.height);
+        entity.add(anim);
+
+        var colliderBounds = Constants.MISTY_COLLIDER_BOUNDS;
         var collidesWith  = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.PLAYER };
         entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
 

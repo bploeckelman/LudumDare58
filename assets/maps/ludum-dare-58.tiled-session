@@ -27,7 +27,7 @@
             }
         },
         "tilesets/mario.tsx": {
-            "scaleInDock": 1,
+            "scaleInDock": 0.75,
             "scaleInEditor": 1
         }
     },

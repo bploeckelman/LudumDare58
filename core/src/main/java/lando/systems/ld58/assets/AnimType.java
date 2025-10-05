@@ -44,18 +44,22 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , MARIO_JUMP(Path.CHAR_MARIO)
     , MARIO_POWER_ATTACK(Path.CHAR_MARIO)
     , MARIO_WALK(Path.CHAR_MARIO)
+    // -- misty -------------------------------------------------
+    , MISTY_IDLE(Path.CHAR_MISTY)
+    , MISTY_TALK(Path.CHAR_MISTY)
     ;
 
     private static class Path {
         private static final String CHARACTERS = "characters/";
-        private static final String CHAR_ANGRY_SUN = CHARACTERS + "angry-sun/";
-        private static final String CHAR_BILLY = CHARACTERS + "billy/";
-        private static final String CHAR_BULLET_BILL = CHARACTERS + "bullet-bill/";
-        private static final String CHAR_CAPTAIN_LOU = CHARACTERS + "captain-lou/";
-        private static final String CHAR_GOOMBA = CHARACTERS + "goomba/";
+        private static final String CHAR_ANGRY_SUN     = CHARACTERS + "angry-sun/";
+        private static final String CHAR_BILLY         = CHARACTERS + "billy/";
+        private static final String CHAR_BULLET_BILL   = CHARACTERS + "bullet-bill/";
+        private static final String CHAR_CAPTAIN_LOU   = CHARACTERS + "captain-lou/";
+        private static final String CHAR_GOOMBA        = CHARACTERS + "goomba/";
         private static final String CHAR_GOOMBA_CYBORG = CHARACTERS + "goomba-cyborg/";
-        private static final String CHAR_KOOPA  = CHARACTERS + "koopa/";
-        private static final String CHAR_MARIO  = CHARACTERS + "mario/";
+        private static final String CHAR_KOOPA         = CHARACTERS + "koopa/";
+        private static final String CHAR_MARIO         = CHARACTERS + "mario/";
+        private static final String CHAR_MISTY         = CHARACTERS + "misty/";
 
         private static final String OBJECTS = "objects/";
         private static final String OBJ_COIN = OBJECTS + "coin/";

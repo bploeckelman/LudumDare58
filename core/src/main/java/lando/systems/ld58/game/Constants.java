@@ -42,6 +42,9 @@ public class Constants {
     public static final Rectangle CAPTAIN_LOU_ANIMATOR_BOUNDS = new Rectangle(louWidth / 2f, scale * 15f, louWidth, louHeight);
     public static final Rectangle CAPTAIN_LOU_COLLIDER_BOUNDS = new Rectangle(-(scale * 150f) / 2f, 0f, scale * 150f, scale * 85f);
 
-    public static final Rectangle GOOMBA_CYBORG_ANIMATOR_BOUNDS = new Rectangle(16, 8, 32, 32);
+    public static final Rectangle GOOMBA_CYBORG_ANIMATOR_BOUNDS = new Rectangle(16, 5, 32, 32);
     public static final Rectangle GOOMBA_CYBORG_COLLIDER_BOUNDS = new Rectangle(-8, 0, 16, 20);
+
+    public static final Rectangle MISTY_ANIMATOR_BOUNDS = new Rectangle(16, 0, 32, 32);
+    public static final Rectangle MISTY_COLLIDER_BOUNDS = new Rectangle(-8, 0, 16, 20);
 }
