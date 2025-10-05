@@ -25,7 +25,10 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.flashback.FlashbackObject;
+import lando.systems.ld58.game.Signals;
+import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 import lando.systems.ld58.utils.accessors.RectangleAccessor;
@@ -51,7 +54,7 @@ public class FlashbackScreen extends BaseScreen {
     public TypingLabel dialog;
 
     public FlashbackScreen() {
-        font = FontType.COUSINE.font("large");
+        font = FontType.ROUNDABOUT.font("large");
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
 
@@ -61,7 +64,7 @@ public class FlashbackScreen extends BaseScreen {
         dialog.setWrap(true);
         dialog.setAlignment(Align.center);
         dialog.setBounds(200, Config.window_height/2f, Config.window_width - 400, Config.window_height/3f);
-
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.DIRGE, 0.25f));
         setUpPhase();
     }
 
@@ -70,8 +73,8 @@ public class FlashbackScreen extends BaseScreen {
         switch(currentStage) {
             case PRESENT_DAY:
                 background = ImageType.BEDROOM.get();
-                messages.add("It was 10 years ago");
-                messages.add("I remember it all fondly");
+                messages.add("Wow... 10 years already?");
+//                messages.add("Feels like it was only yesterday...");
                 Rectangle billyBounds = new Rectangle(14, 2, 1, 1);
                 var billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(), billyBounds);
                 Tween.to(billy.bounds, RectangleAccessor.X, 3f)
@@ -83,8 +86,9 @@ public class FlashbackScreen extends BaseScreen {
                 Timeline.createSequence()
                         .pushPause(.5f)
                     .push(Tween.call((type, source) -> {
-                        messages.add("Misty left with the kids");
-                        messages.add("I didn't know how I would keep going.");
+                        messages.add("When Misty left with the kids, I thought my life was over");
+//                        messages.add("I thought my life was over.");
+                        messages.add("I didn't realize it was only the beginning!");
 
                         dialog.restart(messages.get(0));
                         messages.removeIndex(0);
@@ -97,12 +101,32 @@ public class FlashbackScreen extends BaseScreen {
                 worldCamera.position.x = 25;
                 worldCamera.update();
                 background = ImageType.FLASHBACK_MUSHROOM.get();
+                messages.add("That mushroom changed my whole perspective");
+                messages.add("I got Super powers...");
+                messages.add("I could JUMP...");
+                messages.add("Saw things I could never have imagined.");
+                messages.add("Places...");
+                messages.add("Secrets...");
                 break;
             case MARIO:
                 background = ImageType.FLASHBACK_MARIOS.get();
+
                 break;
             case SANCTUM:
                 background = ImageType.CADRE_ROOM.get();
+                messages.add(
+                    "A cabal of boss enemies from across a wide range of game franchises");
+                messages.add(
+                    "Keeping the Mushroom Kingdom in balance by growing and then releasing a near-endless army of Marios into our ecosystem...");
+                messages.add(
+                    "Which is a premise so absurd it could only have come out of Ludum Dare 33");
+                messages.add(
+                    "Where the theme \"you are the monster\" inspired a plucky team of developers to create a game where you are a goomba whose wife left him, inspiring him toward adventure");
+                messages.add("Anyway, I was that goomba.");
+                messages.add("I ate a mushroom, hijinks ensued, and I ended up " +
+                    "getting inducted into the cabal.");
+                messages.add("But that was a long time ago. \n\nMust have been, what...");
+                messages.add("Wow... 10 years already?");
                 break;
             case EXIT:
                 break;
