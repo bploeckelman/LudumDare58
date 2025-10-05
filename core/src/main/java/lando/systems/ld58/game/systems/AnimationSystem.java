@@ -40,12 +40,7 @@ public class AnimationSystem extends IteratingSystem implements Listener<Animati
         // Apply facing
         anim.scale.set(anim.facing * sx, sy);
 
-        var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
-        if (kirby != null) {
-            // This should go somewhere else I think.
-            kirby.accum += delta;
-            kirby.strength((float)Math.cos(kirby.accum));
-        }
+
     }
 
     @Override

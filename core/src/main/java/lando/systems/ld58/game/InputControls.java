@@ -9,12 +9,12 @@ public class InputControls {
 
     public final int left;
     public final int right;
-    public final int action;
+    public final int jump;
     public final int debug;
 
     public int left() { return left; }
     public int right() { return right; }
-    public int action() { return action; }
+    public int jump() { return jump; }
     public int debug() { return debug; }
 
     public static InputControls forPlayer(Player player) {

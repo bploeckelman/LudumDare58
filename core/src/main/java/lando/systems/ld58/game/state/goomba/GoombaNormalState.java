@@ -15,8 +15,11 @@ import lando.systems.ld58.utils.Calc;
 
 public class GoombaNormalState extends PlayerState {
 
+    public static float COYOTE_TIME = .25f;
+
     private boolean isGrounded;
     private boolean wasGrounded;
+    private float lastOnGround;
 
     public GoombaNormalState(Engine engine, Entity entity) {
         super(engine, entity);
@@ -37,6 +40,7 @@ public class GoombaNormalState extends PlayerState {
 
         // Set the correct 'base' animation, may be overridden later
         if (isGrounded) {
+            lastOnGround = 0;
             // Only play the walk animation if the player is actually moving,
             // play idle if they're pushing against a collider that's blocking them
             var moving           = (velocity().value.x != 0);
@@ -47,6 +51,8 @@ public class GoombaNormalState extends PlayerState {
 
             var animType = actuallyMoving ? AnimType.GOOMBA_NORMAL_WALK : AnimType.GOOMBA_NORMAL_IDLE;
             Signals.animStart.dispatch(new AnimationEvent.Play(animator(), animType));
+        } else {
+            lastOnGround += delta;
         }
 
         handleMovement(delta);
@@ -96,7 +102,7 @@ public class GoombaNormalState extends PlayerState {
 
         var jumpRequested = input.wasActionPressed;
         if (jumpRequested && cooldowns.isReady("jump")) {
-            if (isGrounded && player.jumpState() == Player.JumpState.GROUNDED) {
+            if ((isGrounded || lastOnGround < COYOTE_TIME) && player.jumpState() == Player.JumpState.GROUNDED) {
                 // start a new jump!
                 player.jumpState(Player.JumpState.JUMPED);
 

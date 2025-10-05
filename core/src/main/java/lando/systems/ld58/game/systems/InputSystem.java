@@ -38,8 +38,8 @@ public class InputSystem extends IteratingSystem {
         var controls = InputControls.forPlayer(player);
 
         // Collect key input --------------------------------------------------
-        input.wasActionPressed = Gdx.input.isKeyJustPressed(controls.action());
-        input.isActionHeld     = Gdx.input.isKeyPressed(controls.action());
+        input.wasActionPressed = Gdx.input.isKeyJustPressed(controls.jump());
+        input.isJumpHeld     = Gdx.input.isKeyPressed(controls.jump());
         input.isMoveLeftHeld   = Gdx.input.isKeyPressed(controls.left());
         input.isMoveRightHeld  = Gdx.input.isKeyPressed(controls.right());
 
@@ -48,16 +48,16 @@ public class InputSystem extends IteratingSystem {
             var deadzone = 0.2f;
             var mapping = controller.getMapping();
 
-            var actionButtonDown = controller.getButton(mapping.buttonA);
-            var action = !input.wasControllerActionButtonDown && actionButtonDown;
+            var jumpButtonDown = controller.getButton(mapping.buttonA);
+            var jump = !input.wasControllerJumpButtonDown && jumpButtonDown;
 
-            input.wasControllerActionButtonDown = actionButtonDown;
-            input.wasActionPressed              = input.wasActionPressed || action;
+            input.wasControllerJumpButtonDown = jumpButtonDown;
+            input.wasActionPressed              = input.wasActionPressed || jump;
 
             var moveLeft  = controller.getButton(mapping.buttonDpadLeft)  || controller.getAxis(mapping.axisLeftX) < -deadzone;
             var moveRight = controller.getButton(mapping.buttonDpadRight) || controller.getAxis(mapping.axisLeftX) >  deadzone;
 
-            input.isActionHeld    = input.isActionHeld    || action;
+            input.isJumpHeld      = input.isJumpHeld      || jump;
             input.isMoveLeftHeld  = input.isMoveLeftHeld  || moveLeft;
             input.isMoveRightHeld = input.isMoveRightHeld || moveRight;
         }

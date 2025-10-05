@@ -7,11 +7,11 @@ import lombok.ToString;
 public class Input implements Component {
 
     public int moveDirX;
-    public boolean isActionHeld;
+    public boolean isJumpHeld;
     public boolean isMoveLeftHeld;
     public boolean isMoveRightHeld;
     public boolean wasActionPressed;
-    public boolean wasControllerActionButtonDown;
+    public boolean wasControllerJumpButtonDown;
 
     public Input() {}
 
@@ -19,9 +19,9 @@ public class Input implements Component {
         this.moveDirX = moveDirX;
         this.isMoveLeftHeld = isMoveLeftHeld;
         this.isMoveRightHeld = isMoveRightHeld;
-        this.isActionHeld = isActionHeld;
+        this.isJumpHeld = isActionHeld;
         this.wasActionPressed = wasActionPressed;
-        this.wasControllerActionButtonDown = false;
+        this.wasControllerJumpButtonDown = false;
     }
 
     public static Input empty() {
@@ -31,9 +31,9 @@ public class Input implements Component {
     public void reset() {
         isMoveLeftHeld = false;
         isMoveRightHeld = false;
-        isActionHeld = false;
+        isJumpHeld = false;
         wasActionPressed = false;
-        wasControllerActionButtonDown = false;
+        wasControllerJumpButtonDown = false;
         moveDirX = 0;
     }
 }

@@ -45,6 +45,18 @@ public class RenderSystem extends EntitySystem {
         renderables = engine.getEntitiesFor(RENDERABLES);
     }
 
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        for (var entity : renderables) {
+            var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
+            if (kirby != null) {
+                kirby.accum += deltaTime;
+                kirby.strength((float)Math.cos(kirby.accum));
+            }
+        }
+    }
+
     public void draw(SpriteBatch batch) {
         Util.streamOf(tileLayers).filter(TileLayer::isBackground).findFirst().ifPresent(tileLayer -> renderTileLayer(batch, tileLayer));
         Util.streamOf(tileLayers).filter(TileLayer::isMiddle).findFirst().ifPresent(tileLayer -> renderTileLayer(batch, tileLayer));
