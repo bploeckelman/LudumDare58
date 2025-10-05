@@ -14,9 +14,13 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.tommyettinger.textra.Font;
+import com.github.tommyettinger.textra.Layout;
+import com.github.tommyettinger.textra.TypingLabel;
 import com.kotcrab.vis.ui.VisUI;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.EffectType;
+import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.SkinType;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.screens.*;
@@ -39,6 +43,7 @@ public class Main extends Game {
     public Engine engine;
 
     public BaseScreen currentScreen;
+    Layout layout;
 
     public Main() {
         Main.game = this;
@@ -47,6 +52,7 @@ public class Main extends Game {
     @Override
     public void create() {
         Time.init();
+        layout = new Layout();
 
         assets = new Assets();
         Transition.init(assets);
@@ -131,6 +137,15 @@ public class Main extends Game {
             currentScreen.renderOffscreenBuffers(assets.batch);
             currentScreen.render(Time.delta);
         }
+
+        assets.batch.begin();
+        Font font = FontType.COUSINE.font();
+        layout.font(font);
+        layout.clear();
+        font.markup("FPS: " + Gdx.graphics.getFramesPerSecond(), layout);
+        font.drawGlyphs(assets.batch, layout, 0, Config.window_height - 20);
+
+        assets.batch.end();
     }
 
     @Override
