@@ -83,4 +83,9 @@ public class Components {
         }
         return mapper.has(entity);
     }
+
+    public static boolean hasEnemyComponent(Entity entity) {
+        return Components.has(entity, EnemyMario.class)
+            || Components.has(entity, EnemyAngrySun.class);
+    }
 }

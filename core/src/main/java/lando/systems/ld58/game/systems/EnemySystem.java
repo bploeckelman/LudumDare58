@@ -37,12 +37,11 @@ public class EnemySystem extends IteratingSystem {
         var anim = Components.get(entity, Animator.class);
         var vel = Components.get(entity, Velocity.class);
         var col = Components.get(entity, Collider.class);
-        var speed = 300f;
 
         switch (mario.state) {
             case IDLE: {
                 if (mario.stateTime < 2f) {
-                    vel.stop();
+                    // NOTE: don't stop, just allow friction to apply
                     anim.play(AnimType.MARIO_IDLE);
                 } else {
                     mario.stateTime = 0f;
@@ -50,9 +49,10 @@ public class EnemySystem extends IteratingSystem {
                     mario.direction = MathUtils.randomSign();
                 }
             } break;
+
             case PATROL: {
                 if (mario.stateTime < 4f) {
-                    // Optionally get offset for collider, to look ahead at the collider edges for a platform edge
+                    // Get collider offset to look ahead at edges
                     var colOffset = FramePool.pi2();
                     if (col != null && col.shape instanceof CollisionRect) {
                         var r = col.shape(CollisionRect.class).rectangle;
@@ -61,7 +61,7 @@ public class EnemySystem extends IteratingSystem {
                         colOffset.set(x, 0);
                     }
 
-                    // Move forward until hitting a wall or edge, then turn around
+                    // Check for edge or wall
                     var nearEdge = !Systems.collisionCheck.check(entity, mario.direction + colOffset.x, -1);
                     var hitWall = Systems.collisionCheck.check(entity, mario.direction, 0);
                     if (hitWall || nearEdge) {
@@ -72,7 +72,7 @@ public class EnemySystem extends IteratingSystem {
                     anim.facing = mario.direction;
                     anim.play(AnimType.MARIO_WALK);
 
-                    var accel = speed * mario.direction;
+                    var accel = EnemyMario.WALK_ACCEL * mario.direction;
                     vel.value.x += accel * delta;
                 } else {
                     mario.stateTime = 0f;
@@ -81,6 +81,8 @@ public class EnemySystem extends IteratingSystem {
                 }
             } break;
         }
+
+        mario.stateTime += delta;
     }
 
     private void updateAngrySun(Entity entity, EnemyAngrySun sun, float delta) {
@@ -90,24 +92,28 @@ public class EnemySystem extends IteratingSystem {
 
         var player = getPlayerEntity();
         if (player == null) {
-            vel.stop();
+            // No player, just apply friction to slow down
+            vel.value.scl(0.95f);
             return;
         }
 
-        // Chase velocity - slowly move toward player
+        // Calculate chase acceleration - move toward player
         var playerPos = Components.get(player, Position.class);
-        var chaseVel = FramePool.vec2(playerPos.x, playerPos.y)
+        var chaseAccel = FramePool.vec2(playerPos.x, playerPos.y)
             .sub(pos.x, pos.y)
             .nor()
-            .scl(EnemyAngrySun.CHASE_SPEED);
+            .scl(EnemyAngrySun.CHASE_ACCEL);
 
-        // Circular velocity - perpendicular to chase direction
+        // Calculate circular acceleration - perpendicular motion
         sun.angle += EnemyAngrySun.CIRCLE_SPEED * delta;
-        var circleVel = FramePool.vec2(-MathUtils.sin(sun.angle), MathUtils.cos(sun.angle))
+        var circleAccel = FramePool.vec2(-MathUtils.sin(sun.angle), MathUtils.cos(sun.angle))
             .scl(EnemyAngrySun.CIRCLE_RADIUS * EnemyAngrySun.CIRCLE_SPEED);
 
-        // Combine velocities
-        vel.value.set(chaseVel).add(circleVel);
+        // Apply accelerations to velocity (additive, doesn't clobber collision impulses)
+        vel.value.add(chaseAccel.scl(delta)).add(circleAccel.scl(delta));
+
+        // Apply friction/drag to naturally decay all velocity (AI + collision impulses)
+        vel.value.scl(0.95f);
     }
 
     private Entity getPlayerEntity() {

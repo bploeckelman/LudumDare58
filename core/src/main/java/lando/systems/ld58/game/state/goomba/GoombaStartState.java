@@ -36,7 +36,7 @@ public class GoombaStartState extends PlayerState {
             new SetPositionAction(startPos),
             new DelayAction(0.5f),
             new ParallelActions(
-                new MoveRelativeAction(1.5f, 0, 150),
+                new MoveRelativeAction(0.5f, 0, 50),
                 new PlayAnimAction(AnimType.GOOMBA_RAGE_IDLE),
                 new PlaySoundAction(SoundType.JUMP)
             ),
