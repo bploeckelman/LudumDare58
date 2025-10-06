@@ -3,6 +3,7 @@ package lando.systems.ld58.game.state.goomba;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.SoundType;
@@ -11,6 +12,8 @@ import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.KirbyPower;
 import lando.systems.ld58.game.components.Player;
+import lando.systems.ld58.game.components.Position;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
 import lando.systems.ld58.game.signals.AnimationEvent;
 import lando.systems.ld58.game.signals.AudioEvent;
@@ -26,6 +29,7 @@ public class GoombaNormalState extends PlayerState {
     private boolean wasGrounded;
     private float lastOnGround;
     private float jumpTime;
+    private boolean allowGrab = false;
 
     public GoombaNormalState(Engine engine, Entity entity) {
         super(engine, entity);
@@ -123,7 +127,7 @@ public class GoombaNormalState extends PlayerState {
                 Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_JUMP));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
-            else if (player.jumpState() == Player.JumpState.JUMPED) {
+            else if (player.jumpState() == Player.JumpState.JUMPED && allowGrab) {
                 player.jumpState(Player.JumpState.GRABBED);
 
                 velocity.stop();
@@ -176,6 +180,17 @@ public class GoombaNormalState extends PlayerState {
             if (input().isDownHeld) {
                 kirby.targetStrength = 1f;
                 var enemies = engine.getEntitiesFor(Family.one(KirbyPower.class).get());
+                for (Entity enemy : enemies) {
+                    if (enemy == this.entity) continue; // Don't take from yourself?
+                    if (enemy.getComponent(Position.class).dst(this.entity.getComponent(Position.class)) < KirbyShaderRenderable.radius) {
+                        var enemyKirby =  Components.optional(enemy, KirbyPower.class).orElse(null);
+                        if (enemyKirby == null) continue;
+                        // TODO: suck this guy off
+                        enemy.getComponent(Animator.class).tint.set(Color.MAGENTA);
+                        this.entity.add(new KirbyPower(enemyKirby.powerType));
+                        break;
+                    }
+                }
             } else {
                 kirby.targetStrength = 0f;
             }

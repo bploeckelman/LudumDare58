@@ -11,7 +11,7 @@ import lando.systems.ld58.utils.FramePool;
 
 public class KirbyShaderRenderable extends ShaderRenderable implements Component {
 
-    private static final float radius = 64f;
+    public static final float radius = 64f;
     public float strength;
     public float targetStrength;
     public float rampUpTime = 2.5f;

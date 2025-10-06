@@ -62,8 +62,10 @@ public enum ImageType implements AssetType<Texture> {
             if (texture == null) {
                 throw new GdxRuntimeException(Stringf.format("%s: texture '%s' not found for type '%s'", TAG, type.textureName, type.name()));
             }
-            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            if (type == NOISE) {
+                texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+                texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+            }
             container.put(type, texture);
         }
     }
