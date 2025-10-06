@@ -16,6 +16,7 @@ public class Systems {
     public static InterpSystem           interp;
     public static MapTriggerSystem       mapTrigger;
     public static MovementSystem         movement;
+    public static OffscreenRespawnSystem offscreenRespawn;
     public static ParticleSystem         particles;
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
@@ -34,6 +35,7 @@ public class Systems {
         Systems.interp           = new InterpSystem();
         Systems.mapTrigger       = new MapTriggerSystem();
         Systems.movement         = new MovementSystem();
+        Systems.offscreenRespawn = new OffscreenRespawnSystem();
         Systems.particles        = new ParticleSystem();
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
@@ -49,6 +51,7 @@ public class Systems {
         engine.addSystem(interp);
         engine.addSystem(mapTrigger);
         engine.addSystem(movement);
+        engine.addSystem(offscreenRespawn);
         engine.addSystem(particles);
         engine.addSystem(renderDebug);
         engine.addSystem(render);

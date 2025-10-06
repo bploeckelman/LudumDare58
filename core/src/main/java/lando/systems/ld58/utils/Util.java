@@ -1,5 +1,8 @@
 package lando.systems.ld58.utils;
 
+import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -14,14 +17,37 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.FontType;
+import lando.systems.ld58.game.components.SceneContainer;
+import lando.systems.ld58.game.scenes.Scene;
+import lando.systems.ld58.screens.BaseScreen;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Util {
+
+    // ------------------------------------------------------------------------
+    // Ashley / ECS related
+    // ------------------------------------------------------------------------
+
+    public static final Family SCENE_CONTAINER = Family.one(SceneContainer.class).get();
+
+    @SuppressWarnings("unchecked")
+    public static Scene<? extends BaseScreen> findScene(Engine engine) {
+        return Util.streamOf(engine.getEntitiesFor(SCENE_CONTAINER))
+            .map(SceneContainer::get)
+            .map(SceneContainer::scene)
+            .findFirst()
+            .orElse(null);
+    }
+
+    public static Optional<Entity> getPlayerEntity(Engine engine) {
+        return Optional.ofNullable(Util.findScene(engine)).map(Scene::player);
+    }
 
     // ------------------------------------------------------------------------
     // Collection / Stream related

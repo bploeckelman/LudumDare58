@@ -31,7 +31,19 @@ public abstract class Enemy {
         , EnemyMario.class
         , EnemyMisty.class
     );
-    // NOTE: don't think this can just be a copy of ENEMY_TYPES because the base type has different generic bounds
+    // NOTE: these can't just be a copy of ENEMY_TYPES because the base type has different generic bounds
+    @SuppressWarnings("unchecked")
+    public static final Class<? extends Component>[] ENEMY_COMPONENT_TYPES_ARR = new Class[] {
+          EnemyAngrySun.class
+        , EnemyBulletBill.class
+        , EnemyCaptainLou.class
+        , EnemyGoombaCyborg.class
+        , EnemyHammerBro.class
+        , EnemyKoopa.class
+        , EnemyLakitu.class
+        , EnemyMario.class
+        , EnemyMisty.class
+    };
     public static final List<Class<? extends Component>> ENEMY_COMPONENT_TYPES = List.of(
           EnemyAngrySun.class
         , EnemyBulletBill.class

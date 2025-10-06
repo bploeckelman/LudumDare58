@@ -16,7 +16,7 @@ public class Constants {
 
     public static final float FRICTION_MAX_GROUND = 1000f;
     public static final float FRICTION_MAX_AIR = 0f;
-    public static final float FRICTION_CLIMBER = 200f;
+    public static final float FRICTION_CLIMBER = 0.95f;//200f;
 
     public static final float GRAVITY = -500f;
 

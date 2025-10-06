@@ -8,7 +8,6 @@ import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Collider;
 import lando.systems.ld58.game.components.Position;
-import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.components.Velocity;
 import lando.systems.ld58.game.components.collision.CollisionRect;
 import lando.systems.ld58.game.components.enemies.*;
@@ -19,7 +18,6 @@ import lando.systems.ld58.utils.Util;
 public class EnemySystem extends IteratingSystem {
 
     private static final String TAG = EnemySystem.class.getSimpleName();
-    private static final Family SCENE = Family.one(SceneContainer.class).get();
 
     public EnemySystem() {
         super(Family.one(
@@ -102,7 +100,12 @@ public class EnemySystem extends IteratingSystem {
         if (enemy instanceof EnemyAngrySun) {
             var angrySun = (EnemyAngrySun) enemy;
             updateAngrySun(entity, angrySun, delta);
-        } else {
+        }
+        else if (enemy instanceof EnemyGoombaCyborg) {
+            var goombaCyborg = (EnemyGoombaCyborg) enemy;
+            updateGoombaCyborg(entity, goombaCyborg, delta);
+        }
+        else {
             Util.warn(TAG, "unhandled custom behavior: " + enemy.getClass().getSimpleName());
         }
     }
@@ -112,7 +115,7 @@ public class EnemySystem extends IteratingSystem {
         var pos = Components.get(entity, Position.class);
         var vel = Components.get(entity, Velocity.class);
 
-        var player = getPlayerEntity();
+        var player = Util.getPlayerEntity(getEngine()).orElse(null);
         if (player == null) {
             // No player, just apply friction to slow down
             vel.value.scl(0.95f);
@@ -138,12 +141,31 @@ public class EnemySystem extends IteratingSystem {
         vel.value.scl(0.95f);
     }
 
-    private Entity getPlayerEntity() {
-        var sceneEntities = getEngine().getEntitiesFor(SCENE);
-        if (sceneEntities.size() == 1) {
-            var scene = Components.get(sceneEntities.get(0), SceneContainer.class).scene;
-            return scene.player;
+    private void updateGoombaCyborg(Entity entity, EnemyGoombaCyborg goombaCyborg, float delta) {
+        // Just walk stupidly forward until hitting a wall then turn around,
+        // this is mainly a test for returning to spawn when an enemy falls offscreen
+        if (goombaCyborg.direction == 0) {
+            goombaCyborg.direction = MathUtils.randomSign();
         }
-        return null;
+
+        // Check for wall
+        var vel = Components.get(entity, Velocity.class);
+        var hitWall  = Systems.collisionCheck.check(entity, goombaCyborg.direction, 0);
+        if (hitWall) {
+            goombaCyborg.direction = -goombaCyborg.direction;
+            vel.stopX();
+        }
+
+        var anim = Components.get(entity, Animator.class);
+        anim.facing = goombaCyborg.direction;
+
+        var animType = Enemy.ENEMY_ANIM_TYPE_WALK.get(EnemyGoombaCyborg.class);
+        if (animType != null) anim.play(animType);
+
+        var accel = goombaCyborg.walkAccel * goombaCyborg.direction;
+        vel.value.x += accel * delta;
+
+        var max = 30f;
+        vel.value.x = MathUtils.clamp(vel.value.x, -max, max);
     }
 }

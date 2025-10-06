@@ -55,7 +55,9 @@ public class MovementSystem extends IteratingSystem {
 
         // Apply friction
         if (friction > 0 && grounded) {
-            velocity.value.x = Calc.approach(velocity.value.x, 0, friction * delta);
+            // let's change how friction works with 4 hours left in the jam, what could go wrong?
+//            velocity.value.x = Calc.approach(velocity.value.x, 0, friction * delta);
+            velocity.value.x *= (float) Math.pow(friction, delta);
         }
 
         // Apply gravity TODO: cap max y-velocity?

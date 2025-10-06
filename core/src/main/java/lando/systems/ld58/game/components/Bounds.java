@@ -1,13 +1,9 @@
 package lando.systems.ld58.game.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.utils.Calc;
-
-import java.util.Optional;
 
 /**
  * General-purpose bounds component that can define rectangular areas.
@@ -16,12 +12,6 @@ import java.util.Optional;
 public class Bounds implements Component {
 
     private static final String TAG = Bounds.class.getSimpleName();
-
-    public static final ComponentMapper<Bounds> mapper = ComponentMapper.getFor(Bounds.class);
-
-    public static Optional<Bounds> get(Entity entity) {
-        return Optional.ofNullable(mapper.get(entity));
-    }
 
     public final Rectangle rect;
 
