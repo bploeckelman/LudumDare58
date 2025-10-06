@@ -66,7 +66,7 @@ public abstract class Enemy {
         , EnemyCaptainLou.class,   AnimType.CAPTAIN_LOU_IDLE
         , EnemyGoombaCyborg.class, AnimType.GOOMBA_CYBORG_IDLE
         , EnemyHammerBro.class,    AnimType.HAMMER_BRO_IDLE
-        , EnemyKoopa.class,        AnimType.KOOPA_IDLE
+        , EnemyKoopa.class,        AnimType.KOOPA_WALK
         , EnemyLakitu.class,       AnimType.LAKITU_IDLE
         , EnemyMario.class,        AnimType.MARIO_IDLE
         , EnemyMisty.class,        AnimType.MISTY_IDLE

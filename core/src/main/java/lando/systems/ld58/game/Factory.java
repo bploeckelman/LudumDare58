@@ -317,7 +317,7 @@ public class Factory {
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
         var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
-        var anim = new Animator(AnimType.KOOPA_IDLE);
+        var anim = new Animator(AnimType.KOOPA_WALK);
         anim.origin.set(animBounds.x, animBounds.y);
         anim.size.set(animBounds.width, animBounds.height);
         entity.add(anim);

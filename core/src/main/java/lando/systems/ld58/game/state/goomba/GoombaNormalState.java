@@ -269,6 +269,7 @@ public class GoombaNormalState extends PlayerState {
         var gravity = gravity();
         var velocity = velocity();
         var friction = friction();
+        var animator = animator();
 
         gravity.value = Constants.GRAVITY;
         velocity.maxHorizontalSpeedAir = Constants.MOVE_SPEED_MAX_AIR;
@@ -276,10 +277,10 @@ public class GoombaNormalState extends PlayerState {
         velocity.maxFallSpeed = Constants.MOVE_SPEED_MAX_AIR;
         friction.ground = Constants.FRICTION_MAX_GROUND;
         friction.air = Constants.FRICTION_MAX_AIR;
+        animator.animation = getWalkAnimation().get();
         actionDelay -= delta;
         var kirby = kirby();
 
-        var animator = animator();
 
         if (kirby == null) return;
         kirby.activeTimer -= delta;
@@ -288,12 +289,15 @@ public class GoombaNormalState extends PlayerState {
         velocity.maxHorizontalSpeedGround = kirby().maxGroundSpeed();
         velocity.maxHorizontalSpeedAir = kirby().maxAirSpeed();
         friction.ground = kirby.getFriction();
+        if (kirby.isActionActive()) {
+            animator.animation = getActionAnimation().get();
+        }
 
         if (input().isActionJustPressed && actionDelay <= 0f) {
             actionDelay = .5f;
             switch (kirby.powerType) {
                 case KOOPA:
-                    kirby.activeTimer = 1f;
+                    kirby.activeTimer = 10f;
                     break;
                 case LAKITU:
                     break;

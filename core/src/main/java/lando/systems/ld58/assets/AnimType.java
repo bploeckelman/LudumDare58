@@ -25,6 +25,8 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , BILLY_BULLET_BILL_WALK(Path.CHAR_BULLET_BILL)
     , BILLY_LAKITU_ACTION(Path.CHAR_LAKITU)
     , BILLY_LAKITU_WALK(Path.CHAR_LAKITU)
+    , BILLY_KOOPA_ACTION(Path.CHAR_KOOPA)
+    , BILLY_KOOPA_WALK(Path.CHAR_KOOPA)
     // -- bullet bill -------------------------------------------
     , BULLET_BILL_ACTION(Path.CHAR_BULLET_BILL)
     , BULLET_BILL_IDLE(Path.CHAR_BULLET_BILL)
@@ -32,8 +34,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // -- captain-lou -------------------------------------------
     , CAPTAIN_LOU_IDLE(Path.CHAR_CAPTAIN_LOU)
     // -- koopa -------------------------------------------------
-    , KOOPA_REVIVE(Path.CHAR_KOOPA)
-    , KOOPA_SHELL_SPIN(Path.CHAR_KOOPA)
+    , KOOPA_ACTION(Path.CHAR_KOOPA)
     , KOOPA_WALK(Path.CHAR_KOOPA)
     // -- goomba ------------------------------------------------
     , GOOMBA_NORMAL_IDLE(Path.CHAR_GOOMBA)
@@ -47,7 +48,6 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // -- hammer-bro --------------------------------------------
     , HAMMER_BRO_IDLE(Path.CHAR_HAMMER_BRO)
     // -- koopa -------------------------------------------------
-    , KOOPA_IDLE(Path.CHAR_KOOPA)
     // -- lakitu ------------------------------------------------
     , LAKITU_ACTION(Path.CHAR_LAKITU)
     , LAKITU_IDLE(Path.CHAR_LAKITU)

@@ -18,7 +18,7 @@ public class KirbyPower implements Component {
 
     public AnimType getOriginalEnemyIdleAnimType() {
         switch (powerType) {
-            case KOOPA:  return AnimType.KOOPA_IDLE;
+            case KOOPA:  return AnimType.KOOPA_WALK;
             case LAKITU: return AnimType.LAKITU_IDLE;
             case HAMMER: return AnimType.HAMMER_BRO_IDLE;
             case BULLET: return AnimType.BULLET_BILL_IDLE;
@@ -29,7 +29,7 @@ public class KirbyPower implements Component {
 
     public AnimType getBillyEnemyWalkAnimType() {
         switch (powerType) {
-//            case KOOPA:  return AnimType.BILLY_KOOPA_WALK;
+            case KOOPA:  return AnimType.BILLY_KOOPA_WALK;
             case LAKITU: return AnimType.BILLY_LAKITU_WALK;
 //            case HAMMER: return AnimType.BILLY_HAMMER_BRO_WALK;
             case BULLET: return AnimType.BILLY_BULLET_BILL_WALK;
@@ -40,7 +40,7 @@ public class KirbyPower implements Component {
 
     public AnimType getBillyEnemyActionAnimType() {
         switch (powerType) {
-//            case KOOPA:  return AnimType.BILLY_KOOPA_ACTION;
+            case KOOPA:  return AnimType.BILLY_KOOPA_ACTION;
             case LAKITU: return AnimType.BILLY_LAKITU_ACTION;
 //            case HAMMER: return AnimType.HAMMER_BRO_ACTION;
             case BULLET: return AnimType.BILLY_BULLET_BILL_ACTION;
