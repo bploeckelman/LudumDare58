@@ -315,7 +315,7 @@ public class FlashbackScreen extends BaseScreen {
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
         shader.setUniformf("u_time", accum);
-        shader.setUniformf("u_res", Config.window_width, Config.window_height);
+        shader.setUniformf("u_res", windowCamera.viewportWidth, windowCamera.viewportHeight);
         shader.setUniformf("u_fade", 1f);
         shader.setUniformf("u_flashback", flashback.floatValue());
         batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());

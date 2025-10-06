@@ -48,6 +48,7 @@ public class Assets implements Disposable {
     public ShaderProgram progressShader;
     public ShaderProgram flashbackShader;
     public ShaderProgram relicShader;
+    public ShaderProgram hippieShader;
 
     public Assets() {
         this(Load.SYNC);
@@ -131,6 +132,7 @@ public class Assets implements Disposable {
         progressShader =  Util.loadShader("shaders/default.vert", "shaders/progress.frag");
         flashbackShader = Util.loadShader("shaders/default.vert", "shaders/flashback.frag");
         relicShader = Util.loadShader("shaders/default.vert", "shaders/relic.frag");
+        hippieShader = Util.loadShader("shaders/default.vert", "shaders/hippie.frag");
 
         atlas = mgr.get("sprites/sprites.atlas");
         strings = mgr.get("i18n/strings");

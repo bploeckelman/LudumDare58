@@ -5,7 +5,10 @@ import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -13,6 +16,7 @@ import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.FontType;
+import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
@@ -33,6 +37,10 @@ import java.util.Map;
 public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     private static final float DEBOUNCE_DURATION = .31f;
+    private FrameBuffer fbo;
+    private Texture screenTexture;
+    private float accum;
+    private float trippyAmount = 0;
 
 //    private final Color backgroundColor = new Color(0xaaaaddff);
     private final Color backgroundColor = new Color(.1F, .5F, 1f, 1f);
@@ -53,6 +61,9 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     public IntroScreen() {
         Signals.dialogTrigger.add(this);
+        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
+        screenTexture = fbo.getColorBufferTexture();
+        screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
 
         var entity = Factory.createEntity();
         this.scene = new SceneIntro(this);
@@ -82,6 +93,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
+        accum = 0;
     }
 
     public Scene<? extends BaseScreen> scene() {
@@ -91,6 +103,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     @Override
     public void update(float delta) {
         super.update(delta);
+        accum += delta;
         // TODO: trigger when player reaches a checkpoint
         if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
             transitioning = true;
@@ -134,18 +147,42 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
 
         engine.update(delta);
+        trippyAmount = (MathUtils.cos(accum)+1f)/2f;
     }
 
     @Override
-    public void render(float delta) {
-        ScreenUtils.clear(backgroundColor);
+    public void renderOffscreenBuffers(SpriteBatch batch) {
+        fbo.begin();
 
+        ScreenUtils.clear(backgroundColor);
         // Draw scene
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         Systems.render.draw(batch);
         Systems.renderDebug.draw(shapes);
         batch.end();
+
+        fbo.end();
+    }
+
+    @Override
+    public void render(float delta) {
+        ScreenUtils.clear(backgroundColor);
+
+        var shader = assets.hippieShader;
+        batch.setShader(shader);
+        batch.setProjectionMatrix(windowCamera.combined);
+        batch.begin();
+        ImageType.NOISE.get().bind(1);
+        shader.setUniformi("u_texture2", 1);
+        shader.setUniformf("u_time", accum);
+        shader.setUniformf("u_res", windowCamera.viewportWidth, windowCamera.viewportHeight);
+        shader.setUniformf("u_strength", trippyAmount);
+        screenTexture.bind(0);
+        shader.setUniformi("u_texture", 0);
+        batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());
+        batch.end();
+        batch.setShader(null);
 
         // Draw ui / dialog / story stuff
         batch.setProjectionMatrix(windowCamera.combined);
