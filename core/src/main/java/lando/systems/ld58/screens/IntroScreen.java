@@ -61,7 +61,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.DIRGE, 0.25f));
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.55f));
 
         font = FontType.ROUNDABOUT.font("medium");
         this.dialog = new TypingLabel("", font);

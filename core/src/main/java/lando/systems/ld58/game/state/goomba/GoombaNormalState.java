@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
+import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Constants;
@@ -178,6 +179,7 @@ public class GoombaNormalState extends PlayerState {
         if (power == null) {
             // no power right now
             if (input().isDownHeld) {
+                Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.SUCK, 0.55f));
                 kirby.targetStrength = 1f;
                 var enemies = engine.getEntitiesFor(Family.one(KirbyPower.class).get());
                 for (Entity enemy : enemies) {
@@ -193,6 +195,7 @@ public class GoombaNormalState extends PlayerState {
                     }
                 }
             } else {
+                Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
                 kirby.targetStrength = 0f;
             }
         } else {

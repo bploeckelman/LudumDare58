@@ -59,6 +59,7 @@ public class FlashbackScreen extends BaseScreen {
         screenTexture = fbo.getColorBufferTexture();
 
         currentStage = FlashbackStage.PRESENT_DAY;
+//        currentStage = FlashbackStage.SANCTUM;
         worldCamera.setToOrtho(false, 20, 15);
         dialog = new TypingLabel("", font);
         dialog.setWrap(true);
@@ -74,8 +75,8 @@ public class FlashbackScreen extends BaseScreen {
         switch(currentStage) {
             case PRESENT_DAY:
                 background = ImageType.BEDROOM.get();
-                messages.add("Wow... 10 years already?");
-                messages.add("Feels like it was only yesterday...");
+                messages.add("Wow... Has it been 10 years already?");
+                messages.add("Feels like only yesterday...");
                 var billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(),  new Rectangle(14, 2, 1, 1));
                 Tween.to(billy.bounds, RectangleAccessor.X, 3f)
                         .target(17).repeatYoyo(100, 1f).start(tween);
@@ -93,9 +94,8 @@ public class FlashbackScreen extends BaseScreen {
                 Timeline.createSequence()
                         .pushPause(.5f)
                     .push(Tween.call((type, source) -> {
-                        messages.add("When Misty left with the kids, I thought my life was over");
-//                        messages.add("I thought my life was over.");
-                        messages.add("I didn't realize it was only the beginning!");
+                        messages.add("When Misty left with the kids, I thought my life had ended");
+//                        messages.add("Who'd have guessed it was only the beginning?");
 
                         dialog.restart(messages.get(0));
                         messages.removeIndex(0);
@@ -118,12 +118,13 @@ public class FlashbackScreen extends BaseScreen {
                 placeObjectsInMushroomWorld();
                 worldCamera.position.x = 25;
                 background = ImageType.FLASHBACK_MUSHROOM.get();
-                messages.add("That mushroom changed my whole perspective");
-                messages.add("I got Super powers...");
-                messages.add("I could JUMP...");
-                messages.add("Saw things I could never have imagined.");
-                messages.add("Places...");
-                messages.add("Secrets...");
+                messages.add("But at work the next day, something happened that changed everything.");
+                messages.add("That mushroom...\n It gave me powers I could barely " +
+                    "comprehend" +
+                    ".");
+                messages.add("I mean... I could JUMP! \n\nCan you even imagine??");
+                messages.add("The possibilities were endless.\n\nI was ready for anything!");
+                messages.add("Or so I thought...");
                 break;
             case MARIO:
                 drawParticles = false;
@@ -137,9 +138,19 @@ public class FlashbackScreen extends BaseScreen {
 
                 Timeline.createSequence().pushPause(.5f)
                     .push(Tween.call((type, source) -> {
-                        messages.add("Later, I found a strange factory");
-                        messages.add("They were creating clones of this person");
-                        messages.add("I had to go deeper to learn what was happening");
+                        messages.add("{Size=80%}During one of my adventures (which were " +
+                            "quite numerous and all VERY impressive, by the way) I found " +
+                            "something.");
+                        messages.add("Rows and rows of our greatest foe - the " +
+                                "unstoppable Mario!");
+                        messages.add("Only, he was floating in what appeared to be... gestation " +
+                            "vats?");
+                        messages.add("So Mario wasn't unstoppable after all...");
+                        messages.add("{Size=80%}It only felt that way because of this seemingly " +
+                            "inexhaustible stream of Marios being bred and thrown at us!");
+                        messages.add("But who would do such a thing? \n\nAnd why?");
+                        messages.add("");
+                        messages.add("");
 
                         dialog.restart(messages.get(0));
                         messages.removeIndex(0);
@@ -168,26 +179,30 @@ public class FlashbackScreen extends BaseScreen {
                 worldCamera.position.x = 10;
                 background = ImageType.CADRE_ROOM.get();
                 messages.add(
-                    "A cabal of boss enemies from across a wide range of game franchises");
+                    "{Size=60%}Turns out, a shadowy cabal of boss enemies hailing from a wide range of " +
+                        "longstanding game franchises had been keeping things in balance by growing " +
+                        "and releasing a near-endless army of Marios into the Mushroom Kingdom ecosystem.");
                 messages.add(
-                    "{Size=90%}Keeping the Mushroom Kingdom in balance by growing and then releasing a near-endless army of Marios into our ecosystem...");
-                messages.add(
-                    "Which is a premise so absurd it could only have come out of Ludum Dare 33");
-                messages.add(
-                    "{Size=70%}Where the theme \"you are the monster\" inspired a plucky team of developers to create a game where you are a goomba whose wife left him, inspiring him toward adventure");
-                messages.add("Anyway, I was that goomba.");
-                messages.add("I ate a mushroom, hijinks ensued, and I ended up " +
+                    "{Size=60%}It was a premise so absurd it could only have come out of Ludum " +
+                        "Dare 33, whose theme of \"you are the monster\" inspired a plucky team " +
+                        "of developers to create a game where you play as a goomba who sets out towards adventure after his home life crumbles.");
+                messages.add("{Size=60%}If you hadn't already guessed, I was that goomba. \n\nLong story short, I ate a mushroom, hijinks ensued, and I ended up " +
                     "getting inducted into the cabal.");
-                messages.add("But that was a long time ago. \n\nMust have been, what...");
-                messages.add("Wow... 10 years already?");
+
+                messages.add("{Size=55%}Fun times, that cabal. \n\nTotal sausage party, but they're all good guys.\n\n" +
+                    "You'd be surprised how much they contribute to the community.");
+
+                messages.add("{Size=70%}Also, unexpectedly good listeners. \n\nThey really made it a safe space for big feelings.");
+                messages.add("{Size=70%}Anyway, things were good for while, but before long, life started feeling a little bit off in the Mushroom Kingdom.");
+//                messages.add("{Size=70%}Maybe it's just because I'm older now, but it really feels like things used to be better back then..");
                 break;
             case EXIT:
                 deBounce = 1.5f;
                 Timeline.createSequence().pushPause(.5f)
                     .push(Tween.to(flashback,1, .5f).target(0))
                     .push(Tween.call((type, source) -> {
-                        messages.add("Now that we are back in the present.");
-                        messages.add("Things aren't as good as I thought they should be.");
+                        messages.add("{Size=80%}Maybe it's just because I'm older now, but it really feels like things used to be better back then.");
+                        messages.add("{Size=80%}Ah well... Life goes on. \n\nWhatever the reason - it's time for another day on the front lines!");
 
                         dialog.restart(messages.get(0));
                         messages.removeIndex(0);
@@ -276,14 +291,15 @@ public class FlashbackScreen extends BaseScreen {
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
         batch.draw(background, 0, 0, background.getWidth()/16f, background.getHeight()/16f);
-        for (FlashbackObject object : objects) {
-            batch.setColor(object.tintColor);
-            object.render(batch);
-        }
+
         if (drawParticles) {
             for (FlashbackParticle particle : particles) {
                 particle.render(batch);
             }
+        }
+        for (FlashbackObject object : objects) {
+            batch.setColor(object.tintColor);
+            object.render(batch);
         }
         batch.setColor(Color.WHITE);
         batch.end();
@@ -333,7 +349,7 @@ public class FlashbackScreen extends BaseScreen {
 
     private void drawDialog(SpriteBatch batch, float delta) {
         if (!dialog.getOriginalText().toString().isEmpty()) {
-            batch.setColor(0, 0, 0, .4f);
+            batch.setColor(0, 0, 0, .75f);
             batch.draw(assets.pixel, dialog.getX()- 5, dialog.getY()-5, dialog.getWidth()+10, dialog.getHeight()+10);
             batch.setColor(Color.WHITE);
         }

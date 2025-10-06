@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
@@ -32,6 +33,7 @@ public class GameScreen extends BaseScreen {
 
     public GameScreen() {
         this.gdx = new TextureRegion(ImageType.GDX.get());
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.25f));
         switchScene(SceneType.TEST);
     }
 

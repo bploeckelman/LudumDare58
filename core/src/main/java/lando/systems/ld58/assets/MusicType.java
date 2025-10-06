@@ -8,8 +8,11 @@ import java.util.EnumMap;
 
 public enum MusicType implements AssetType<Music> {
       CASTLEVANIA("castlevania.ogg"),
-      MAIN("music1.ogg"),
+      MAIN_THEME("music1.ogg"),
       DIRGE("mario-dirge.ogg"),
+      MARIO_JAZZ("mario-jazzy.ogg"),
+      MARIO_DEGRADED("mario-degraded.ogg"),
+      SUCK("suck1.ogg"), // Not actually music - used for looping
     ;
 
     private static final String TAG = MusicType.class.getSimpleName();
