@@ -21,7 +21,7 @@ import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.Systems; 
+import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.scenes.Scene;
@@ -67,7 +67,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         Signals.dialogTrigger.add(this);
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
-        screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
+//        screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
 
         var entity = Factory.createEntity();
         this.scene = new SceneIntro(this);
