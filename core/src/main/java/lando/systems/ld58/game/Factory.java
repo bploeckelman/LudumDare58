@@ -121,6 +121,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
+        entity.add(new KirbyPower(KirbyPower.PowerType.SUN));
 
         entity.add(new Outline(Color.RED, Color.CLEAR, 1f));
         var animOrigin = new Vector2(16, 12);
@@ -237,6 +238,7 @@ public class Factory {
         entity.add(new Velocity(0, 0));
         entity.add(new Friction(Constants.FRICTION_CLIMBER));
         entity.add(new Gravity(Constants.GRAVITY));
+        entity.add(new KirbyPower(KirbyPower.PowerType.BULLET));
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
         var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
@@ -265,6 +267,7 @@ public class Factory {
         entity.add(new Velocity(0, 0));
         entity.add(new Friction(Constants.FRICTION_CLIMBER));
         entity.add(new Gravity(Constants.GRAVITY));
+        entity.add(new KirbyPower(KirbyPower.PowerType.HAMMER));
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
         var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
@@ -293,6 +296,7 @@ public class Factory {
         entity.add(new Velocity(0, 0));
         entity.add(new Friction(Constants.FRICTION_CLIMBER));
         entity.add(new Gravity(Constants.GRAVITY));
+        entity.add(new KirbyPower(KirbyPower.PowerType.KOOPA));
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
         var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;
@@ -321,6 +325,7 @@ public class Factory {
         entity.add(new Velocity(0, 0));
         entity.add(new Friction(Constants.FRICTION_CLIMBER));
         entity.add(new Gravity(Constants.GRAVITY));
+        entity.add(new KirbyPower(KirbyPower.PowerType.LAKITU));
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
         var animBounds = Constants.MISTY_ANIMATOR_BOUNDS;

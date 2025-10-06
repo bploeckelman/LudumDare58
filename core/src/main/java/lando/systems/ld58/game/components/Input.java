@@ -12,20 +12,22 @@ public class Input implements Component {
     public boolean isMoveRightHeld;
     public boolean wasJumpJustPressed;
     public boolean wasControllerJumpButtonDown;
+    public boolean isDownHeld;
 
     public Input() {}
 
-    public Input(int moveDirX, boolean isMoveLeftHeld, boolean isMoveRightHeld, boolean isActionHeld, boolean wasActionPressed) {
+    public Input(int moveDirX, boolean isMoveLeftHeld, boolean isMoveRightHeld, boolean isActionHeld, boolean wasActionPressed, boolean isDownHeld) {
         this.moveDirX = moveDirX;
         this.isMoveLeftHeld = isMoveLeftHeld;
         this.isMoveRightHeld = isMoveRightHeld;
         this.isJumpHeld = isActionHeld;
         this.wasJumpJustPressed = wasActionPressed;
         this.wasControllerJumpButtonDown = false;
+        this.isDownHeld = isDownHeld;
     }
 
     public static Input empty() {
-        return new Input(0, false, false, false, false);
+        return new Input(0, false, false, false, false, false);
     }
 
     public void reset() {
@@ -35,5 +37,6 @@ public class Input implements Component {
         wasJumpJustPressed = false;
         wasControllerJumpButtonDown = false;
         moveDirX = 0;
+        isDownHeld = false;
     }
 }

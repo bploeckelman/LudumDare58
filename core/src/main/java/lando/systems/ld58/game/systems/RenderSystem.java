@@ -47,7 +47,21 @@ public class RenderSystem extends SortedIteratingSystem {
         var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
         if (kirby != null) {
             kirby.accum += deltaTime;
-            kirby.strength((float)Math.cos(kirby.accum));
+            if (kirby.strength < kirby.targetStrength) {
+                float amount = kirby.rampUpTime * deltaTime;
+                if (amount  + kirby.strength > kirby.targetStrength) {
+                    kirby.strength =  kirby.targetStrength;
+                } else {
+                    kirby.strength += amount;
+                }
+            } else if (kirby.strength > kirby.targetStrength) {
+                float amount = kirby.rampDownTime * deltaTime;
+                if (kirby.strength - amount < kirby.targetStrength) {
+                    kirby.strength =  kirby.targetStrength;
+                } else  {
+                    kirby.strength -= amount;
+                }
+            }
         }
 
         var flames = Components.optional(entity, FlameShaderRenderable.class).orElse(null);
@@ -92,7 +106,7 @@ public class RenderSystem extends SortedIteratingSystem {
         batch.setShader(shader);
 
         var rect = kirby.rect(pos);
-        shader.setUniformf("u_strength", kirby.strength());
+        shader.setUniformf("u_strength", kirby.strength);
         shader.setUniformf("u_time", kirby.accum);
 
         batch.draw(kirby.texture, rect.x, rect.y, rect.width, rect.height);

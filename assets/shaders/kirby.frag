@@ -40,7 +40,7 @@ void main() {
     vec4 texColor = vec4(0);
     texColor += mix(vec4(0.),vec4(hsv2rgb(vec3(movedDist+ u_time* 1.4, noise.r, 1.)), .7), cubicPulse(mod(-u_time * 1.,1./lines), .02, mod(movedDist, 1./lines)));
 
-    float alpha = smoothstep(1., .8, dist) * u_strength;
+    float alpha = smoothstep(1., .5, dist) * u_strength;
     texColor.a *= alpha;
     gl_FragColor = texColor * v_color;
 }

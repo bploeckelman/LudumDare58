@@ -42,6 +42,7 @@ public class InputSystem extends IteratingSystem {
         input.isJumpHeld     = Gdx.input.isKeyPressed(controls.jump());
         input.isMoveLeftHeld   = Gdx.input.isKeyPressed(controls.left());
         input.isMoveRightHeld  = Gdx.input.isKeyPressed(controls.right());
+        input.isDownHeld = Gdx.input.isKeyPressed(controls.down());
 
         // Collect controller input -------------------------------------------
         if (controller != null) {
@@ -56,10 +57,12 @@ public class InputSystem extends IteratingSystem {
 
             var moveLeft  = controller.getButton(mapping.buttonDpadLeft)  || controller.getAxis(mapping.axisLeftX) < -deadzone;
             var moveRight = controller.getButton(mapping.buttonDpadRight) || controller.getAxis(mapping.axisLeftX) >  deadzone;
+            var moveDown = controller.getButton(mapping.buttonDpadDown)   || controller.getAxis(mapping.axisLeftY) < -deadzone;
 
             input.isJumpHeld      = input.isJumpHeld      || jump;
             input.isMoveLeftHeld  = input.isMoveLeftHeld  || moveLeft;
             input.isMoveRightHeld = input.isMoveRightHeld || moveRight;
+            input.isDownHeld      = input.isDownHeld      || moveDown;
         }
 
         input.moveDirX = input.isMoveLeftHeld ? -1 : input.isMoveRightHeld ? 1 : 0;

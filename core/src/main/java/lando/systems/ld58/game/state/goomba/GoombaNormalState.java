@@ -2,12 +2,16 @@ package lando.systems.ld58.game.state.goomba;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.SoundType;
+import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.game.Signals;
+import lando.systems.ld58.game.components.KirbyPower;
 import lando.systems.ld58.game.components.Player;
+import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
 import lando.systems.ld58.game.signals.AnimationEvent;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CooldownEvent;
@@ -59,6 +63,7 @@ public class GoombaNormalState extends PlayerState {
 
         handleMovement(delta);
         handleJumping(delta);
+        handleSuckOff(delta);
     }
 
     private void handleMovement(float delta) {
@@ -157,5 +162,27 @@ public class GoombaNormalState extends PlayerState {
                 velocity.value.y += jumpAccelAmount * Constants.JUMP_HELD_ACCEL;
             }
         }
+    }
+
+    private void handleSuckOff(float delta) {
+        // if you don't have a power you can suck a guy off
+        var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
+        var power = Components.optional(entity, KirbyPower.class).orElse(null);
+        if (kirby == null) return;
+
+
+        if (power == null) {
+            // no power right now
+            if (input().isDownHeld) {
+                kirby.targetStrength = 1f;
+                var enemies = engine.getEntitiesFor(Family.one(KirbyPower.class).get());
+            } else {
+                kirby.targetStrength = 0f;
+            }
+        } else {
+            // You have a power
+            kirby.targetStrength = 0;
+        }
+
     }
 }

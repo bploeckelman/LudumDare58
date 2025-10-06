@@ -11,23 +11,19 @@ import lando.systems.ld58.utils.FramePool;
 
 public class KirbyShaderRenderable extends ShaderRenderable implements Component {
 
-    private static final float radius = 48f;
-    private float strength;
+    private static final float radius = 64f;
+    public float strength;
+    public float targetStrength;
+    public float rampUpTime = 2.5f;
+    public float rampDownTime = 20f;
 
     public KirbyShaderRenderable() {
         shaderProgram = Main.game.assets.kirbyShader;
         texture = ImageType.NOISE.get();
 
         bounds.set(-radius, -radius + 4, radius*2f, radius*2f);
-        this.strength = 1f;
-    }
-
-    public float strength() {
-        return strength;
-    }
-
-    public void strength(float strength) {
-        this.strength = MathUtils.clamp(strength, 0f, 1f);
+        this.strength = 0f;
+        this.targetStrength = 0f;
     }
 
 }
