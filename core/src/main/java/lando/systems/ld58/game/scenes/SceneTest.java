@@ -23,9 +23,9 @@ public class SceneTest extends Scene<GameScreen> {
         screen.engine.getSystem(ViewSystem.class).target(player);
 
         // TEST: Attach a test particle emitter to the player
-        var target = Components.get(player, Position.class);
-        var params = new TestEffect.Params(target, Color.RED, 0.2f);
-        var emitter = Factory.emitter(EmitterType.TEST, params);
-        screen.engine.addEntity(emitter);
+//        var target = Components.get(player, Position.class);
+//        var params = new TestEffect.Params(target, Color.RED, 0.2f);
+//        var emitter = Factory.emitter(EmitterType.TEST, params);
+//        screen.engine.addEntity(emitter);
     }
 }

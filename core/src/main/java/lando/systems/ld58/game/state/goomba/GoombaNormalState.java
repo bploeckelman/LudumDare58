@@ -187,6 +187,7 @@ public class GoombaNormalState extends PlayerState {
                         if (enemyKirby == null) continue;
                         // TODO: suck this guy off
                         enemy.getComponent(Animator.class).tint.set(Color.MAGENTA);
+                        enemy.remove(KirbyPower.class);
                         this.entity.add(new KirbyPower(enemyKirby.powerType));
                         break;
                     }
@@ -197,6 +198,9 @@ public class GoombaNormalState extends PlayerState {
         } else {
             // You have a power
             kirby.targetStrength = 0;
+            if (input().isDownHeld && input().isActionJustPressed) {
+                entity.remove(KirbyPower.class);
+            }
         }
 
     }

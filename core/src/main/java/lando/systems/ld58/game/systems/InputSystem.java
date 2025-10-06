@@ -43,6 +43,10 @@ public class InputSystem extends IteratingSystem {
         input.isMoveLeftHeld   = Gdx.input.isKeyPressed(controls.left());
         input.isMoveRightHeld  = Gdx.input.isKeyPressed(controls.right());
         input.isDownHeld = Gdx.input.isKeyPressed(controls.down());
+        input.isActionHeld = Gdx.input.isKeyPressed(controls.enter());
+        input.isActionHeld |= Gdx.input.isTouched();
+        input.isActionJustPressed = Gdx.input.isKeyJustPressed(controls.enter());
+        input.isActionJustPressed |= Gdx.input.justTouched();
 
         // Collect controller input -------------------------------------------
         if (controller != null) {
@@ -52,14 +56,21 @@ public class InputSystem extends IteratingSystem {
             var jumpButtonDown = controller.getButton(mapping.buttonA);
             var jump = !input.wasControllerJumpButtonDown && jumpButtonDown;
 
+            var actionButtonDown = controller.getButton(mapping.buttonB);
+            var action = !input.isActionHeld && actionButtonDown;
+
             input.wasControllerJumpButtonDown = jumpButtonDown;
             input.wasJumpJustPressed              = input.wasJumpJustPressed || jump;
+
+            input.isActionHeld = action;
+            input.isActionJustPressed             = input.isActionJustPressed || action;
 
             var moveLeft  = controller.getButton(mapping.buttonDpadLeft)  || controller.getAxis(mapping.axisLeftX) < -deadzone;
             var moveRight = controller.getButton(mapping.buttonDpadRight) || controller.getAxis(mapping.axisLeftX) >  deadzone;
             var moveDown = controller.getButton(mapping.buttonDpadDown)   || controller.getAxis(mapping.axisLeftY) < -deadzone;
 
             input.isJumpHeld      = input.isJumpHeld      || jump;
+            input.isActionHeld    = input.isActionHeld    || action;
             input.isMoveLeftHeld  = input.isMoveLeftHeld  || moveLeft;
             input.isMoveRightHeld = input.isMoveRightHeld || moveRight;
             input.isDownHeld      = input.isDownHeld      || moveDown;

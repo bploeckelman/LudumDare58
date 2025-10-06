@@ -13,6 +13,8 @@ public class Input implements Component {
     public boolean wasJumpJustPressed;
     public boolean wasControllerJumpButtonDown;
     public boolean isDownHeld;
+    public boolean isActionHeld;
+    public boolean isActionJustPressed;
 
     public Input() {}
 
@@ -24,6 +26,8 @@ public class Input implements Component {
         this.wasJumpJustPressed = wasActionPressed;
         this.wasControllerJumpButtonDown = false;
         this.isDownHeld = isDownHeld;
+        this.isActionHeld = isActionHeld;
+        this.isActionJustPressed = false;
     }
 
     public static Input empty() {
@@ -38,5 +42,7 @@ public class Input implements Component {
         wasControllerJumpButtonDown = false;
         moveDirX = 0;
         isDownHeld = false;
+        isActionHeld = false;
+        isActionJustPressed = false;
     }
 }
