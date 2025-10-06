@@ -4,8 +4,6 @@ import com.badlogic.ashley.core.Component;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Constants;
 
-import java.awt.*;
-
 public class KirbyPower implements Component {
     public enum PowerType {KOOPA, LAKITU, HAMMER, BULLET, SUN}
 
