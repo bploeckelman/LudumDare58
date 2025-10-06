@@ -16,20 +16,21 @@ public class Velocity implements Component {
         return Optional.ofNullable(mapper.get(entity));
     }
 
-    public final Vector2 value;
+    public final Vector2 value = new Vector2();
     public final Vector2 remainder;
+
 
     public Velocity(float x, float y) {
         this(new Vector2(x, y));
     }
 
     public Velocity(Velocity velocity) {
-        this.value = velocity.value;
+        this.value.set(velocity.value);
         this.remainder = velocity.remainder;
     }
 
     public Velocity(Vector2 value) {
-        this.value = value;
+        this.value.set(value);
         this.remainder = Vector2.Zero.cpy();
     }
 

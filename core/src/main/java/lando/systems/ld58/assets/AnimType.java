@@ -8,7 +8,7 @@ import java.util.EnumMap;
 
 public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // object animations ----------------------------------------
-    COIN(Path.OBJ_COIN)
+      COIN(Path.OBJ_COIN)
     , COIN_BLOCK(Path.FLASHBACK, "coin-block")
     , RELIC_PLUNGER(Path.OBJ_RELIC)
     , RELIC_TORCH(Path.OBJ_RELIC)

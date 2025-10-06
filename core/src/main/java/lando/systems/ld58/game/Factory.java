@@ -78,7 +78,8 @@ public class Factory {
             .add("jump", 0.2f)
             .add("taunt", 0.2f));
 
-        var collidesWith   = new CollisionMask[] { CollisionMask.SOLID, CollisionMask.ENEMY };
+        var collidesWith   = new CollisionMask[] {
+            CollisionMask.SOLID, CollisionMask.ENEMY, CollisionMask.DESTRUCTIBLE };
         entity.add(Collider.rect(CollisionMask.PLAYER, Constants.BILLY_COLLIDER_BOUNDS, collidesWith));
 
         return entity;
@@ -495,6 +496,36 @@ public class Factory {
         var bounds = new Circle(0, 0, 10);
         var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
         entity.add(Collider.circ(CollisionMask.PICKUP, bounds.x, bounds.y, bounds.radius, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity block(TilemapObject.Spawner spawner) {
+        if (!"block".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create destructible block from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Block"));
+        entity.add(new Destructible());
+
+        // NOTE: 'tile' map object 'position' is a bit off of where we'd want it in game, manually adjusting it here
+        var tileMapObject = (TiledMapTileMapObject) spawner.mapObject;
+        var x = spawner.x + tileMapObject.getProperties().get("width", 0f, Float.class) / 2f;
+        var y = spawner.y + tileMapObject.getProperties().get("height", 0f, Float.class) / 2f;
+        entity.add(new Position(x, y));
+        entity.add(new Outline(Color.ORANGE, Color.CLEAR_WHITE, 1f));
+
+        // TODO: make different anim type
+        var anim = new Animator(AnimType.COIN_BLOCK);
+        anim.origin.set(8, 8);
+        anim.depth = Constants.Z_DEPTH_DEFAULT + 1;
+        entity.add(anim);
+
+        var bounds = new Rectangle(-8, -8, 16, 16);
+        var collidesWith  = new CollisionMask[] {};
+        entity.add(Collider.rect(CollisionMask.DESTRUCTIBLE, bounds, collidesWith));
 
         return entity;
     }

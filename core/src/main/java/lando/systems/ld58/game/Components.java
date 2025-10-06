@@ -19,7 +19,9 @@ public class Components {
         entry(Bounds.class,         ComponentMapper.getFor(Bounds.class)),
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
+        entry(Destructible.class,   ComponentMapper.getFor(Destructible.class)),
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
+        entry(Fireball.class,       ComponentMapper.getFor(Fireball.class)),
         entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
         entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
         entry(Id.class,             ComponentMapper.getFor(Id.class)),
@@ -44,7 +46,7 @@ public class Components {
         entry(Image.class,                 ComponentMapper.getFor(Image.class)),
         entry(KirbyShaderRenderable.class, ComponentMapper.getFor(KirbyShaderRenderable.class)),
         entry(Outline.class,               ComponentMapper.getFor(Outline.class)),
-        entry(RelicPickupRender.class,           ComponentMapper.getFor(RelicPickupRender.class)),
+        entry(RelicPickupRender.class,     ComponentMapper.getFor(RelicPickupRender.class)),
 
         entry(EnemyAngrySun.class,     ComponentMapper.getFor(EnemyAngrySun.class)),
         entry(EnemyBulletBill.class,   ComponentMapper.getFor(EnemyBulletBill.class)),

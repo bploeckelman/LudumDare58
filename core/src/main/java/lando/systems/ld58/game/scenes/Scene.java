@@ -64,6 +64,7 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<E
             case "plunger": screen.engine.addEntity(Factory.relic(spawner));        break;
             case "torch":   screen.engine.addEntity(Factory.relic(spawner));        break;
             case "wrench":  screen.engine.addEntity(Factory.relic(spawner));        break;
+            case "block":   screen.engine.addEntity(Factory.block(spawner));        break;
             default: {
                 this.player = Factory.player(spawner);
                 screen.engine.addEntity(this.player);

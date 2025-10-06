@@ -111,7 +111,7 @@ public class MovementSystem extends IteratingSystem {
             while (movePixelsY != 0) {
                 var hitEntity = collisionCheckSystem.getFirstOverlappingEntity(entity, 0, sign);
                 if (hitEntity != null) {
-                    var collisionEvent = CollisionEvent.move(entity, hitEntity, sign, 0);
+                    var collisionEvent = CollisionEvent.move(entity, hitEntity, 0, sign);
                     Signals.collision.dispatch(collisionEvent);
 
                     if (collisionEvent.response().stopVelocity()) velocity.stopY();

@@ -14,6 +14,7 @@ import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
+import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
 import lando.systems.ld58.game.scenes.Scene;
@@ -280,6 +281,8 @@ public class GoombaNormalState extends PlayerState {
                     kirby.activeTimer = .5f;
                     break;
                 case SUN:
+                    spawnFireball();
+                    kirby.activeTimer = .5f;
                     break;
             }
         }
@@ -311,5 +314,25 @@ public class GoombaNormalState extends PlayerState {
         } else {
             return kirbyPower.getBillyEnemyActionAnimType();
         }
+    }
+
+    public void spawnFireball() {
+
+        var animator = animator();
+        var vel = new Velocity(0,0);
+        vel.value.y = 0;
+        vel.value.x = 100 * animator.facing;
+
+        var fireballEntity = engine.createEntity();
+        fireballEntity.add(new Position(position().x, position().y + 20));
+        fireballEntity.add(vel);
+        fireballEntity.add(new Gravity(Constants.GRAVITY));
+        fireballEntity.add(new Fireball());
+        fireballEntity.add(new Animator(AnimType.COIN));
+
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID };
+        fireballEntity.add(Collider.circ(CollisionMask.PROJECTILE, 2, 2, 4f, collidesWith));
+
+        engine.addEntity(fireballEntity);
     }
 }
