@@ -40,9 +40,9 @@ public enum ImageType implements AssetType<Texture> {
         var texParamsRepeat = new TextureLoader.TextureParameter();
         texParamsRepeat.wrapU = Texture.TextureWrap.Repeat;
         texParamsRepeat.wrapV = Texture.TextureWrap.Repeat;
-        texParamsRepeat.minFilter = Texture.TextureFilter.MipMap;
-        texParamsRepeat.magFilter = Texture.TextureFilter.MipMap;
-        texParamsRepeat.genMipMaps = true;
+        texParamsRepeat.minFilter = Texture.TextureFilter.Linear;
+        texParamsRepeat.magFilter = Texture.TextureFilter.Linear;
+        texParamsRepeat.genMipMaps = false;
 
         var mgr = assets.mgr;
         for (var type : ImageType.values()) {
