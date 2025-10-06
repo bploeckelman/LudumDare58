@@ -8,7 +8,7 @@ import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.components.Pickup;
 
 public class RelicPickupRender implements Component {
-    public static float DURATION = 10f;
+    public static float DURATION = 3f;
 
     Interpolation interpolation = Interpolation.sineIn;
 

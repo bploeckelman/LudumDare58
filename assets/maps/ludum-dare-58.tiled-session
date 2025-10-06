@@ -92,6 +92,9 @@
         "tilesets/mario.tsx": {
             "scaleInDock": 0.75,
             "scaleInEditor": 1
+        },
+        "tilesets/noise.tsx": {
+            "scaleInDock": 1
         }
     },
     "last.imagePath": "C:/Users/Brian/Projects/LudumDare/LudumDare58/assets/maps/tilesets",

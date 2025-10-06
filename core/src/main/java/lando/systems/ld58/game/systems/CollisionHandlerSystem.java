@@ -5,10 +5,12 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
+import com.github.tommyettinger.digital.Stringf;
+import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Destructible;
+import lando.systems.ld58.game.components.BlockBreakable;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
@@ -61,9 +63,17 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             = Components.hasEnemyComponent(move.entityA()) ? move.entityA()
             : Components.hasEnemyComponent(move.entityB()) ? move.entityB()
             : null;
-        var destruct
-            = Components.has(move.entityA(), Destructible.class) ? move.entityA()
-            : Components.has(move.entityB(), Destructible.class) ? move.entityB()
+        var blockBreak
+            = Components.has(move.entityA(), BlockBreakable.class) ? move.entityA()
+            : Components.has(move.entityB(), BlockBreakable.class) ? move.entityB()
+            : null;
+        var blockSpike
+            = Components.has(move.entityA(), BlockSpike.class) ? move.entityA()
+            : Components.has(move.entityB(), BlockSpike.class) ? move.entityB()
+            : null;
+        var blockLava
+            = Components.has(move.entityA(), BlockLava.class) ? move.entityA()
+            : Components.has(move.entityB(), BlockLava.class) ? move.entityB()
             : null;
 
         // TODO: rework player/enemy collision instead of using block at top of method
@@ -71,8 +81,14 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
 //        // Player/Enemy collision
 //            handlePlayerEnemyCollision(move, player, enemy);
 //        } else
-        if (player != null && destruct != null) {
-            handlePlayerDestructibleCollision(move, player, destruct);
+        if (player != null && blockBreak != null) {
+            handlePlayerBlockBreakCollision(move, player, blockBreak);
+        }
+        else if (player != null && blockSpike != null) {
+            handlePlayerBlockSpikeCollision(move, player, blockSpike);
+        }
+        else if (player != null && blockLava != null) {
+            handlePlayerBlockLavaCollision(move, player, blockLava);
         }
         // TODO: add 'handleProjectileDestructibleCollision(projectile, destructible);
 
@@ -252,7 +268,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
         }
     }
 
-    private void handlePlayerDestructibleCollision(CollisionEvent.Move move, Entity playerEntity, Entity destructibleEntity) {
+    private void handlePlayerBlockBreakCollision(CollisionEvent.Move move, Entity playerEntity, Entity destructibleEntity) {
         // Need a power to destroy it
         var playerPower = Components.get(playerEntity, KirbyPower.class);
         if (playerPower == null) {
@@ -262,7 +278,8 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
 
         // Need bullet bill power to be active to destroy it
         var isBulletBill = (playerPower.powerType == KirbyPower.PowerType.BULLET);
-        if (isBulletBill && !playerPower.isActionActive()) {
+        var canSmash = isBulletBill && playerPower.isActionActive();
+        if (!canSmash) {
             move.response = CollisionResponse.STOP_BOTH;
             return;
         }
@@ -283,5 +300,94 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
         var playerVel = Components.get(playerEntity, Velocity.class);
         playerVel.set(playerVel.x() * 0.75f, playerVel.y());
         move.response = CollisionResponse.KEEP_VELOCITY;
+    }
+
+    private void handlePlayerBlockSpikeCollision(CollisionEvent.Move move, Entity playerEntity, Entity spikeEntity) {
+        var playerPos = Components.get(playerEntity, Position.class);
+        var playerSpawn = Components.get(playerEntity, MySpawner.class).spawner;
+
+        // Need a power to safely traverse it, otherwise move back to spawn
+        var playerPower = Components.get(playerEntity, KirbyPower.class);
+        if (playerPower == null) {
+            // TODO: play 'ouch' sound and particle effect
+            playerPos.set(playerSpawn.x, playerSpawn.y);
+            if (Flag.LOG_DEBUG.isEnabled()) {
+                Util.log(TAG, Stringf.format("player touched danger block, moving back to spawn: id=%s, name=%s",
+                    Components.optional(playerEntity, Id.class).orElse(Id.UNKNOWN),
+                    Components.optional(playerEntity, Name.class).orElse(Name.UNKNOWN)));
+            }
+            move.response = CollisionResponse.STOP_BOTH;
+            return;
+        }
+
+        // Need koopa power to be active to traverse it
+        var isKoopaPower = (playerPower.powerType == KirbyPower.PowerType.KOOPA);
+        var canTraverse = isKoopaPower && playerPower.isActionActive();
+        if (!canTraverse) {
+            // TODO: play 'ouch' sound and particle effect
+            playerPos.set(playerSpawn.x, playerSpawn.y);
+            if (Flag.LOG_DEBUG.isEnabled()) {
+                Util.log(TAG, Stringf.format("player touched danger block, moving back to spawn: id=%s, name=%s",
+                    Components.optional(playerEntity, Id.class).orElse(Id.UNKNOWN),
+                    Components.optional(playerEntity, Name.class).orElse(Name.UNKNOWN)));
+            }
+            move.response = CollisionResponse.STOP_BOTH;
+            return;
+        }
+
+        // TODO: hot foot effect
+//        // Particle effect
+//        var destructPos = Components.get(destructibleEntity, Position.class);
+//        var params = new BlockBreakEffect.Params(destructPos);
+//        var emitter = Factory.emitter(EmitterType.BLOCK_BREAK, params);
+//        getEngine().addEntity(emitter);
+
+//        var blockPos = Components.get(spikeEntity, Position.class);
+//        var blockCol = Components.get(spikeEntity, Collider.class);
+//        var blockColRect =
+//
+//        // Continue moving if we're moving in a direction that allows it
+//        var playerVel = Components.get(playerEntity, Velocity.class);
+//        if (move.dir().x != 0) {
+//
+//        }
+//        else if (move.dir().y != 0) {
+//
+//        }
+//        move.response = CollisionResponse.KEEP_VELOCITY;
+    }
+
+    private void handlePlayerBlockLavaCollision(CollisionEvent.Move move, Entity playerEntity, Entity lavaEntity) {
+        var playerPos = Components.get(playerEntity, Position.class);
+        var playerSpawn = Components.get(playerEntity, MySpawner.class).spawner;
+
+        // Need a power to safely traverse it, otherwise move back to spawn
+        var playerPower = Components.get(playerEntity, KirbyPower.class);
+        if (playerPower == null) {
+            // TODO: play 'ouch' sound and particle effect
+            playerPos.set(playerSpawn.x, playerSpawn.y);
+            if (Flag.LOG_DEBUG.isEnabled()) {
+                Util.log(TAG, Stringf.format("player touched danger block, moving back to spawn: id=%s, name=%s",
+                    Components.optional(playerEntity, Id.class).orElse(Id.UNKNOWN),
+                    Components.optional(playerEntity, Name.class).orElse(Name.UNKNOWN)));
+            }
+            move.response = CollisionResponse.STOP_BOTH;
+            return;
+        }
+
+        // Need koopa power to be active to traverse it
+        var isKoopaPower = (playerPower.powerType == KirbyPower.PowerType.KOOPA);
+        var canTraverse = isKoopaPower && playerPower.isActionActive();
+        if (!canTraverse) {
+            // TODO: play 'ouch' sound and particle effect
+            playerPos.set(playerSpawn.x, playerSpawn.y);
+            if (Flag.LOG_DEBUG.isEnabled()) {
+                Util.log(TAG, Stringf.format("player touched danger block, moving back to spawn: id=%s, name=%s",
+                    Components.optional(playerEntity, Id.class).orElse(Id.UNKNOWN),
+                    Components.optional(playerEntity, Name.class).orElse(Name.UNKNOWN)));
+            }
+            move.response = CollisionResponse.STOP_BOTH;
+            return;
+        }
     }
 }

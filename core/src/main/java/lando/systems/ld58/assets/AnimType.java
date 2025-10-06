@@ -13,6 +13,12 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , RELIC_PLUNGER(Path.OBJ_RELIC)
     , RELIC_TORCH(Path.OBJ_RELIC)
     , RELIC_WRENCH(Path.OBJ_RELIC)
+    // block animations -----------------------------------------
+    , BLOCK_BREAK(Path.BLOCKS)
+    , BLOCK_SPIKE_UP(Path.BLOCKS)
+    , BLOCK_SPIKE_DOWN(Path.BLOCKS)
+    , BLOCK_LAVA_UP(Path.BLOCKS)
+    , BLOCK_LAVA_DOWN(Path.BLOCKS)
     // character animations -------------------------------------
     // -- angry sun ---------------------------------------------
     , ANGRY_SUN(Path.CHAR_ANGRY_SUN, new Data(0.2f))
@@ -104,8 +110,9 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
         private static final String OBJ_COIN = OBJECTS + "coin/";
         private static final String OBJ_RELIC = OBJECTS + "relics/";
 
-        private static final String FLASHBACK = "flashback/";
+        private static final String BLOCKS = "blocks/";
 
+        private static final String FLASHBACK = "flashback/";
     }
 
     private static final String TAG = FontType.class.getSimpleName();
