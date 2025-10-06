@@ -40,8 +40,8 @@ public enum ImageType implements AssetType<Texture> {
         var texParamsRepeat = new TextureLoader.TextureParameter();
         texParamsRepeat.wrapU = Texture.TextureWrap.Repeat;
         texParamsRepeat.wrapV = Texture.TextureWrap.Repeat;
-        texParamsRepeat.minFilter = Texture.TextureFilter.Linear;
-        texParamsRepeat.magFilter = Texture.TextureFilter.Linear;
+        texParamsRepeat.minFilter = Texture.TextureFilter.Nearest;
+        texParamsRepeat.magFilter = Texture.TextureFilter.Nearest;
         texParamsRepeat.genMipMaps = false;
 
         var mgr = assets.mgr;
@@ -62,6 +62,8 @@ public enum ImageType implements AssetType<Texture> {
             if (texture == null) {
                 throw new GdxRuntimeException(Stringf.format("%s: texture '%s' not found for type '%s'", TAG, type.textureName, type.name()));
             }
+            texture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             container.put(type, texture);
         }
     }
