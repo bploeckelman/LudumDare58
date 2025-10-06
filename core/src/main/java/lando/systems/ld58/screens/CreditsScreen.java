@@ -25,7 +25,7 @@ public class CreditsScreen extends BaseScreen {
         if (!transitioning && Gdx.input.justTouched()){
             transitioning = true;
             Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
-            game.setScreen(new LaunchScreen());
+            game.setScreen(new TitleScreen());
         }
     }
 
