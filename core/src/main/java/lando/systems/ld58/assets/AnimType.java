@@ -58,6 +58,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , YOUNG_BILLY_RAGE(Path.FLASHBACK, "billy-rage")
     , DRACULA(Path.FLASHBACK, "dracula")
     , GANNON(Path.FLASHBACK, "gannon")
+    , GOOMBA_CAPE(Path.FLASHBACK, "goomba-cloak")
     , HIPPO(Path.FLASHBACK, "hippo")
     , KIDS(Path.FLASHBACK, "kids")
     , LUIGI(Path.FLASHBACK, "luigi")

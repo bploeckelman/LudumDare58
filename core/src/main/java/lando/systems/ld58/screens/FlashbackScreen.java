@@ -24,6 +24,7 @@ import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.assets.*;
 import lando.systems.ld58.flashback.FlashbackObject;
+import lando.systems.ld58.flashback.FlashbackParticle;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
@@ -48,12 +49,14 @@ public class FlashbackScreen extends BaseScreen {
     private Array<FlashbackObject> objects = new Array<>();
     private Array<String> messages =  new Array<>();
     public MutableFloat flashback = new MutableFloat(0);
+    private boolean drawParticles = false;
 
     public Layout layout = new Layout();
     public Font font;
     public TypingLabel dialog;
 
     public FlashbackScreen() {
+        drawParticles = false;
         font = FontType.ROUNDABOUT.font("large");
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
@@ -115,7 +118,7 @@ public class FlashbackScreen extends BaseScreen {
                 break;
             case MUSHROOM:
                 backgroundColor.set(107/255f, 140/255f, 255/255f, 1.0f);
-                objects.clear();
+                placeObjectsInMushroomWorld();
                 worldCamera.position.x = 25;
                 background = ImageType.FLASHBACK_MUSHROOM.get();
                 messages.add("That mushroom changed my whole perspective");
@@ -126,6 +129,7 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add("Secrets...");
                 break;
             case MARIO:
+                drawParticles = false;
                 placeObjectsInMarioWorld();
                 backgroundColor.set(.25f, .25f, .25f, 1.0f);
                 worldCamera.position.x = 84;
@@ -157,6 +161,7 @@ public class FlashbackScreen extends BaseScreen {
                 tween.killAll();
                 objects.add(new FlashbackObject(AnimType.GANNON.get(), new Rectangle(.5f, 2, 2, 4)));
                 objects.add(new FlashbackObject(AnimType.HIPPO.get(), new Rectangle(2.5f, 2, 2, 4)));
+                objects.add(new FlashbackObject(AnimType.GOOMBA_CAPE.get(),  new Rectangle(5f, 2, 2, 2)));
                 objects.add(new FlashbackObject(AnimType.MOTHER_BRAIN.get(), new Rectangle(6, 2, 8, 4)));
                 objects.add(new FlashbackObject(AnimType.DRACULA.get(), new Rectangle(13, 2, 2, 4)));
                 objects.add(new FlashbackObject(AnimType.LUIGI.get(), new Rectangle(16, 2, 2, 4)));
@@ -168,7 +173,7 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add(
                     "A cabal of boss enemies from across a wide range of game franchises");
                 messages.add(
-                    "Keeping the Mushroom Kingdom in balance by growing and then releasing a near-endless army of Marios into our ecosystem...");
+                    "{Size=90%}Keeping the Mushroom Kingdom in balance by growing and then releasing a near-endless army of Marios into our ecosystem...");
                 messages.add(
                     "Which is a premise so absurd it could only have come out of Ludum Dare 33");
                 messages.add(
@@ -180,7 +185,7 @@ public class FlashbackScreen extends BaseScreen {
                 messages.add("Wow... 10 years already?");
                 break;
             case EXIT:
-                deBounce = .5f;
+                deBounce = 1.5f;
                 Timeline.createSequence().pushPause(.5f)
                     .push(Tween.to(flashback,1, .5f).target(0))
                     .push(Tween.call((type, source) -> {
@@ -247,6 +252,9 @@ public class FlashbackScreen extends BaseScreen {
         for (FlashbackObject object : objects) {
             object.update(delta);
         }
+        if (drawParticles) {
+            updateParticleFountain(delta);
+        }
 
         dialog.act(delta);
         if (Gdx.input.justTouched() && deBounce <= 0) {
@@ -274,6 +282,11 @@ public class FlashbackScreen extends BaseScreen {
         for (FlashbackObject object : objects) {
             batch.setColor(object.tintColor);
             object.render(batch);
+        }
+        if (drawParticles) {
+            for (FlashbackParticle particle : particles) {
+                particle.render(batch);
+            }
         }
         batch.setColor(Color.WHITE);
         batch.end();
@@ -328,6 +341,44 @@ public class FlashbackScreen extends BaseScreen {
             batch.setColor(Color.WHITE);
         }
         dialog.draw(batch, 1f);
+    }
+
+    Array<FlashbackParticle> particles = new Array<>();
+    private void updateParticleFountain(float delta) {
+        for (int i = 0; i < 30; i++) {
+            particles.add(new FlashbackParticle());
+        }
+
+        for (int i = particles.size-1; i >= 0; i--) {
+            var particle = particles.get(i);
+            particle.update(delta);
+
+            if (particle.ttl < 0) particles.removeIndex(i);
+        }
+    }
+
+    private void placeObjectsInMushroomWorld() {
+        objects.clear();
+        objects.add(new FlashbackObject(AnimType.COIN_BLOCK.get(), new Rectangle(27, 9, 1, 1)));
+        objects.add(new FlashbackObject(AnimType.COIN_BLOCK.get(), new Rectangle(28, 5, 1, 1)));
+        objects.add(new FlashbackObject(AnimType.COIN_BLOCK.get(), new Rectangle(26, 5, 1, 1)));
+        objects.add(new FlashbackObject(AnimType.COIN_BLOCK.get(), new Rectangle(21, 5, 1, 1)));
+        var billy = new FlashbackObject(AnimType.YOUNG_BILLY_NORMAL.get(),  new Rectangle(27, 2, 1, 1));
+        objects.add(billy);
+        var mushroom = new FlashbackObject(AnimType.MUSHROOM.get(),  new Rectangle(32, 2, 1, 1));
+        objects.add(mushroom);
+        Timeline.createSequence()
+            .beginParallel()
+                .push(Tween.to(billy.bounds, RectangleAccessor.X, 3f).target(25).ease(Linear.INOUT))
+                .push(Tween.to(mushroom.bounds, RectangleAccessor.X, 3f).target(25.8f).ease(Linear.INOUT))
+            .end()
+            .push(Tween.to(mushroom.tintColor, ColorAccessor.A, .05f).target(0))
+            .push(Tween.call((type, source) -> {
+                billy.animation = AnimType.YOUNG_BILLY_RAGE.get();
+                drawParticles = true;
+            }))
+            .start(tween);
+
     }
 
     private void placeObjectsInMarioWorld() {
