@@ -41,6 +41,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     private Texture screenTexture;
     private float accum;
     private float trippyAmount = 0;
+    private boolean changeToGameScreen = false;
 
 //    private final Color backgroundColor = new Color(0xaaaaddff);
     private final Color backgroundColor = new Color(.1F, .5F, 1f, 1f);
@@ -108,8 +109,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public void update(float delta) {
         super.update(delta);
         accum += delta;
-        // TODO: trigger when player reaches a checkpoint
-        if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+        if (!transitioning && changeToGameScreen) {
             transitioning = true;
 
             // Cleanup ECS stuff from this screen before moving to the next screen/scene
