@@ -99,15 +99,19 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<E
         for (var spawner : spawners) {
             //@formatter:off
             switch (spawner.type) {
-                case "mario":  screen.engine.addEntity(Factory.mario(spawner));        break;
-                case "sun":    screen.engine.addEntity(Factory.angrySun(spawner));     break;
-                case "goomba": screen.engine.addEntity(Factory.goombaCyborg(spawner)); break;
-                case "lou":    screen.engine.addEntity(Factory.captainLou(spawner));   break;
-                case "misty":  screen.engine.addEntity(Factory.misty(spawner));        break;
-                case "bullet": screen.engine.addEntity(Factory.bulletBill(spawner));   break;
-                case "hammer": screen.engine.addEntity(Factory.hammerBro(spawner));    break;
-                case "koopa":  screen.engine.addEntity(Factory.koopa(spawner));        break;
-                case "lakitu": screen.engine.addEntity(Factory.lakitu(spawner));       break;
+                case "mario":   screen.engine.addEntity(Factory.mario(spawner));        break;
+                case "sun":     screen.engine.addEntity(Factory.angrySun(spawner));     break;
+                case "goomba":  screen.engine.addEntity(Factory.goombaCyborg(spawner)); break;
+                case "lou":     screen.engine.addEntity(Factory.captainLou(spawner));   break;
+                case "misty":   screen.engine.addEntity(Factory.misty(spawner));        break;
+                case "bullet":  screen.engine.addEntity(Factory.bulletBill(spawner));   break;
+                case "hammer":  screen.engine.addEntity(Factory.hammerBro(spawner));    break;
+                case "koopa":   screen.engine.addEntity(Factory.koopa(spawner));        break;
+                case "lakitu":  screen.engine.addEntity(Factory.lakitu(spawner));       break;
+                case "coin":    screen.engine.addEntity(Factory.coin(spawner));         break;
+                case "plunger": screen.engine.addEntity(Factory.relic(spawner));        break;
+                case "torch":   screen.engine.addEntity(Factory.relic(spawner));        break;
+                case "wrench":  screen.engine.addEntity(Factory.relic(spawner));        break;
                 default: {
                     this.player = Factory.player(spawner);
                     screen.engine.addEntity(this.player);

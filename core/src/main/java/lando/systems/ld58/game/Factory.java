@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -71,7 +73,7 @@ public class Factory {
         animator.size.set(animBounds.width, animBounds.height);
         animator.depth = 1;
         entity.add(animator);
-        entity.add(new Outline(Color.YELLOW, Color.CLEAR, 1f));
+        entity.add(new Outline(Color.BLACK, Color.CLEAR_WHITE, 1f));
         entity.add(new KirbyShaderRenderable());
 //        entity.add(new FlameShaderRenderable(animator));
         entity.add(new Cooldowns()
@@ -420,6 +422,68 @@ public class Factory {
 
         entity.add(name);
         entity.add(emitter);
+
+        return entity;
+    }
+
+    public static Entity coin(TilemapObject.Spawner spawner) {
+        if (!"coin".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create coin from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Coin"));
+        entity.add(Pickup.coin());
+
+        // NOTE: 'tile' map object 'position' is a bit off of where we'd want it in game, manually adjusting it here
+        var tileMapObject = (TiledMapTileMapObject) spawner.mapObject;
+        var x = spawner.x + tileMapObject.getProperties().get("width", 0f, Float.class) / 2f;
+        var y = spawner.y + tileMapObject.getProperties().get("height", 0f, Float.class) / 2f;
+        entity.add(new Position(x, y));
+        entity.add(new Outline(Color.YELLOW, Color.CLEAR_WHITE, 1f));
+
+        var anim = new Animator(AnimType.COIN);
+        anim.origin.set(8, 8);
+        anim.depth = Constants.Z_DEPTH_DEFAULT + 1;
+        entity.add(anim);
+
+        var bounds = new Circle(0, 0, 6);
+        var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
+        entity.add(Collider.circ(CollisionMask.PICKUP, bounds.x, bounds.y, bounds.radius, collidesWith));
+
+        return entity;
+    }
+
+    public static Entity relic(TilemapObject.Spawner spawner) {
+        var isPlunger = "plunger".equals(spawner.type);
+        var isTorch   = "torch".equals(spawner.type);
+        var isWrench  = "wrench".equals(spawner.type);
+        if (!isWrench && !isTorch && !isPlunger) {
+            throw new GdxRuntimeException(TAG + ": tried to create relic from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        if      (isPlunger) entity.add(new Name("RelicPlunger"));
+        else if (isTorch)   entity.add(new Name("RelicTorch"));
+        else if (isWrench)  entity.add(new Name("RelicWrench"));
+
+        if      (isPlunger) entity.add(Pickup.plunger());
+        else if (isTorch)   entity.add(Pickup.torch());
+        else if (isWrench)  entity.add(Pickup.wrench());
+
+        entity.add(new Position(spawner.x, spawner.y));
+        entity.add(new Outline(Color.BLACK, Color.CLEAR_WHITE, 2f));
+
+        var anim = new Animator(AnimType.COIN);
+        anim.origin.set(8, 8);
+        anim.depth = Constants.Z_DEPTH_DEFAULT + 1;
+        entity.add(anim);
+
+        var colliderBounds = new Rectangle(8, 8, 16, 16);
+        var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
+        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
 
         return entity;
     }

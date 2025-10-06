@@ -1,14 +1,18 @@
 package lando.systems.ld58.game.systems;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
+import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Signals;
+import lando.systems.ld58.game.components.Pickup;
 import lando.systems.ld58.game.components.Player;
 import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.game.components.Velocity;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
+import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CollisionEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
@@ -37,7 +41,37 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
     }
 
     private void handleOverlapCollision(CollisionEvent.Overlap overlap) {
-        // TODO...
+        var player = Components.has(overlap.entityA(), Player.class) ? overlap.entityA()
+                   : Components.has(overlap.entityB(), Player.class) ? overlap.entityB()
+                   : null;
+        var pickup = Components.has(overlap.entityA(), Pickup.class) ? overlap.entityA()
+                   : Components.has(overlap.entityB(), Pickup.class) ? overlap.entityB()
+                   : null;
+
+        if (player != null && pickup != null) {
+            handlePlayerPickupCollision(player, pickup);
+        }
+    }
+
+    private void handlePlayerPickupCollision(Entity playerEntity, Entity pickupEntity) {
+        var player = Components.get(playerEntity, Player.class);
+        var pickup = Components.get(pickupEntity, Pickup.class);
+
+        // TODO: handle the pickup differently depending what it is...
+        //  - mark a relic as obtained and trigger level completion
+        //  - increment a coin counter
+        switch (pickup.type) {
+            case COIN: {
+                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.COIN));
+            } break;
+            case RELIC_PLUNGER:
+            case RELIC_TORCH:
+            case RELIC_WRENCH: {
+                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.THUD));
+            } break;
+        }
+
+        getEngine().removeEntity(pickupEntity);
     }
 
     private void handlePlayerEnemyCollision(CollisionEvent.Move move) {

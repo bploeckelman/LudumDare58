@@ -15,6 +15,7 @@ public enum Flag {
     , LOG_DEBUG     (true)
     , LOG_WARN      (true)
     , LOG_INPUT     (false)
+    , LOG_EVENT     (false)
     , DEBUG_RENDER  (false)
     , DEBUG_UI      (false)
     , FRAME_STEP    (false)

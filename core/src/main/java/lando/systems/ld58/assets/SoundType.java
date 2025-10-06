@@ -7,7 +7,9 @@ import lando.systems.ld58.utils.Util;
 import java.util.EnumMap;
 
 public enum SoundType implements AssetType<Sound> {
-      JUMP("jump.ogg")
+      COIN("coin.ogg")
+    , JUMP("jump.ogg")
+    , THUD("thud1.ogg")
     ;
 
     private static final String TAG = SoundType.class.getSimpleName();

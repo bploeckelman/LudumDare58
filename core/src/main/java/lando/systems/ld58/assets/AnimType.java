@@ -10,6 +10,9 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // object animations ----------------------------------------
     COIN(Path.OBJ_COIN)
     , COIN_BLOCK(Path.FLASHBACK, "coin-block")
+    , RELIC_PLUNGER(Path.OBJ_RELIC)
+    , RELIC_TORCH(Path.OBJ_RELIC)
+    , RELIC_WRENCH(Path.OBJ_RELIC)
     // character animations -------------------------------------
     // -- angry sun ---------------------------------------------
     , ANGRY_SUN(Path.CHAR_ANGRY_SUN, new Data(0.2f))
@@ -89,6 +92,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
 
         private static final String OBJECTS = "objects/";
         private static final String OBJ_COIN = OBJECTS + "coin/";
+        private static final String OBJ_RELIC = OBJECTS + "relics/";
 
         private static final String FLASHBACK = "flashback/";
 

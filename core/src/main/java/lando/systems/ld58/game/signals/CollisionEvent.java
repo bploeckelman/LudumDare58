@@ -2,7 +2,12 @@ package lando.systems.ld58.game.signals;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
+import com.github.tommyettinger.digital.Stringf;
+import lando.systems.ld58.Flag;
+import lando.systems.ld58.game.Components;
+import lando.systems.ld58.game.components.Name;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
+import lando.systems.ld58.utils.Util;
 
 public interface CollisionEvent {
 
@@ -13,14 +18,18 @@ public interface CollisionEvent {
     CollisionResponse response();
 
     static Move move(Entity a, Entity b, int xDir, int yDir) {
-//        Util.log(TAG, "Move: mover=%s target=%s"
-//            .formatted(Components.get(a, Id.class), Components.get(b, Id.class)));
+        if (Flag.LOG_EVENT.isEnabled()) {
+            Util.log(TAG, Stringf.format("Move: mover=%s target=%s",
+                Components.get(a, Name.class), Components.get(b, Name.class)));
+        }
         return new Move(a, b, xDir, yDir);
     }
 
     static Overlap overlap(Entity a, Entity b) {
-//        Util.log(TAG, "Overlap between entities: a=%s b=%s"
-//            .formatted(Components.get(a, Id.class), Components.get(b, Id.class)));
+        if (Flag.LOG_EVENT.isEnabled()) {
+            Util.log(TAG, Stringf.format("Overlap between entities: a=%s b=%s",
+                Components.get(a, Name.class), Components.get(b, Name.class)));
+        }
         return new Overlap(a, b);
     }
 

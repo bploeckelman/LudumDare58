@@ -33,11 +33,11 @@
             "expandedObjectLayers": [
                 4
             ],
-            "scale": 1,
-            "selectedLayer": 0,
+            "scale": 2,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 810.5,
-                "y": 569.5
+                "x": 213.25,
+                "y": 208.75
             }
         },
         "relic1.tmx": {

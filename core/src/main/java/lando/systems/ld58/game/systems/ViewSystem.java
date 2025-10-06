@@ -15,8 +15,6 @@ public class ViewSystem extends IteratingSystem {
     private static final String TAG = ViewSystem.class.getSimpleName();
     private static final Vector2 SPEED = new Vector2(500f, 2000f);
 
-    private Entity map;
-    private Entity view;
     private Target target;
     private float ratchet; // TODO: have a better way to enable / disable ratchet
     private boolean initialized;
@@ -26,8 +24,6 @@ public class ViewSystem extends IteratingSystem {
 
     public ViewSystem() {
         super(Family.one(Viewer.class, Tilemap.class).get());
-        this.map = null;
-        this.view = null;
         this.target = null;
         this.ratchet = 0;
         this.initialized = false;
@@ -59,20 +55,15 @@ public class ViewSystem extends IteratingSystem {
         super.update(delta);
         if (target == null) return;
 
-        var entities = getEntities();
-        if (map == null) {
-            map = Util.streamOf(entities)
-                .filter(entity -> Components.has(entity, Tilemap.class))
-                .findFirst()
-                .orElse(null);
-        }
-        if (view == null) {
-            view = Util.streamOf(entities)
-                .filter(entity -> Components.has(entity, Viewer.class))
-                .findFirst()
-                .orElse(null);
-        }
+        var scene = Util.streamOf(getEngine().getEntitiesFor(Family.one(SceneContainer.class).get()))
+            .map(SceneContainer::get)
+            .map(SceneContainer::scene)
+            .findFirst()
+            .orElse(null);
+        if (scene == null) return;
 
+        var map = scene.map;
+        var view = scene.view;
         if (map == null || view == null) {
             Util.log(TAG, "unable to find map or view entities, skipping update");
             return;

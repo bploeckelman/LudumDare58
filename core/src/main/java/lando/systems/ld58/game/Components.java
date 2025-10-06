@@ -28,6 +28,7 @@ public class Components {
         entry(KirbyPower.class,     ComponentMapper.getFor(KirbyPower.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
+        entry(Pickup.class,         ComponentMapper.getFor(Pickup.class)),
         entry(Player.class,         ComponentMapper.getFor(Player.class)),
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
