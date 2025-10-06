@@ -179,7 +179,7 @@ public class GoombaNormalState extends PlayerState {
         if (power == null) {
             // no power right now
             if (input().isDownHeld) {
-                Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.SUCK, 0.55f));
+                Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.SUCK, 0.25f));
                 kirby.targetStrength = 1f;
                 var enemies = engine.getEntitiesFor(Family.one(KirbyPower.class).get());
                 for (Entity enemy : enemies) {
@@ -191,6 +191,7 @@ public class GoombaNormalState extends PlayerState {
                         enemy.getComponent(Animator.class).tint.set(Color.MAGENTA);
                         enemy.remove(KirbyPower.class);
                         this.entity.add(new KirbyPower(enemyKirby.powerType));
+                        Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP, .75f));
                         break;
                     }
                 }
@@ -201,8 +202,11 @@ public class GoombaNormalState extends PlayerState {
         } else {
             // You have a power
             kirby.targetStrength = 0;
+            Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
+
             if (input().isDownHeld && input().isActionJustPressed) {
                 entity.remove(KirbyPower.class);
+
             }
         }
 

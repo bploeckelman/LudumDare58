@@ -33,7 +33,7 @@ public class GameScreen extends BaseScreen {
 
     public GameScreen() {
         this.gdx = new TextureRegion(ImageType.GDX.get());
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.25f));
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.5f));
         switchScene(SceneType.TEST);
     }
 

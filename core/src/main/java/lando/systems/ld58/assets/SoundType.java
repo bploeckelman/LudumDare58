@@ -10,6 +10,7 @@ public enum SoundType implements AssetType<Sound> {
       COIN("coin.ogg")
     , JUMP("jump.ogg")
     , THUD("thud1.ogg")
+    , SLURP("slurp1.ogg")
     ;
 
     private static final String TAG = SoundType.class.getSimpleName();
