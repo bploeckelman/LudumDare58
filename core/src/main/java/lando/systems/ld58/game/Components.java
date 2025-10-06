@@ -21,6 +21,7 @@ public class Components {
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
         entry(Destructible.class,   ComponentMapper.getFor(Destructible.class)),
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
+        entry(EnemyTag.class,       ComponentMapper.getFor(EnemyTag.class)),
         entry(Fireball.class,       ComponentMapper.getFor(Fireball.class)),
         entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
         entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
@@ -104,7 +105,6 @@ public class Components {
     }
 
     public static boolean hasEnemyComponent(Entity entity) {
-        return Components.has(entity, EnemyMario.class)
-            || Components.has(entity, EnemyAngrySun.class);
+        return Components.has(entity, EnemyTag.class);
     }
 }

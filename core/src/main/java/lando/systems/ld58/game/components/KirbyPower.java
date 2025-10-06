@@ -125,6 +125,10 @@ public class KirbyPower implements Component {
         return Constants.MOVE_SPEED_MAX_AIR;
     }
 
+    public float getMaxFallSpeed() {
+        return Constants.MOVE_SPEED_MAX_FALL;
+    }
+
     public boolean isActionActive() {
         return activeTimer > 0;
     }

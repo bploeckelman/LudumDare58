@@ -65,6 +65,10 @@ public class MovementSystem extends IteratingSystem {
             velocity.value.y += gravity * delta;
         }
 
+        if (velocity.value.y < -velocity.maxFallSpeed) {
+            velocity.value.y = -velocity.maxFallSpeed;
+        }
+
         // How far should we move this tick, assuming nothing is in the way
         var moveTotal = FramePool.vec2(
             velocity.remainder.x + velocity.value.x * delta,

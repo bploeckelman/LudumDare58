@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;
+import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.utils.Calc;
 
 import java.util.Optional;
@@ -18,6 +19,10 @@ public class Velocity implements Component {
 
     public final Vector2 value = new Vector2();
     public final Vector2 remainder;
+
+    public float maxFallSpeed = Constants.MOVE_SPEED_MAX_FALL;
+    public float maxHorizontalSpeedAir = Constants.MOVE_SPEED_MAX_AIR;
+    public float maxHorizontalSpeedGround = Constants.MOVE_SPEED_MAX_GROUND;
 
 
     public Velocity(float x, float y) {

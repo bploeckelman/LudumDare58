@@ -6,6 +6,7 @@ public class Constants {
 
     public static final float MOVE_SPEED_MAX_GROUND = 250f;
     public static final float MOVE_SPEED_MAX_AIR = 500f;
+    public static final float MOVE_SPEED_MAX_FALL = 500f;
 
     public static final float MOVE_ACCEL_GROUND = 500f;
     public static final float MOVE_ACCEL_AIR = 250f;

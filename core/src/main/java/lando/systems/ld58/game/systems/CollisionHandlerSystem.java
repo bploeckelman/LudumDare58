@@ -18,6 +18,7 @@ import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CollisionEvent;
 import lando.systems.ld58.particles.effects.BlockBreakEffect;
 import lando.systems.ld58.utils.FramePool;
+import lando.systems.ld58.utils.Time;
 import lando.systems.ld58.utils.Util;
 
 public class CollisionHandlerSystem extends EntitySystem implements Listener<CollisionEvent> {
@@ -42,10 +43,16 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             handlePlayerEnemyCollision(move);
         }
 
-        // Fireball/Wall
-        if ((Components.has(move.mover(), Fireball.class) && Components.has(move.target(), Tilemap.class))) {
-            handleFireballMapCollisions(move);
-        }
+        var fireball
+            = Components.has(move.entityA(), Fireball.class) ? move.entityA()
+            : Components.has(move.entityB(), Fireball.class) ? move.entityB()
+            : null;
+
+        var tilemap
+            = Components.has(move.entityA(), Tilemap.class) ? move.entityA()
+            : Components.has(move.entityB(), Tilemap.class) ? move.entityB()
+            : null;
+
         var player
             = Components.has(move.entityA(), Player.class) ? move.entityA()
             : Components.has(move.entityB(), Player.class) ? move.entityB()
@@ -68,6 +75,15 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             handlePlayerDestructibleCollision(move, player, destruct);
         }
         // TODO: add 'handleProjectileDestructibleCollision(projectile, destructible);
+
+
+        if (fireball != null && tilemap != null) {
+            handleFireballMapCollisions(move);
+        }
+
+        if (fireball != null && enemy != null) {
+            handleEnemyFireballCollision(move, fireball, enemy);
+        }
     }
 
     private void handleOverlapCollision(CollisionEvent.Overlap overlap) {
@@ -96,6 +112,23 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             fireballVel.value.y *= -1;
         }
         move.response = CollisionResponse.KEEP_VELOCITY;
+    }
+
+    private void handleEnemyFireballCollision(CollisionEvent.Move move, Entity fireball, Entity enemy) {
+        if (!enemy.getComponent(EnemyTag.class).alive) {
+            return;
+        }
+
+        enemy.getComponent(EnemyTag.class).alive = false;
+        getEngine().removeEntity(enemy);
+        getEngine().removeEntity(fireball);
+        Util.log("called");
+        Time.do_after_delay(3f, (args) -> {
+            Util.findScene(getEngine()).spawnEntity(enemy.getComponent(MySpawner.class).spawner);
+            Util.log("spawned");
+        });
+
+        move.response = CollisionResponse.PASSTHROUGH;
     }
 
     private void handlePlayerPickupCollision(Entity playerEntity, Entity pickupEntity) {

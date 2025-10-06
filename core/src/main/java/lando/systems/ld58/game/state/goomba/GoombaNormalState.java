@@ -87,6 +87,14 @@ public class GoombaNormalState extends PlayerState {
         handleJumping(delta);
         handleSuckOff(delta);
         handleAction(delta);
+
+        var fireballs = engine.getEntitiesFor(Family.all(Fireball.class).get());
+        for (Entity fireball : fireballs) {
+            fireball.getComponent(Fireball.class).ttl -= delta;
+            if (fireball.getComponent(Fireball.class).ttl <= 0) {
+                engine.removeEntity(fireball);
+            }
+        }
     }
 
     private void handleMovement(float delta) {
@@ -101,10 +109,8 @@ public class GoombaNormalState extends PlayerState {
             : input.moveDirX * Constants.MOVE_ACCEL_AIR;
         velocity.value.x += accel * delta;
 
-        var maxAirSpeed = kirby == null ? Constants.MOVE_SPEED_MAX_AIR : kirby.maxAirSpeed();
-        var maxGroundSpeed = kirby == null ? Constants.MOVE_SPEED_MAX_GROUND : kirby.maxGroundSpeed();
         // Constrain horizontal speed
-        var maxSpeed = isGrounded ? maxGroundSpeed: maxAirSpeed;
+        var maxSpeed = isGrounded ? velocity.maxHorizontalSpeedGround : velocity.maxHorizontalSpeedAir;
         if (Calc.abs(velocity.value.x) > maxSpeed) {
             // NOTE: this version is a hard cap on max speed
             velocity.value.x = animator.facing * maxSpeed;
@@ -257,15 +263,23 @@ public class GoombaNormalState extends PlayerState {
     float actionDelay = 0;
     public void handleAction(float delta) {
         var gravity = gravity();
+        var velocity = velocity();
+
         gravity.value = Constants.GRAVITY;
+        velocity.maxHorizontalSpeedAir = Constants.MOVE_SPEED_MAX_AIR;
+        velocity.maxHorizontalSpeedGround = Constants.MOVE_SPEED_MAX_GROUND;
+        velocity.maxFallSpeed = Constants.MOVE_SPEED_MAX_AIR;
         actionDelay -= delta;
         var kirby = kirby();
-        var velocity = velocity();
+
         var animator = animator();
 
         if (kirby == null) return;
         kirby.activeTimer -= delta;
         gravity.value = kirby.getGravity();
+        velocity.maxFallSpeed = kirby().maxGroundSpeed();
+        velocity.maxHorizontalSpeedGround = kirby().maxGroundSpeed();
+        velocity.maxHorizontalSpeedAir = kirby().maxAirSpeed();
 
         if (input().isActionJustPressed && actionDelay <= 0f) {
             actionDelay = .5f;
@@ -322,16 +336,20 @@ public class GoombaNormalState extends PlayerState {
         var vel = new Velocity(0,0);
         vel.value.y = 0;
         vel.value.x = 100 * animator.facing;
+        vel.maxFallSpeed = 100f;
 
         var fireballEntity = engine.createEntity();
         fireballEntity.add(new Position(position().x, position().y + 20));
         fireballEntity.add(vel);
         fireballEntity.add(new Gravity(Constants.GRAVITY));
         fireballEntity.add(new Fireball());
-        fireballEntity.add(new Animator(AnimType.COIN));
+        var fireballAnim = new Animator(AnimType.MARIO_FIREBALL);
+        fireballAnim.size.set(16,16f);
+        fireballAnim.depth = 15f;
+        fireballEntity.add(fireballAnim);
 
-        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID };
-        fireballEntity.add(Collider.circ(CollisionMask.PROJECTILE, 2, 2, 4f, collidesWith));
+        var collidesWith  = new CollisionMask[] { CollisionMask.SOLID , CollisionMask.DESTRUCTIBLE, CollisionMask.ENEMY};
+        fireballEntity.add(Collider.circ(CollisionMask.PROJECTILE, 8, 8, 8f, collidesWith));
 
         engine.addEntity(fireballEntity);
     }
