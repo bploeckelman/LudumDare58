@@ -476,14 +476,18 @@ public class Factory {
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Outline(Color.BLACK, Color.CLEAR_WHITE, 2f));
 
-        var anim = new Animator(AnimType.COIN);
-        anim.origin.set(8, 8);
+        var animType = isPlunger ? AnimType.RELIC_PLUNGER
+                     : isTorch ? AnimType.RELIC_TORCH
+                     : isWrench ? AnimType.RELIC_WRENCH : null;
+        var anim = new Animator(animType);
+        anim.origin.set(16, 16);
+        anim.size.set(32, 32);
         anim.depth = Constants.Z_DEPTH_DEFAULT + 1;
         entity.add(anim);
 
-        var colliderBounds = new Rectangle(8, 8, 16, 16);
+        var bounds = new Circle(0, 0, 10);
         var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
-        entity.add(Collider.rect(CollisionMask.ENEMY, colliderBounds, collidesWith));
+        entity.add(Collider.circ(CollisionMask.PICKUP, bounds.x, bounds.y, bounds.radius, collidesWith));
 
         return entity;
     }
