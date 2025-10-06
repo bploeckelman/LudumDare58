@@ -86,7 +86,8 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<E
 
         // Create entities for mapObjects
         for (var mapObject : tilemap.objects) {
-            screen.engine.addEntity(TilemapObject.createEntity(tilemap, mapObject));
+            var entity = TilemapObject.createEntity(tilemap, mapObject);
+            screen.engine.addEntity(entity);
         }
     }
 

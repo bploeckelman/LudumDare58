@@ -53,7 +53,8 @@ public class Components {
         entry(EnemyMisty.class,        ComponentMapper.getFor(EnemyMario.class)),
 
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
-        entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class))
+        entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class)),
+        entry(TilemapObject.Trigger.class, ComponentMapper.getFor(TilemapObject.Trigger.class))
     );
 
     private Components() { /* don't allow instantiation */ }

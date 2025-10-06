@@ -20,4 +20,6 @@ public class Signals {
     public static final Signal<StateEvent> changeState = new Signal<>();
 
     public static final Signal<EntityEvent> removeEntity = new Signal<>();
+
+    public static final Signal<TriggerEvent> dialogTrigger = new Signal<>();
 }

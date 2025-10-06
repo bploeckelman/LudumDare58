@@ -1,11 +1,17 @@
 package lando.systems.ld58.screens;
 
+import com.badlogic.ashley.signals.Listener;
+import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
+import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
@@ -16,15 +22,19 @@ import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.scenes.SceneIntro;
 import lando.systems.ld58.game.signals.AudioEvent;
+import lando.systems.ld58.game.signals.TriggerEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
 
-public class IntroScreen extends BaseScreen {
+import java.awt.*;
+
+public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     private final Color backgroundColor = new Color(0xbbebf3ff);
 
     public final Scene<IntroScreen> scene;
+    public TypingLabel dialog;
 
     public IntroScreen() {
         var entity = Factory.createEntity();
@@ -41,6 +51,15 @@ public class IntroScreen extends BaseScreen {
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
         Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.DIRGE, 0.25f));
+
+        font = FontType.ROUNDABOUT.font("large");
+        this.dialog = new TypingLabel("", font);
+        this.dialog.setWrap(true);
+        this.dialog.setAlignment(Align.center);
+        this.dialog.setBounds(
+            200, Config.window_height/2f,
+            Config.window_width - 400,
+            Config.window_height/3f);
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
@@ -93,6 +112,23 @@ public class IntroScreen extends BaseScreen {
                 windowCamera.viewportHeight - layout.getHeight());
             font.drawGlyphs(batch, layout, pos.x, pos.y);
             batch.end();
+        }
+    }
+
+    private void drawDialog(SpriteBatch batch, float delta) {
+        if (!dialog.getOriginalText().toString().isEmpty()) {
+            batch.setColor(0, 0, 0, .4f);
+            batch.draw(assets.pixel, dialog.getX()- 5, dialog.getY()-5, dialog.getWidth()+10, dialog.getHeight()+10);
+            batch.setColor(Color.WHITE);
+        }
+        dialog.draw(batch, 1f);
+    }
+
+    @Override
+    public void receive(Signal<TriggerEvent> signal, TriggerEvent event) {
+        if (event instanceof TriggerEvent.Dialog) {
+            var dialog = (TriggerEvent.Dialog) event;
+            // TODO: lookup dialog text by key and start dialog
         }
     }
 }

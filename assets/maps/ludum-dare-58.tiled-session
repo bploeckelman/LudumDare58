@@ -19,10 +19,13 @@
             }
         },
         "finale.tmx": {
+            "expandedObjectLayers": [
+                5
+            ],
             "scale": 0.75,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 612.6666666666667,
+                "x": 450.66666666666674,
                 "y": 368.66666666666663
             }
         },
