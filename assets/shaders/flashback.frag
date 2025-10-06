@@ -6,7 +6,7 @@ uniform sampler2D u_texture;
 uniform float u_flashback;
 uniform float u_time;
 uniform float u_fade;
-uniform vec3 u_res;
+uniform vec2 u_res;
 
 varying vec4 v_color;
 varying vec2 v_texCoord;
@@ -24,6 +24,11 @@ void main() {
 
     texColor = desaturate(texColor.rgb, u_flashback *  .8);
 
-    gl_FragColor = texColor * v_color;
+    vec2 uv = v_texCoord - .5;
+    float dist = length(uv);
+
+    float vig = smoothstep(.5, .6, dist);
+    float intensity = .6 * u_flashback;
+    gl_FragColor = vec4(mix(texColor.rgb, texColor.rgb * (1.0 - intensity), vig), 1.) * v_color;
 
 }
