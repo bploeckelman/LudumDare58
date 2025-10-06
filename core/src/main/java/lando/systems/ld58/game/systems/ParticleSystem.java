@@ -60,6 +60,15 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
                 pool.free(particleData);
             }
         }
+
+        // Remove completed emitters
+        for (var entity : getEntities()) {
+            var emitter = Components.get(entity, Emitter.class);
+            if (emitter == null) continue;
+            if (emitter.isComplete()) {
+                getEngine().removeEntity(entity);
+            }
+        }
     }
 
     @Override
@@ -159,6 +168,11 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
             position.set(pathPos.x, pathPos.y);
         }
         else if (data.targeted) {
+            // If we're tracking a position component for the target, update the target coords
+            if (data.targetPosition != null) {
+                data.xTarget = data.targetPosition.x;
+                data.yTarget = data.targetPosition.y;
+            }
             position.set(
                 MathUtils.lerp(data.xStart, data.xTarget, progress),
                 MathUtils.lerp(data.yStart, data.yTarget, progress));

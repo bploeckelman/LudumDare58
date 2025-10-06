@@ -84,6 +84,10 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         engine.update(0f);
     }
 
+    public Scene<? extends BaseScreen> scene() {
+        return scene;
+    }
+
     @Override
     public void update(float delta) {
         super.update(delta);

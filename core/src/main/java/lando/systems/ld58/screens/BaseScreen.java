@@ -17,6 +17,7 @@ import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Systems;
+import lando.systems.ld58.game.scenes.Scene;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public abstract class BaseScreen implements Screen {
@@ -58,6 +59,10 @@ public abstract class BaseScreen implements Screen {
         font.regenerateLayout(layout);
 
         Factory.init(this);
+    }
+
+    public Scene<? extends BaseScreen> scene() {
+        return null;
     }
 
     /** Called when this screen becomes the current screen for a {@link Game}. */

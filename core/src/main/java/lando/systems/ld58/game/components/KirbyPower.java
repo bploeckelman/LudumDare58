@@ -1,8 +1,6 @@
 package lando.systems.ld58.game.components;
 
 import com.badlogic.ashley.core.Component;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import lando.systems.ld58.assets.AnimType;
 
 public class KirbyPower implements Component {
@@ -14,36 +12,36 @@ public class KirbyPower implements Component {
         this.powerType = powerType;
     }
 
-    public AnimType getWalkAnimation() {
+    public AnimType getOriginalEnemyIdleAnimType() {
         switch (powerType) {
-            case KOOPA:
-                break;
-            case LAKITU:
-                return AnimType.BILLY_LAKITU_WALK;
-            case HAMMER:
-                break;
-            case BULLET:
-                return AnimType.BILLY_BULLET_BILL_WALK;
-            case SUN:
-                break;
+            case KOOPA:  return AnimType.KOOPA_IDLE;
+            case LAKITU: return AnimType.LAKITU_IDLE;
+            case HAMMER: return AnimType.HAMMER_BRO_IDLE;
+            case BULLET: return AnimType.BULLET_BILL_IDLE;
+            case SUN:    return AnimType.ANGRY_SUN;
+            default:     return AnimType.COIN_BLOCK;
         }
-        return AnimType.COIN_BLOCK;
     }
 
-    public AnimType getActionAnimation() {
+    public AnimType getBillyEnemyWalkAnimType() {
         switch (powerType) {
-            case KOOPA:
-                break;
-            case LAKITU:
-                return AnimType.BILLY_LAKITU_ACTION;
-            case HAMMER:
-                break;
-            case BULLET:
-                return AnimType.BILLY_BULLET_BILL_ACTION;
-            case SUN:
-                break;
+//            case KOOPA:  return AnimType.BILLY_KOOPA_WALK;
+            case LAKITU: return AnimType.BILLY_LAKITU_WALK;
+//            case HAMMER: return AnimType.BILLY_HAMMER_BRO_WALK;
+            case BULLET: return AnimType.BILLY_BULLET_BILL_WALK;
+//            case SUN:    return AnimType.BILLY_ANGRY_SUN;
+            default:     return AnimType.COIN_BLOCK;
         }
+    }
 
-        return AnimType.COIN_BLOCK;
+    public AnimType getBillyEnemyActionAnimType() {
+        switch (powerType) {
+//            case KOOPA:  return AnimType.BILLY_KOOPA_ACTION;
+            case LAKITU: return AnimType.BILLY_LAKITU_ACTION;
+//            case HAMMER: return AnimType.HAMMER_BRO_ACTION;
+            case BULLET: return AnimType.BILLY_BULLET_BILL_ACTION;
+//            case SUN:    return AnimType.BILLY_ANGRY_SUN;
+            default:     return AnimType.COIN_BLOCK;
+        }
     }
 }

@@ -48,11 +48,9 @@ public class Factory {
     }
 
     public static Entity player(TilemapObject.Spawner spawner) {
-        return player(spawner.x(), spawner.y());
-    }
-
-    public static Entity player(Position position) {
-        return player(position.x, position.y);
+        var entity = player(spawner.x(), spawner.y());
+        entity.add(new MySpawner(spawner));
+        return entity;
     }
 
     public static Entity player(int x, int y) {
@@ -95,6 +93,7 @@ public class Factory {
 
         entity.add(new Name("Mario"));
         entity.add(new EnemyMario());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -120,6 +119,7 @@ public class Factory {
 
         entity.add(new Name("Sun"));
         entity.add(new EnemyAngrySun());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -147,6 +147,7 @@ public class Factory {
 
         entity.add(new Name("GoombaCyborg"));
         entity.add(new EnemyGoombaCyborg());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -176,6 +177,7 @@ public class Factory {
 
         entity.add(new Name("CaptainLou"));
         entity.add(new EnemyCaptainLou());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -205,6 +207,7 @@ public class Factory {
 
         entity.add(new Name("Misty"));
         entity.add(new EnemyMisty());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -235,6 +238,7 @@ public class Factory {
 
         entity.add(new Name("BulletBill"));
         entity.add(new EnemyBulletBill());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -264,6 +268,7 @@ public class Factory {
 
         entity.add(new Name("HammerBro"));
         entity.add(new EnemyHammerBro());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -293,6 +298,7 @@ public class Factory {
 
         entity.add(new Name("Koopa"));
         entity.add(new EnemyKoopa());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
@@ -322,6 +328,7 @@ public class Factory {
 
         entity.add(new Name("Lakitu"));
         entity.add(new EnemyLakitu());
+        entity.add(new MySpawner(spawner));
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));

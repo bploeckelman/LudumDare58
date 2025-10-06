@@ -27,6 +27,12 @@ public class TestEffect implements ParticleEffect {
             this.interval = interval;
             this.timer = interval;
         }
+
+        @Override
+        public boolean isComplete() {
+            // Perpetual emission
+            return false;
+        }
     }
 
     @Override

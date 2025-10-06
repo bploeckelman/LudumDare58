@@ -3,11 +3,11 @@ package lando.systems.ld58.particles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.Pool;
+import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.utils.SimplePath;
 
 public class ParticleData implements Pool.Poolable {
@@ -38,6 +38,7 @@ public class ParticleData implements Pool.Poolable {
     public boolean targeted;
     public float xTarget;
     public float yTarget;
+    public Position targetPosition;
 
     public Vector2 velocity;
     public float bounceScale;
@@ -75,6 +76,7 @@ public class ParticleData implements Pool.Poolable {
         accel = new Vector2();
         collisionBounds = new Circle();
         collisionRect = new Rectangle();
+        targetPosition = null;
         reset();
     }
 
@@ -111,6 +113,7 @@ public class ParticleData implements Pool.Poolable {
         this.targeted = false;
         this.xTarget = 0f;
         this.yTarget = 0f;
+        this.targetPosition = null;
 
         this.velocity.set(0,0);
         this.bounceScale = .8f;
@@ -170,6 +173,7 @@ public class ParticleData implements Pool.Poolable {
         private boolean targeted = false;
         private float xTarget = 0f;
         private float yTarget = 0f;
+        private Position targetPosition;
 
         private float xVel = 0f;
         private float yVel = 0f;
@@ -246,6 +250,14 @@ public class ParticleData implements Pool.Poolable {
         public Initializer targetPos(float x, float y) {
             this.xTarget = x;
             this.yTarget = y;
+            this.targeted = true;
+            return this;
+        }
+
+        public Initializer targetPos(Position targetPosition) {
+            this.targetPosition = targetPosition;
+            this.xTarget = targetPosition.x;
+            this.yTarget = targetPosition.y;
             this.targeted = true;
             return this;
         }
@@ -393,6 +405,7 @@ public class ParticleData implements Pool.Poolable {
             particleData.targeted = targeted;
             particleData.xTarget = xTarget;
             particleData.yTarget = yTarget;
+            particleData.targetPosition = targetPosition;
             if (targeted && !timed) {
                 throw new GdxRuntimeException("Particles with a target must also have a time to live, is your Particle.Initializer missing a call to timeToLive()?");
             }

@@ -12,8 +12,10 @@ import lando.systems.ld58.game.actions.ParallelActions;
 import lando.systems.ld58.game.actions.SequentialActions;
 import lando.systems.ld58.game.actions.types.*;
 import lando.systems.ld58.game.components.TilemapObject;
+import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.signals.StateEvent;
 import lando.systems.ld58.game.state.PlayerState;
+import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 
@@ -21,8 +23,8 @@ public class GoombaStartState extends PlayerState {
 
     private static final Family SPAWNERS = Family.one(TilemapObject.Spawner.class).get();
 
-    public GoombaStartState(Engine engine, Entity entity) {
-        super(engine, entity);
+    public GoombaStartState(Engine engine, Scene<? extends BaseScreen> scene, Entity entity) {
+        super(engine, scene, entity);
     }
 
     @Override

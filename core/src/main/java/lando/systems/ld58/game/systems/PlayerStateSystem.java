@@ -11,6 +11,7 @@ import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.Id;
 import lando.systems.ld58.game.components.Player;
+import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.signals.StateEvent;
 import lando.systems.ld58.game.state.PlayerState;
 import lando.systems.ld58.game.state.goomba.GoombaNormalState;
@@ -27,12 +28,17 @@ public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingS
     private static final String TAG = PlayerStateSystem.class.getSimpleName();
 
     private final ScreenType screen;
+    private final Scene<ScreenType> scene;
     private final Map<Entity, Map<Class<? extends PlayerState>, PlayerState>> allStates;
     private final Map<Entity, PlayerState> currentStates;
 
+    @SuppressWarnings("unchecked")
     public PlayerStateSystem(ScreenType screen) {
         super(Family.all(Player.class).get(), PRIORITY);
         this.screen = screen;
+        // NOTE: only IntroScreen and GameScreen have Scenes!
+        //  but that's ok, because we only create a PlayerStateSystem for those screens
+        this.scene = (Scene<ScreenType>) screen.scene();
         this.currentStates = new HashMap<>();
         this.allStates = new HashMap<>();
         Signals.changeState.add(this);
@@ -111,16 +117,14 @@ public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingS
     protected void processEntity(Entity entity, float delta) {
         var statesByType = allStates.computeIfAbsent(entity, k -> new HashMap<>());
         if (statesByType.isEmpty()) {
-            populateStates(entity, statesByType);
+            populateStates(entity, scene, statesByType);
             Signals.changeState.dispatch(new StateEvent.Change(entity, null, GoombaStartState.class));
         }
     }
 
-    private void populateStates(Entity entity, Map<Class<? extends PlayerState>, PlayerState> statesByPlayerEntity) {
+    private void populateStates(Entity entity, Scene<ScreenType> scene, Map<Class<? extends PlayerState>, PlayerState> statesByPlayerEntity) {
         var engine = getEngine();
-//        statesByPlayerEntity.putIfAbsent(CharacterChangeState.class, new CharacterChangeState(engine, entity));
-
-        statesByPlayerEntity.putIfAbsent(GoombaNormalState.class, new GoombaNormalState(engine, entity));
-        statesByPlayerEntity.putIfAbsent(GoombaStartState.class,  new GoombaStartState(engine, entity));
+        statesByPlayerEntity.putIfAbsent(GoombaNormalState.class, new GoombaNormalState(engine, scene, entity));
+        statesByPlayerEntity.putIfAbsent(GoombaStartState.class,  new GoombaStartState(engine, scene, entity));
     }
 }

@@ -6,24 +6,32 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
+import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Constants;
+import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.components.KirbyPower;
-import lando.systems.ld58.game.components.Player;
-import lando.systems.ld58.game.components.Position;
+import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
+import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.signals.AnimationEvent;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CooldownEvent;
 import lando.systems.ld58.game.state.PlayerState;
+import lando.systems.ld58.particles.effects.SpitEffect;
+import lando.systems.ld58.particles.effects.SuckEffect;
+import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.Calc;
+import lando.systems.ld58.utils.Time;
+import lando.systems.ld58.utils.Util;
 
 public class GoombaNormalState extends PlayerState {
 
+    private static final String TAG = GoombaNormalState.class.getSimpleName();
+    private static final Family ENEMY_WITH_POWER = Family.one(KirbyPower.class).get();
     public static float COYOTE_TIME = .25f;
 
     private boolean isGrounded;
@@ -33,8 +41,8 @@ public class GoombaNormalState extends PlayerState {
     private boolean allowGrab = false;
     private boolean suckActive = false;
 
-    public GoombaNormalState(Engine engine, Entity entity) {
-        super(engine, entity);
+    public GoombaNormalState(Engine engine, Scene<? extends BaseScreen> scene, Entity entity) {
+        super(engine, scene, entity);
     }
 
     @Override
@@ -66,7 +74,7 @@ public class GoombaNormalState extends PlayerState {
             if (kirbyPower == null) {
                 animType = actuallyMoving ? AnimType.BILLY_WALK : AnimType.BILLY_IDLE;
             } else {
-                animType = kirbyPower.getWalkAnimation();
+                animType = kirbyPower.getBillyEnemyWalkAnimType();
             }
 
             Signals.animStart.dispatch(new AnimationEvent.Play(animator(), animType));
@@ -196,17 +204,45 @@ public class GoombaNormalState extends PlayerState {
             // no power right now
             if (input().isDownHeld && suckActive) {
                 Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.SUCK, 0.25f));
-                var enemies = engine.getEntitiesFor(Family.one(KirbyPower.class).get());
-                for (Entity enemy : enemies) {
-                    if (enemy == this.entity) continue; // Don't take from yourself?
-                    if (enemy.getComponent(Position.class).dst(this.entity.getComponent(Position.class)) < KirbyShaderRenderable.radius) {
-                        var enemyKirby =  Components.optional(enemy, KirbyPower.class).orElse(null);
-                        if (enemyKirby == null) continue;
-                        // TODO: suck this guy off
-                        enemy.getComponent(Animator.class).tint.set(Color.MAGENTA);
-                        enemy.remove(KirbyPower.class);
-                        gainPower(enemyKirby.powerType);
+
+                var enemiesWithPower = engine.getEntitiesFor(ENEMY_WITH_POWER);
+                for (var enemyEntity : enemiesWithPower) {
+                    if (enemyEntity == this.entity) continue; // Don't take from yourself?
+
+                    var playerPos = entity.getComponent(Position.class);
+                    var enemyPos = enemyEntity.getComponent(Position.class);
+                    if (enemyPos.dst(playerPos) < KirbyShaderRenderable.radius) {
+                        var enemyPower = Components.get(enemyEntity, KirbyPower.class);
+                        if (enemyPower == null) continue;
+
+                        // Suck this guy off....
                         Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP, .75f));
+
+                        // Create a particle emitter to show the enemy power being sucked in
+                        var params = new SuckEffect.Params(enemyPower, entity, enemyPos);
+                        var emitter = Factory.emitter(EmitterType.POWER_SUCK, params);
+                        engine.addEntity(emitter);
+
+                        // Give power to billy by cloning power component and attaching to billy
+                        enemyEntity.remove(KirbyPower.class);
+                        gainPower(enemyPower.powerType);
+
+                        // Respawn enemy from their MySpawner so there's always an enemy of that type in the level
+                        // TODO: technically we don't need this extra complexity of removing and respawning,
+                        //  the suck effect can look like we're sucking out the 'spirit power'
+                        //  and we can just leave the enemy in place
+                        var enemySpawner = Components.get(enemyEntity, MySpawner.class);
+                        if (enemySpawner == null) {
+                            Util.warn(TAG, "unable to respawn sucked enemy, missing MySpawner component: "
+                                    + Components.get(enemyEntity, Name.class));
+                        } else {
+                            // Spawn a new entity from their spawner after some interval
+                            if (scene != null) {
+                                Time.do_after_delay(3f, (args) -> scene.spawnEntity(enemySpawner.spawner));
+                            }
+                            // Delete the original enemy entity
+                            engine.removeEntity(enemyEntity);
+                        }
                         break;
                     }
                 }
@@ -220,6 +256,12 @@ public class GoombaNormalState extends PlayerState {
             Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
 
             if (input().isDownHeld && input().isActionJustPressed) {
+                // Create a particle emitter to show the enemy power being spat out
+                var params = new SpitEffect.Params(power, position());
+                var emitter = Factory.emitter(EmitterType.POWER_SPIT, params);
+                engine.addEntity(emitter);
+
+                // Remove the power from billy and restore his original animation
                 entity.remove(KirbyPower.class);
                 Signals.animStart.dispatch(new AnimationEvent.Play(animator(), AnimType.BILLY_IDLE));
             }
@@ -229,35 +271,35 @@ public class GoombaNormalState extends PlayerState {
     public void gainPower(KirbyPower.PowerType powerType) {
         var kirbyPower = new KirbyPower(powerType);
         this.entity.add(kirbyPower);
-        var animator = Components.optional(entity, Animator.class).orElse(null);
+        var animator = Components.get(entity, Animator.class);
         if (animator == null) return;
-        Signals.animStart.dispatch(new AnimationEvent.Play(animator(), kirbyPower.getWalkAnimation()));
+        Signals.animStart.dispatch(new AnimationEvent.Play(animator(), kirbyPower.getBillyEnemyWalkAnimType()));
     }
 
     public AnimType getWalkAnimation() {
-        var kirbyPower =  Components.optional(entity, KirbyPower.class).orElse(null);
+        var kirbyPower = Components.get(entity, KirbyPower.class);
         if (kirbyPower == null) {
             return AnimType.BILLY_WALK;
         } else {
-            return kirbyPower.getWalkAnimation();
+            return kirbyPower.getBillyEnemyWalkAnimType();
         }
     }
 
     public AnimType getJumpAnimation() {
-        var kirbyPower =  Components.optional(entity, KirbyPower.class).orElse(null);
+        var kirbyPower = Components.get(entity, KirbyPower.class);
         if (kirbyPower == null) {
             return AnimType.BILLY_JUMP;
         } else {
-            return kirbyPower.getWalkAnimation();
+            return kirbyPower.getBillyEnemyWalkAnimType();
         }
     }
 
     public AnimType getActionAnimation() {
-        var kirbyPower =  Components.optional(entity, KirbyPower.class).orElse(null);
+        var kirbyPower = Components.get(entity, KirbyPower.class);
         if (kirbyPower == null) {
             return AnimType.BILLY_WALK;
         } else {
-            return kirbyPower.getActionAnimation();
+            return kirbyPower.getBillyEnemyActionAnimType();
         }
     }
 }

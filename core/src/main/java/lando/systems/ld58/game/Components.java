@@ -26,6 +26,7 @@ public class Components {
         entry(Input.class,          ComponentMapper.getFor(Input.class)),
         entry(Interp.class,         ComponentMapper.getFor(Interp.class)),
         entry(KirbyPower.class,     ComponentMapper.getFor(KirbyPower.class)),
+        entry(MySpawner.class,      ComponentMapper.getFor(MySpawner.class)),
         entry(Name.class,           ComponentMapper.getFor(Name.class)),
         entry(Particle.class,       ComponentMapper.getFor(Particle.class)),
         entry(Pickup.class,         ComponentMapper.getFor(Pickup.class)),

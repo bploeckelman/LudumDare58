@@ -7,12 +7,15 @@ import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.actions.ActionGroup;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.renderable.Animator;
+import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.systems.CollisionCheckSystem;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
+import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.Util;
 
 public abstract class PlayerState {
 
+    protected Scene<? extends BaseScreen> scene;
     protected Engine engine;
     protected Entity entity;
     protected ActionGroup currentActions;
@@ -20,7 +23,8 @@ public abstract class PlayerState {
     protected PlayerStateSystem playerStateSystem;
     protected float elapsed = 0f;
 
-    public PlayerState(Engine engine, Entity entity) {
+    public PlayerState(Engine engine, Scene<? extends BaseScreen> scene, Entity entity) {
+        this.scene = scene;
         this.engine = engine;
         this.entity = entity;
         this.currentActions = null;

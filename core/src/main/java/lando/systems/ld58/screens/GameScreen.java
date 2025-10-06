@@ -37,6 +37,10 @@ public class GameScreen extends BaseScreen {
         switchScene(SceneType.TEST);
     }
 
+    public Scene<? extends BaseScreen> scene() {
+        return scene;
+    }
+
     @Override
     public void update(float delta) {
         super.update(delta);

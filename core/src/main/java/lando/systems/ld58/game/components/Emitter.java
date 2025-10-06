@@ -25,4 +25,8 @@ public class Emitter extends Renderable implements Component {
     public List<ParticleData> spawn() {
         return effect.spawn(params);
     }
+
+    public boolean isComplete() {
+        return params.isComplete();
+    }
 }
