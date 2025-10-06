@@ -4,86 +4,107 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.math.MathUtils;
-import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Systems;
-import lando.systems.ld58.game.components.*;
+import lando.systems.ld58.game.components.Collider;
+import lando.systems.ld58.game.components.Position;
+import lando.systems.ld58.game.components.SceneContainer;
+import lando.systems.ld58.game.components.Velocity;
 import lando.systems.ld58.game.components.collision.CollisionRect;
-import lando.systems.ld58.game.components.enemies.EnemyAngrySun;
-import lando.systems.ld58.game.components.enemies.EnemyMario;
+import lando.systems.ld58.game.components.enemies.*;
 import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.utils.FramePool;
+import lando.systems.ld58.utils.Util;
 
 public class EnemySystem extends IteratingSystem {
 
+    private static final String TAG = EnemySystem.class.getSimpleName();
     private static final Family SCENE = Family.one(SceneContainer.class).get();
 
     public EnemySystem() {
-        super(Family.one(EnemyMario.class, EnemyAngrySun.class).get());
+        super(Family.one(
+              EnemyAngrySun.class
+            , EnemyBulletBill.class
+            , EnemyCaptainLou.class
+            , EnemyGoombaCyborg.class
+            , EnemyHammerBro.class
+            , EnemyKoopa.class
+            , EnemyLakitu.class
+            , EnemyMario.class
+            , EnemyMisty.class
+        ).get());
     }
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-        if (Components.has(entity, EnemyMario.class)) {
-            var mario = Components.get(entity, EnemyMario.class);
-            updateMario(entity, mario, delta);
-        }
-        else if (Components.has(entity, EnemyAngrySun.class)) {
-            var sun = Components.get(entity, EnemyAngrySun.class);
-            updateAngrySun(entity, sun, delta);
-        }
+        var enemy = Enemy.getEnemyComponent(entity);
+        if (enemy == null) return;
+
+        if      (Enemy.Behavior.PATROL == enemy.behavior) updatePatrol(entity, enemy, delta);
+        else if (Enemy.Behavior.CUSTOM == enemy.behavior) updateCustom(entity, enemy, delta);
     }
 
-    private void updateMario(Entity entity, EnemyMario mario, float delta) {
+    private void updatePatrol(Entity entity, Enemy enemy, float delta) {
         var anim = Components.get(entity, Animator.class);
         var vel = Components.get(entity, Velocity.class);
         var col = Components.get(entity, Collider.class);
 
-        switch (mario.state) {
+        switch (enemy.patrolState) {
             case IDLE: {
-                if (mario.stateTime < 2f) {
+                if (enemy.stateTime < 2f) {
                     // NOTE: don't stop, just allow friction to apply
-                    anim.play(AnimType.MARIO_IDLE);
+                    var animType = Enemy.ENEMY_ANIM_TYPE_IDLE.get(enemy.getClass());
+                    if (animType != null) anim.play(animType);
                 } else {
-                    mario.stateTime = 0f;
-                    mario.state = EnemyMario.State.PATROL;
-                    mario.direction = MathUtils.randomSign();
+                    enemy.stateTime = 0f;
+                    enemy.patrolState = Enemy.PatrolState.MOVE;
+                    enemy.direction = MathUtils.randomSign();
                 }
             } break;
 
-            case PATROL: {
-                if (mario.stateTime < 4f) {
+            case MOVE: {
+                if (enemy.stateTime < 4f) {
                     // Get collider offset to look ahead at edges
                     var colOffset = FramePool.pi2();
                     if (col != null && col.shape instanceof CollisionRect) {
                         var r = col.shape(CollisionRect.class).rectangle;
-                        var x = (mario.direction == +1) ? r.x + r.width
-                              : (mario.direction == -1) ? r.x : 0f;
+                        var x = (enemy.direction == +1) ? r.x + r.width
+                              : (enemy.direction == -1) ? r.x : 0f;
                         colOffset.set(x, 0);
                     }
 
                     // Check for edge or wall
-                    var nearEdge = !Systems.collisionCheck.check(entity, mario.direction + colOffset.x, -1);
-                    var hitWall = Systems.collisionCheck.check(entity, mario.direction, 0);
+                    var nearEdge = !Systems.collisionCheck.check(entity, enemy.direction + colOffset.x, -1);
+                    var hitWall  = Systems.collisionCheck.check(entity, enemy.direction, 0);
                     if (hitWall || nearEdge) {
-                        mario.direction = -mario.direction;
+                        enemy.direction = -enemy.direction;
                         vel.stopX();
                     }
 
-                    anim.facing = mario.direction;
-                    anim.play(AnimType.MARIO_WALK);
+                    anim.facing = enemy.direction;
+                    var animType = Enemy.ENEMY_ANIM_TYPE_WALK.get(enemy.getClass());
+                    if (animType != null) anim.play(animType);
 
-                    var accel = EnemyMario.WALK_ACCEL * mario.direction;
+                    var accel = enemy.walkAccel * enemy.direction;
                     vel.value.x += accel * delta;
                 } else {
-                    mario.stateTime = 0f;
-                    mario.state = EnemyMario.State.IDLE;
-                    mario.direction = 0;
+                    enemy.stateTime = 0f;
+                    enemy.patrolState = Enemy.PatrolState.IDLE;
+                    enemy.direction = 0;
                 }
             } break;
         }
 
-        mario.stateTime += delta;
+        enemy.stateTime += delta;
+    }
+
+    private void updateCustom(Entity entity, Enemy enemy, float delta) {
+        if (enemy instanceof EnemyAngrySun) {
+            var angrySun = (EnemyAngrySun) enemy;
+            updateAngrySun(entity, angrySun, delta);
+        } else {
+            Util.warn(TAG, "unhandled custom behavior: " + enemy.getClass().getSimpleName());
+        }
     }
 
     private void updateAngrySun(Entity entity, EnemyAngrySun sun, float delta) {

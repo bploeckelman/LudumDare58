@@ -21,8 +21,14 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , BILLY_JUMP(Path.CHAR_BILLY)
     , BILLY_WALK(Path.CHAR_BILLY)
     , BILLY_YELL(Path.CHAR_BILLY)
+    , BILLY_BULLET_BILL_ACTION(Path.CHAR_BULLET_BILL)
+    , BILLY_BULLET_BILL_WALK(Path.CHAR_BULLET_BILL)
+    , BILLY_LAKITU_ACTION(Path.CHAR_LAKITU)
+    , BILLY_LAKITU_WALK(Path.CHAR_LAKITU)
     // -- bullet bill -------------------------------------------
+    , BULLET_BILL_ACTION(Path.CHAR_BULLET_BILL)
     , BULLET_BILL_IDLE(Path.CHAR_BULLET_BILL)
+    , BULLET_BILL_WALK(Path.CHAR_BULLET_BILL)
     // -- captain-lou -------------------------------------------
     , CAPTAIN_LOU_IDLE(Path.CHAR_CAPTAIN_LOU)
     // -- koopa -------------------------------------------------
@@ -43,7 +49,11 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // -- koopa -------------------------------------------------
     , KOOPA_IDLE(Path.CHAR_KOOPA)
     // -- lakitu ------------------------------------------------
+    , LAKITU_ACTION(Path.CHAR_LAKITU)
     , LAKITU_IDLE(Path.CHAR_LAKITU)
+    , LAKITU_WALK(Path.CHAR_LAKITU)
+    , LAKITU_SPINY_IDLE(Path.CHAR_LAKITU)
+    , LAKITU_SPINY_WALK(Path.CHAR_LAKITU)
     // -- mario -------------------------------------------------
     , MARIO_ATTACK(Path.CHAR_MARIO)
     , MARIO_FALL(Path.CHAR_MARIO)

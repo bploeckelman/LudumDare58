@@ -9,4 +9,8 @@ public class EnemyAngrySun extends Enemy implements Component {
     public static final float CHASE_ACCEL = 100f; // pixels/sec^2
 
     public float angle = 0f;
+
+    public EnemyAngrySun() {
+        behavior = Behavior.CUSTOM;
+    }
 }
