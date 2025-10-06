@@ -26,7 +26,8 @@ public class GameScreen extends BaseScreen {
 
     private enum SceneType { TEST, RELIC_1, RELIC_2, RELIC_3, FINALE }
 
-    private final Color backgroundColor = new Color(0x225522ff);
+//    private final Color backgroundColor = new Color(0x225522ff);
+    private final Color backgroundColor = new Color(0x333333ff);
     private final TextureRegion gdx;
 
     public Scene<GameScreen> scene;
@@ -84,12 +85,12 @@ public class GameScreen extends BaseScreen {
 
         // TEMP: libgdx background
         batch.setProjectionMatrix(windowCamera.combined);
-        batch.begin();
-        Util.draw(batch, gdx, FramePool.rect(
-            (windowCamera.viewportWidth - gdx.getRegionWidth()) / 2f,
-            (windowCamera.viewportHeight - gdx.getRegionHeight()) / 2f,
-            gdx.getRegionWidth(), gdx.getRegionHeight()));
-        batch.end();
+//        batch.begin();
+//        Util.draw(batch, gdx, FramePool.rect(
+//            (windowCamera.viewportWidth - gdx.getRegionWidth()) / 2f,
+//            (windowCamera.viewportHeight - gdx.getRegionHeight()) / 2f,
+//            gdx.getRegionWidth(), gdx.getRegionHeight()));
+//        batch.end();
 
         // Draw scene
         batch.setProjectionMatrix(worldCamera.combined);

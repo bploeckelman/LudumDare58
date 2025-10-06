@@ -18,10 +18,7 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
-import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.EffectType;
-import lando.systems.ld58.assets.FontType;
-import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.assets.*;
 import lando.systems.ld58.flashback.FlashbackObject;
 import lando.systems.ld58.flashback.FlashbackParticle;
 import lando.systems.ld58.game.Signals;
@@ -67,6 +64,8 @@ public class EndingScreen extends BaseScreen {
 
         dialog.restart("");
         currentPhase = PHASE.START;
+        Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.5f));
         setupPhase();
     }
 
@@ -194,8 +193,8 @@ public class EndingScreen extends BaseScreen {
                 Timeline.createSequence()
                     .push(Tween.to(billy.bounds, RectangleAccessor.X, 3f).target(5))
                     .push(Tween.call((type, source) -> {
-                        dialog.restart("I finally have all of the relics");
-                        messages.add("Time to throw them into Pluto \n{SIZE=70%}(the secret theme of LD 33)");
+                        dialog.restart("I collected all the relics");
+                        messages.add("Time to throw them into Pluto! \n{SIZE=70%}(the secret theme of LD 33)");
                     }))
 
                     .push(Tween.call((type, source) -> completed = true))
@@ -223,8 +222,8 @@ public class EndingScreen extends BaseScreen {
                         .push(Tween.to(plunger.bounds, RectangleAccessor.WH, 1f).target(0, 0))
                     .end()
                     .push(Tween.call((type, source) -> {
-                        dialog.restart("They are destroyed. The mushroom kingdom should be safe now");
-                        messages.add("What");
+                        dialog.restart("{SIZE=70%}With those destroyed, the Mushroom Kingdom should once again be safe");
+                        messages.add("Wait...");
                         messages.add("What is going on?");
                     }))
                     .start(tween);
@@ -239,12 +238,12 @@ public class EndingScreen extends BaseScreen {
                     .pushPause(2f)
                     .push(Tween.to(captinLou.bounds, RectangleAccessor.XY, 2f).target(20, 20))
                     .push(Tween.call((type, source) -> {
-                        dialog.restart("That was an epic boss battle.");
+                        dialog.restart("That was an epic boss battle...");
                         messages.add("Or it would have been if we didn't run out of time.");
                         messages.add("Mario has been banished from our world.  Things should return to normal now.");
                         messages.add("Or...  \nAnother threat will emerge 10 years from now in..");
-                        messages.add("Goomba Simulator 2035");
-                        messages.add("Thanks for playing our game");
+                        messages.add("Goomba Simulator 2035!");
+                        messages.add("Thanks for playing our game! :)");
                     }))
                 .start(tween);
                 break;
