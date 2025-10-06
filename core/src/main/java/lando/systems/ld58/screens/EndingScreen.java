@@ -238,12 +238,12 @@ public class EndingScreen extends BaseScreen {
                     .pushPause(2f)
                     .push(Tween.to(captinLou.bounds, RectangleAccessor.XY, 2f).target(20, 20))
                     .push(Tween.call((type, source) -> {
-                        dialog.restart("That was an epic boss battle...");
-                        messages.add("Or it would have been if we didn't run out of time.");
+                        dialog.restart("That boss battle was EPIC.");
+                        messages.add("{SIZE=50%}Or at least, it would have been if we didn't run out of time.");
                         messages.add("Mario has been banished from our world.  Things should return to normal now.");
-                        messages.add("Or...  \nAnother threat will emerge 10 years from now in..");
+                        messages.add("Or...  \nAnother threat will emerge 10 years from now, in..");
                         messages.add("Goomba Simulator 2035!");
-                        messages.add("Thanks for playing our game! :)");
+                        messages.add("Thank you for playing our game!");
                     }))
                 .start(tween);
                 break;
