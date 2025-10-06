@@ -72,6 +72,12 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // -- misty -------------------------------------------------
     , MISTY_IDLE(Path.CHAR_MISTY)
     , MISTY_TALK(Path.CHAR_MISTY)
+
+    //--- ENDING 0----------------------------------------------
+    , ALBANO_BOT_IDLE(Path.CHAR_ALBANO_BOT, new Data(.5f))
+    , ALBANO_BOT_TALK(Path.CHAR_ALBANO_BOT, new Data(.5f))
+    , ALBANO_BOT_STILL(Path.CHAR_ALBANO_BOT, new Data(.5f))
+
     // -- flash back --------------------------------------------
     , YOUNG_BILLY_NORMAL(Path.FLASHBACK, "billy-normal")
     , YOUNG_BILLY_RAGE(Path.FLASHBACK, "billy-rage")
@@ -98,6 +104,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
         private static final String CHAR_BILLY         = CHARACTERS + "billy/";
         private static final String CHAR_BULLET_BILL   = CHARACTERS + "bullet-bill/";
         private static final String CHAR_CAPTAIN_LOU   = CHARACTERS + "captain-lou/";
+        private static final String CHAR_ALBANO_BOT    = CHARACTERS + "albano-bot/";
         private static final String CHAR_GOOMBA        = CHARACTERS + "goomba/";
         private static final String CHAR_GOOMBA_CYBORG = CHARACTERS + "goomba-cyborg/";
         private static final String CHAR_HAMMER_BRO    = CHARACTERS + "hammer-bro/";

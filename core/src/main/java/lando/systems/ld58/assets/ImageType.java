@@ -12,6 +12,7 @@ public enum ImageType implements AssetType<Texture> {
     //@formatter:off
       GDX("libgdx.png")
     , BG_WARP_ROOM("bg_00_warp_room.png")
+    , CADRE_FLOOR("cadre_floor.png")
     , CADRE_ROOM("cadreroom.png")
     , BEDROOM("inhome-bedroom.png")
     , FLASHBACK_MUSHROOM("level1.png")
