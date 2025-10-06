@@ -151,7 +151,6 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
 
         engine.update(delta);
-        trippyAmount = (MathUtils.cos(accum)+1f)/2f;
     }
 
     @Override
