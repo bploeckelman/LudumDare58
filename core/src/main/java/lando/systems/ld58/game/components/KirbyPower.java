@@ -8,6 +8,7 @@ public class KirbyPower implements Component {
     public enum PowerType {KOOPA, LAKITU, HAMMER, BULLET, SUN}
 
     public PowerType powerType;
+    public float activeTimer;
 
     public KirbyPower(PowerType powerType) {
         this.powerType = powerType;
@@ -51,6 +52,9 @@ public class KirbyPower implements Component {
             case LAKITU:
             case SUN:
                 return Constants.GRAVITY * .4f;
+            case BULLET:
+                if (activeTimer > 0) return 0;
+
         }
         return Constants.GRAVITY;
     }
@@ -119,5 +123,9 @@ public class KirbyPower implements Component {
                 return Constants.MOVE_SPEED_MAX_AIR;
         }
         return Constants.MOVE_SPEED_MAX_AIR;
+    }
+
+    public boolean isActionActive() {
+        return activeTimer > 0;
     }
 }

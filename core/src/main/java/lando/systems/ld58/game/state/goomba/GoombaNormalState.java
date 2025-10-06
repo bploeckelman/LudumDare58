@@ -85,6 +85,7 @@ public class GoombaNormalState extends PlayerState {
         handleMovement(delta);
         handleJumping(delta);
         handleSuckOff(delta);
+        handleAction(delta);
     }
 
     private void handleMovement(float delta) {
@@ -250,8 +251,39 @@ public class GoombaNormalState extends PlayerState {
         var animator = Components.get(entity, Animator.class);
         if (animator == null) return;
         Signals.animStart.dispatch(new AnimationEvent.Play(animator(), kirbyPower.getBillyEnemyWalkAnimType()));
-        var grav = entity.getComponent(Gravity.class);
-        grav.value = kirbyPower.getGravity();
+    }
+
+    float actionDelay = 0;
+    public void handleAction(float delta) {
+        var gravity = gravity();
+        gravity.value = Constants.GRAVITY;
+        actionDelay -= delta;
+        var kirby = kirby();
+        var velocity = velocity();
+        var animator = animator();
+
+        if (kirby == null) return;
+        kirby.activeTimer -= delta;
+        gravity.value = kirby.getGravity();
+
+        if (input().isActionJustPressed && actionDelay <= 0f) {
+            actionDelay = .5f;
+            switch (kirby.powerType) {
+                case KOOPA:
+                    break;
+                case LAKITU:
+                    break;
+                case HAMMER:
+                    break;
+                case BULLET:
+                    velocity.value.x = animator.facing * 500f;
+                    kirby.activeTimer = .5f;
+                    break;
+                case SUN:
+                    break;
+            }
+        }
+
     }
 
     public AnimType getWalkAnimation() {
