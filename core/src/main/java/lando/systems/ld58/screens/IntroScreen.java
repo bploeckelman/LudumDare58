@@ -21,7 +21,7 @@ import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.Systems;
+import lando.systems.ld58.game.Systems; 
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.scenes.Scene;
@@ -46,7 +46,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     private final Color backgroundColor = new Color(.1F, .5F, 1f, 1f);
 
     private final Map<String, String> dialogText = Map.of(
-        "dialog-test-8", "Okay, something is definitely wrong.\nIt reeks of garlic and raw sewage in our otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?",
+        "dialog-test-1", "Okay, something is definitely wrong.\nIt reeks of garlic and raw sewage in our otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?",
 //        "dialog-test-2", "He that is wounded in the stones,\nor hath his privy member cut off,\nshall not enter into the congregation of the Lord.\n\n- Deuteronomy 23:1"
         "dialog-test-2", "At the last Cabal Strategic Alignment meeting, I vaguely remember Gannon complaining about getting stuck with Collector duty again...\n\nWe all know the 'dorf is a messy bitch who lives for drama, but would even HE be petty enough to leave the Ur-Artifacts scattered around after the last release?"
         ,"dialog-test-3", "He knows as well as we do that having the Ur-Artifacts lying around the Kingdom puts us at risk of another incursion situation like the Brooklyn Incident.\n\nWe can't be getting invaded by malevolent entities who wish us ill all the time! Where does he think he is, Hyrule?"
@@ -54,7 +54,9 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         ,"dialog-test-5", "Coincidentally, this case happens to contain exact replicas of the very items I am looking for, which should make identifying them considerably easier.\n\nHow convenient!"
         ,"dialog-test-6", "Nice job holding the jump button down slightly longer than usual! \nThat might come in handy later.\n\nOr actually, it might not (I honestly can't remember where we landed with the level design...)"
         ,"dialog-test-7", "Thank you, Goomba!\n\nBut our exit is not in another castle!\n\n(Which is to say, you complete levels by collecting each respective relic, rather than by reaching any particular structure.)"
-        ,"dialog-test-1", "One of the benefits of working in the Mushroom Kingdom is everybody wants to see you succeed.\n\nIf you hold the Down button, you can to suck in your comrades and use their powers. Cute!\n\nAlso uncomfortably intimate!"
+        ,"dialog-test-8", "One of the benefits of working in the Mushroom Kingdom is everybody wants to see you succeed.\n\nIf you hold the Down button, you can to suck in your comrades and use their powers. Cute!\n\nAlso uncomfortably intimate!"
+        ,"dialog-test-9", "After you suck your comrade, you can hit Enter to use their powers!\n\nSharing is caring."
+        ,"dialog-test-10", "When you're done having your friends inside you, you can simply hold Down and hit Enter.\n\nGoodbye, social obligations!"
     );
 
     public final Scene<IntroScreen> scene;
