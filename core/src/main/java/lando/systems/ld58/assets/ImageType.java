@@ -49,7 +49,7 @@ public enum ImageType implements AssetType<Texture> {
 //            var isBackground = type.textureName.contains("background");
 
 //            var params = isBackground ? texParamsRepeat : texParamsNormal;
-            mgr.load(type.textureName, Texture.class, texParamsRepeat);
+            mgr.load(type.textureName, Texture.class, texParamsNormal);
 
             Util.log(TAG, Stringf.format("texture '%s' loaded for type '%s'", type.textureName, type.name()));
         }
