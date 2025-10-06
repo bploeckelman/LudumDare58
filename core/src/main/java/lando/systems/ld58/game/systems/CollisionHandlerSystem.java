@@ -13,7 +13,6 @@ import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
-import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CollisionEvent;
@@ -221,49 +220,35 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
     }
 
     private void handlePlayerDestructibleCollision(CollisionEvent.Move move, Entity playerEntity, Entity destructibleEntity) {
-        var destructible = Components.get(destructibleEntity, Destructible.class);
-        if (destructible.destroyed) {
-            // TODO: might need to remove respawn to prevent trapping player
-//            destructible.respawnTimer -= Time.delta;
-//            if (destructible.respawnTimer <= 0) {
-//                destructible.respawnTimer = Destructible.RESPAWN_INTERVAL;
-//                destructible.destroyed = false;
-//            }
-
-            move.response = CollisionResponse.PASSTHROUGH;
-            return;
-        }
-
-        // TODO: handle the pickup differently depending what it is...
-        //  for now, just if the player has a bullet bill power and they're overlapping, destroy it
-
+        // Need a power to destroy it
         var playerPower = Components.get(playerEntity, KirbyPower.class);
         if (playerPower == null) {
             move.response = CollisionResponse.STOP_BOTH;
             return;
         }
 
-        // Only destroy if power is activated...
+        // Need bullet bill power to be active to destroy it
         var isBulletBill = (playerPower.powerType == KirbyPower.PowerType.BULLET);
-        if (isBulletBill && playerPower.isActionActive()) {
-            destructible.destroyed = true;
-
-            // TODO: trigger sound
-
-            // Trigger a particle effect for the block break
-            var destructPos = Components.get(destructibleEntity, Position.class);
-            var params = new BlockBreakEffect.Params(destructPos);
-            var emitter = Factory.emitter(EmitterType.BLOCK_BREAK, params);
-            getEngine().addEntity(emitter);
-
-            // Stop drawing the animator for an destructible that's destroyed
-            var destructAnim = Components.get(destructibleEntity, Animator.class);
-            destructAnim.tint.a = 0f;
-
-            // Stop remaining movement this frame, but keep velocity just scale it down
-            var playerVel = Components.get(playerEntity, Velocity.class);
-            playerVel.set(playerVel.x() * 0.75f, playerVel.y());
-            move.response = CollisionResponse.KEEP_VELOCITY;
+        if (isBulletBill && !playerPower.isActionActive()) {
+            move.response = CollisionResponse.STOP_BOTH;
+            return;
         }
+
+        // TODO: replace with 'block breaking' sound
+        Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.THUD));
+
+        // Particle effect
+        var destructPos = Components.get(destructibleEntity, Position.class);
+        var params = new BlockBreakEffect.Params(destructPos);
+        var emitter = Factory.emitter(EmitterType.BLOCK_BREAK, params);
+        getEngine().addEntity(emitter);
+
+        // Remove the block
+        getEngine().removeEntity(destructibleEntity);
+
+        // Stop remaining movement this frame, but keep velocity just scale it down
+        var playerVel = Components.get(playerEntity, Velocity.class);
+        playerVel.set(playerVel.x() * 0.75f, playerVel.y());
+        move.response = CollisionResponse.KEEP_VELOCITY;
     }
 }
