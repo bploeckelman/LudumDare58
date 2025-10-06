@@ -7,8 +7,10 @@ import java.io.Serializable;
 import java.util.EnumMap;
 
 public enum AnimType implements AssetType<Animation<TextureRegion>> {
+      TITLE_BILLY_MORPH("title/", "title-big-billy-morph", new Data(0.1f, Animation.PlayMode.NORMAL))
+    , TITLE_BILLY_WALK("title/", "title-big-billy-old-walk")
     // object animations ----------------------------------------
-      COIN(Path.OBJ_COIN)
+    , COIN(Path.OBJ_COIN)
     , COIN_BLOCK(Path.FLASHBACK, "coin-block")
     , RELIC_PLUNGER(Path.OBJ_RELIC)
     , RELIC_TORCH(Path.OBJ_RELIC)

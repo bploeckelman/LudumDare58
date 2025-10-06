@@ -73,6 +73,9 @@
                 "y": 488.5
             }
         },
+        "smb-items-extracted.tsx": {
+            "scaleInDock": 1
+        },
         "test.tmx": {
             "scale": 2,
             "selectedLayer": 2,
