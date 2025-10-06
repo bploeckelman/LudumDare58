@@ -139,15 +139,6 @@ public class Main extends Game {
             currentScreen.render(Time.delta);
         }
 
-        {   // TODO: REMOVE THIS BLOCK BEFORE RELEASE
-            assets.batch.begin();
-            Font font = FontType.COUSINE.font();
-            layout.font(font);
-            layout.clear();
-            font.markup("FPS: " + Gdx.graphics.getFramesPerSecond(), layout);
-            font.drawGlyphs(assets.batch, layout, 0, Config.window_height - 20);
-            assets.batch.end();
-        }
     }
 
     @Override
