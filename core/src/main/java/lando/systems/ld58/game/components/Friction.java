@@ -3,6 +3,7 @@ package lando.systems.ld58.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import lando.systems.ld58.game.Constants;
 
 import java.util.Optional;
 
@@ -14,15 +15,15 @@ public class Friction implements Component {
         return Optional.ofNullable(mapper.get(entity));
     }
 
-    public float value;
+    public float ground;
+    public float air;
 
     public Friction() {
-        this(0);
+        this(Constants.FRICTION_MAX_GROUND, Constants.FRICTION_MAX_AIR);
     }
 
-    public Friction(float value) {
-        this.value = value;
+    public Friction(float ground, float air) {
+        this.ground = ground;
+        this.air = air;
     }
-
-    public float value() { return value; }
 }

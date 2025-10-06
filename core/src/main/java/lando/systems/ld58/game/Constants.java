@@ -15,8 +15,8 @@ public class Constants {
     public static final float JUMP_HELD_ACCEL = 20f;
     public static final float JUMP_ACCEL_DOUBLE = 350f;
 
-    public static final float FRICTION_MAX_GROUND = 1000f;
-    public static final float FRICTION_MAX_AIR = 0f;
+    public static final float FRICTION_MAX_GROUND = .01f;
+    public static final float FRICTION_MAX_AIR = .2f;
     public static final float FRICTION_CLIMBER = 0.95f;//200f;
 
     public static final float GRAVITY = -500f;

@@ -45,7 +45,7 @@ public class MovementSystem extends IteratingSystem {
         // Get components; required components throw, optional components provide an alternative
         var position  = Components.optional(entity, Position.class).orElseThrow();
         var velocity  = Components.optional(entity, Velocity.class).orElseThrow();
-        var friction  = Components.optional(entity, Friction.class).map(Friction::value).orElse(0f);
+        var friction  = Components.optional(entity, Friction.class).orElse(new Friction());
         var gravity   = Components.optional(entity, Gravity.class).map(Gravity::value).orElse(0f);
         var collider  = Components.optional(entity, Collider.class);
 
@@ -54,10 +54,12 @@ public class MovementSystem extends IteratingSystem {
         var grounded = collisionCheckSystem.onGround(entity, ignoreSolids);
 
         // Apply friction
-        if (friction > 0 && grounded) {
+        if (grounded) {
             // let's change how friction works with 4 hours left in the jam, what could go wrong?
 //            velocity.value.x = Calc.approach(velocity.value.x, 0, friction * delta);
-            velocity.value.x *= (float) Math.pow(friction, delta);
+            velocity.value.x *= (float) Math.pow(friction.ground, delta);
+        } else {
+            velocity.value.x *= (float) Math.pow(friction.air, delta);
         }
 
         // Apply gravity TODO: cap max y-velocity?

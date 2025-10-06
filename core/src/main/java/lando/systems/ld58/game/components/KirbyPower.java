@@ -4,6 +4,8 @@ import com.badlogic.ashley.core.Component;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Constants;
 
+import java.awt.*;
+
 public class KirbyPower implements Component {
     public enum PowerType {KOOPA, LAKITU, HAMMER, BULLET, SUN}
 
@@ -104,12 +106,29 @@ public class KirbyPower implements Component {
             case SUN:
             case LAKITU:
                 return Constants.MOVE_SPEED_MAX_GROUND * .3f;
-            case HAMMER:
             case KOOPA:
+                return isActionActive() ? Constants.MOVE_SPEED_MAX_GROUND * 2f : Constants.MOVE_SPEED_MAX_GROUND;
+            case HAMMER:
             case BULLET:
                 return Constants.MOVE_SPEED_MAX_GROUND;
         }
         return Constants.MOVE_SPEED_MAX_GROUND;
+    }
+
+    public float getFriction() {
+        switch (powerType) {
+            case KOOPA:
+                return isActionActive() ? 1f : Constants.FRICTION_MAX_GROUND;
+            case LAKITU:
+                break;
+            case HAMMER:
+                break;
+            case BULLET:
+                break;
+            case SUN:
+                break;
+        }
+        return Constants.FRICTION_MAX_GROUND;
     }
 
     public float maxAirSpeed() {

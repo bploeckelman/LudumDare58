@@ -61,7 +61,7 @@ public class Factory {
 
         entity.add(new Position(x, y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new Input());
 
@@ -99,7 +99,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
 
         var animBounds = Constants.MARIO_ANIMATOR_BOUNDS;
@@ -155,7 +155,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
@@ -186,7 +186,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
 
         entity.add(new Outline(Color.RED, Color.CLEAR, 1f));
@@ -217,7 +217,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
 
         entity.add(new Outline(Color.BLACK, Color.CLEAR, 1f));
@@ -249,7 +249,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new KirbyPower(KirbyPower.PowerType.BULLET));
 
@@ -280,7 +280,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new KirbyPower(KirbyPower.PowerType.HAMMER));
 
@@ -311,7 +311,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new KirbyPower(KirbyPower.PowerType.KOOPA));
 
@@ -342,7 +342,7 @@ public class Factory {
 
         entity.add(new Position(spawner.x, spawner.y));
         entity.add(new Velocity(0, 0));
-        entity.add(new Friction(Constants.FRICTION_CLIMBER));
+        entity.add(new Friction());
         entity.add(new Gravity(Constants.GRAVITY));
         entity.add(new KirbyPower(KirbyPower.PowerType.LAKITU));
 

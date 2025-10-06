@@ -121,7 +121,7 @@ public class GoombaNormalState extends PlayerState {
 
         // Apply friction to slow down, if applicable
         if (input.moveDirX == 0) {
-            var friction = isGrounded ? Constants.FRICTION_MAX_GROUND : Constants.FRICTION_MAX_AIR;
+            var friction = isGrounded ? friction().ground : friction().air;
             velocity.value.x = Calc.approach(velocity.value.x, 0, friction * delta);
         }
 
@@ -157,6 +157,10 @@ public class GoombaNormalState extends PlayerState {
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
                 Signals.animStart.dispatch(new AnimationEvent.Start(animator, getJumpAnimation()));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
+
+                if ((kirby != null ? kirby.powerType : null) == KirbyPower.PowerType.KOOPA) {
+                    kirby.activeTimer = 0;
+                }
             }
         }
 
@@ -264,11 +268,14 @@ public class GoombaNormalState extends PlayerState {
     public void handleAction(float delta) {
         var gravity = gravity();
         var velocity = velocity();
+        var friction = friction();
 
         gravity.value = Constants.GRAVITY;
         velocity.maxHorizontalSpeedAir = Constants.MOVE_SPEED_MAX_AIR;
         velocity.maxHorizontalSpeedGround = Constants.MOVE_SPEED_MAX_GROUND;
         velocity.maxFallSpeed = Constants.MOVE_SPEED_MAX_AIR;
+        friction.ground = Constants.FRICTION_MAX_GROUND;
+        friction.air = Constants.FRICTION_MAX_AIR;
         actionDelay -= delta;
         var kirby = kirby();
 
@@ -280,11 +287,13 @@ public class GoombaNormalState extends PlayerState {
         velocity.maxFallSpeed = kirby().maxGroundSpeed();
         velocity.maxHorizontalSpeedGround = kirby().maxGroundSpeed();
         velocity.maxHorizontalSpeedAir = kirby().maxAirSpeed();
+        friction.ground = kirby.getFriction();
 
         if (input().isActionJustPressed && actionDelay <= 0f) {
             actionDelay = .5f;
             switch (kirby.powerType) {
                 case KOOPA:
+                    kirby.activeTimer = 1f;
                     break;
                 case LAKITU:
                     break;
