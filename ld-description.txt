@@ -1,11 +1,11 @@
 - ** [HTML/WebGL](https://lando.systems/games/ld58-LINKHERE) **
 - ** [Desktop/Java](https://lando.systems/games/ld58-LINKHERE) **
 - ** [Source](https://github.com/bploeckelman/LudumDare58) **
-# Goomba Simulator: 2025 #
+# Goomba Simulator 2025 #
 
-You're a Goomba that collects the dropped artifacts that Mario left
+You're a Goomba that collects the dropped artifacts that Mario left to restore balance to the Mushroom Kingdom!
 
-When, in the course of human events, it becomes necessary for a Ludum Dare team to revisit past work, only a fool doesn't heed that call. This is the 10th anniversary sequel to the 2015 Ludum Dare   
+When, in the course of human events, it becomes necessary for a Ludum Dare team to revisit past work, only a fool doesn't heed that call. This is the 10th anniversary sequel to our 2015 Ludum Dare entry!
 
 # Controls:
 ---
@@ -36,4 +36,4 @@ Music and Text:
 
 ### Attribution:
 ---
-- The entire population of NES developers and the generation of gamers and asset-creators who have followed
+- None of this would have happened without the unmatched skill and dedication of the teams behind the Super Mario Bros games.
