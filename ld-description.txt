@@ -5,6 +5,8 @@
 
 You're a Goomba that collects the dropped artifacts that Mario left to restore balance to the Mushroom Kingdom!
 
+Use the S key to suck in your fellow enemies so you can use their powers
+
 When, in the course of human events, it becomes necessary for a Ludum Dare team to revisit past work, only a fool doesn't heed that call. This is the 10th anniversary sequel to our 2015 Ludum Dare entry!
 
 # Controls:
@@ -12,8 +14,8 @@ When, in the course of human events, it becomes necessary for a Ludum Dare team 
 
 * WASD or controller to move
 * Space to jump
-* S to suck in other enemies and use their powers!
-* S + Enter to jettison your enemy so you can use new powers!
+* S to suck in other enemies
+* S + Enter to jettison your previous powers
 
 
 # About the Team:
