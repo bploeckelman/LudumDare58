@@ -1,5 +1,7 @@
 package lando.systems.ld58.screens;
 
+import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
@@ -15,6 +17,7 @@ import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
+import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.scenes.*;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
@@ -28,14 +31,12 @@ public class GameScreen extends BaseScreen {
 
 //    private final Color backgroundColor = new Color(0x225522ff);
     private final Color backgroundColor = new Color(0x333333ff);
-    private final TextureRegion gdx;
 
     public Scene<GameScreen> scene;
 
     public GameScreen() {
-        this.gdx = new TextureRegion(ImageType.GDX.get());
         Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.5f));
-        switchScene(SceneType.TEST);
+        switchScene(SceneType.RELIC_1);
     }
 
     public Scene<? extends BaseScreen> scene() {
@@ -45,29 +46,41 @@ public class GameScreen extends BaseScreen {
     @Override
     public void update(float delta) {
         super.update(delta);
+
+        var relicCollectedEntities = engine.getEntitiesFor(Family.one(RelicPickupRender.class).get());
+
+        for (Entity entity : relicCollectedEntities) {
+            if (!transitioning && entity.getComponent(RelicPickupRender.class).isComplete()) {
+                transitioning = true;
+                switchScene(nextScene());
+            }
+        }
+
 //        if (!transitioning && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.justTouched()) {
 //            transitioning = true;
 //            game.setScreen(new EndingScreen());
 //        }
-        // TODO: temporary for testing scene changes -------------
-        if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-            if      (scene instanceof SceneTest)   switchScene(SceneType.RELIC_1);
-            else if (scene instanceof SceneRelic1) switchScene(SceneType.RELIC_2);
-            else if (scene instanceof SceneRelic2) switchScene(SceneType.RELIC_3);
-            else if (scene instanceof SceneRelic3) switchScene(SceneType.FINALE);
-            else if (scene instanceof SceneFinale && !transitioning) {
-                transitioning = true;
+//        // TODO: temporary for testing scene changes -------------
+//        if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+//            if      (scene instanceof SceneTest)   switchScene(SceneType.RELIC_1);
+//            else if (scene instanceof SceneRelic1) switchScene(SceneType.RELIC_2);
+//            else if (scene instanceof SceneRelic2) switchScene(SceneType.RELIC_3);
+//            else if (scene instanceof SceneRelic3) switchScene(SceneType.FINALE);
+//            else if (scene instanceof SceneFinale && !transitioning) {
+//                transitioning = true;
+//
+//                // Cleanup ECS stuff from this screen before moving to the next screen/scene
+//                Signals.changeState.remove(Systems.playerState);
+//                engine.removeSystem(Systems.playerState);
+//                engine.removeAllEntities();
+//
+//                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+//                game.setScreen(new EndingScreen());
+//            }
+//        }
+//        // TODO: temporary for testing scene changes -------------
 
-                // Cleanup ECS stuff from this screen before moving to the next screen/scene
-                Signals.changeState.remove(Systems.playerState);
-                engine.removeSystem(Systems.playerState);
-                engine.removeAllEntities();
 
-                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
-                game.setScreen(new EndingScreen());
-            }
-        }
-        // TODO: temporary for testing scene changes -------------
 
         if (Flag.FRAME_STEP.isEnabled()) {
             Config.stepped_frame = Gdx.input.isKeyJustPressed(Input.Keys.NUM_9);
@@ -116,6 +129,14 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    private SceneType nextScene () {
+        if (scene instanceof SceneTest) { return SceneType.RELIC_1; }
+        if (scene instanceof SceneRelic1) { return SceneType.RELIC_2; }
+        if (scene instanceof SceneRelic2) { return SceneType.RELIC_3; }
+        if (scene instanceof SceneRelic3) { return SceneType.FINALE; }
+        return SceneType.FINALE;
+    }
+
     private void switchScene(SceneType sceneType) {
         // Cleanup ECS stuff from this screen before moving to the next screen/scene
         Signals.removeEntity.remove(scene);
@@ -129,7 +150,10 @@ public class GameScreen extends BaseScreen {
             case RELIC_1: scene = new SceneRelic1(this); break;
             case RELIC_2: scene = new SceneRelic2(this); break;
             case RELIC_3: scene = new SceneRelic3(this); break;
-            case FINALE:  scene = new SceneFinale(this); break;
+            case FINALE:
+                game.setScreen(new EndingScreen());
+                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+                return;
         }
 
         var entity = Factory.createEntity();
@@ -149,5 +173,6 @@ public class GameScreen extends BaseScreen {
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
+        transitioning = false;
     }
 }
