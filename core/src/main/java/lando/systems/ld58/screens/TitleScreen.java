@@ -28,6 +28,7 @@ public class TitleScreen extends BaseScreen {
     private final TextureRegion billyOldStatic;
     private final TextureRegion billyNewStatic;
 
+    private final MutableFloat morphAmount = new MutableFloat(0);
     private final MutableFloat pixelOverlayAlpha = new MutableFloat(1f);
     private final MutableFloat title2015Alpha = new MutableFloat(0);
     private final MutableFloat title2025Alpha = new MutableFloat(0);
@@ -95,9 +96,8 @@ public class TitleScreen extends BaseScreen {
                     .push(Tween.to(title2025Alpha, -1, 1.5f).target(1f))
                     .push(Tween.to(billyPos, Vector2Accessor.XY, 3f)
                         .target(billyPosTarget.x, billyPosTarget.y))
-
+                    .push(Tween.to(morphAmount, -1, morphDuration).target(billyMorphAnimType.get().getAnimationDuration()))
             )
-            .pushPause(morphDuration)
             .push(Tween.call((type, source) -> {
                 morphComplete = true;
                 showGlowTitle = true;
@@ -144,27 +144,22 @@ public class TitleScreen extends BaseScreen {
                 var frame = anim.getKeyFrame(animTime);
                 batch.draw(frame, billyPos.x, billyPos.y);
             } else { // Walk complete...
-                if (!morphStarted) {
-                    // Waiting to start morph so show static
-                    batch.draw(billyOldStatic, billyPos.x, billyPos.y);
-                } else {
-                    // Morph started...
-                    if (!morphComplete) {
+//                if (!morphStarted) {
+//                    // Waiting to start morph so show static
+//                    batch.draw(billyOldStatic, billyPos.x, billyPos.y);
+//                } else {
+                    // Morph started..
                         var anim = billyMorphAnimType.get();
-                        var frame = anim.getKeyFrame(animTime);
+                        var frame = anim.getKeyFrame(morphAmount.floatValue());
                         batch.draw(frame, billyPos.x, billyPos.y);
-                    } else { // morph complete...
-                        // Show static new billy
-                        batch.draw(billyNewStatic, billyPos.x, billyPos.y);
-                    }
-                }
+//                }
             }
 
-            if (showOldTitle) {
                 batch.setColor(1, 1, 1, title2015Alpha.floatValue());
                 batch.draw(title2015, titlePosTarget.x, titlePosTarget.y);
                 batch.setColor(Color.WHITE);
-            }
+
+
             if (showGlowTitle) {
                 batch.setColor(1, 1, 1, title2025GlowAlpha.floatValue());
                 batch.draw(title2025Glow, titlePosTarget.x, titlePosTarget.y);
