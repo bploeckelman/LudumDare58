@@ -38,10 +38,10 @@ float n(float x) {
 }
 
 void main() {
-    vec2 np = vec2(v_texCoord.x + (u_time/10.), v_texCoord.y + (u_time/10.));
+    vec2 np = vec2(v_texCoord.x + (u_time/10.5), v_texCoord.y + (u_time/10.5));
     vec2 np2 = vec2(v_texCoord.x - (u_time/10.), v_texCoord.y + (u_time/10.));
-    vec2 np3 = vec2(v_texCoord.x - (u_time/10.), v_texCoord.y - (u_time/10.));
-    vec2 np4 = vec2(v_texCoord.x + (u_time/10.), v_texCoord.y - (u_time/10.));
+    vec2 np3 = vec2(v_texCoord.x - (u_time/9.), v_texCoord.y - (u_time/9.));
+    vec2 np4 = vec2(v_texCoord.x + (u_time/8.), v_texCoord.y - (u_time/8.));
     vec4 noise = texture2D(u_texture2, np) + texture2D(u_texture2, np2) +texture2D(u_texture2, np3) + texture2D(u_texture2, np4) ;
     noise /= 4.;
 
@@ -55,4 +55,5 @@ void main() {
 
     gl_FragColor = vec4(finalColor, 1.) * v_color;
 
+//    gl_FragColor = vec4(vec3(noise.r),1.);
 }
