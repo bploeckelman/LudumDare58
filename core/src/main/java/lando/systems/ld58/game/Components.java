@@ -20,6 +20,7 @@ public class Components {
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
+        entry(Fireball.class,       ComponentMapper.getFor(Fireball.class)),
         entry(Friction.class,       ComponentMapper.getFor(Friction.class)),
         entry(Gravity.class,        ComponentMapper.getFor(Gravity.class)),
         entry(Id.class,             ComponentMapper.getFor(Id.class)),

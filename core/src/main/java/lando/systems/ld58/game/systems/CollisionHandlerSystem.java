@@ -4,13 +4,11 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
+import com.badlogic.gdx.Gdx;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.components.Pickup;
-import lando.systems.ld58.game.components.Player;
-import lando.systems.ld58.game.components.Position;
-import lando.systems.ld58.game.components.Velocity;
+import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
 import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.signals.AudioEvent;
@@ -39,6 +37,11 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
          || (Components.has(move.target(), Player.class) && Components.hasEnemyComponent(move.mover()))) {
             handlePlayerEnemyCollision(move);
         }
+
+        // Fireball/Wall
+        if ((Components.has(move.mover(), Fireball.class) && Components.has(move.target(), Tilemap.class))) {
+            handleFireballMapCollisions(move);
+        }
     }
 
     private void handleOverlapCollision(CollisionEvent.Overlap overlap) {
@@ -51,7 +54,22 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
 
         if (player != null && pickup != null) {
             handlePlayerPickupCollision(player, pickup);
+        } else {
+            Gdx.app.debug(TAG, "Overlap collision that wasn't handled");
         }
+    }
+
+    private void handleFireballMapCollisions(CollisionEvent.Move move) {
+        var fireball = move.mover();
+        var fireballVel = fireball.getComponent(Velocity.class);
+
+        if (move.dir().x != 0) {
+            fireballVel.value.x *= -1;
+        }
+        if (move.dir().y != 0) {
+            fireballVel.value.y *= -1;
+        }
+        move.response = CollisionResponse.KEEP_VELOCITY;
     }
 
     private void handlePlayerPickupCollision(Entity playerEntity, Entity pickupEntity) {
