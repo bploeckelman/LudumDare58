@@ -41,6 +41,9 @@ public class Assets implements Disposable {
 
     public final Texture pixel;
 
+    public NinePatch plainNine;
+    public NinePatch dimNine;
+
     public TextureRegion pixelRegion;
     public ShaderProgram outlineShader;
     public ShaderProgram kirbyShader;
@@ -140,6 +143,10 @@ public class Assets implements Disposable {
         for (var assets : assetClasses) {
             AssetType.init(assets, this);
         }
+
+        plainNine = new NinePatch(atlas.findRegion("patch/plain"), 5, 5, 5, 5);
+        dimNine = new NinePatch(atlas.findRegion("patch/plain-dim"), 5, 5, 5, 5);
+
 
         loaded = true;
         return 1;

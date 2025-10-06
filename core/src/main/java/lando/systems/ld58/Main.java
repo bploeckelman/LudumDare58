@@ -93,6 +93,7 @@ public class Main extends Game {
         var startScreen = showLaunchScreen ? new LaunchScreen()
             : Flag.GAME_SCREEN.isEnabled() ? new GameScreen()
             : new TitleScreen();
+
         setScreen(startScreen);
     }
 
