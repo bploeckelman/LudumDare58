@@ -1,16 +1,15 @@
 package lando.systems.ld58.screens;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.equations.Linear;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL30;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
-import com.github.tommyettinger.textra.TextraLabel;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.assets.*;
@@ -28,7 +26,6 @@ import lando.systems.ld58.flashback.FlashbackParticle;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
-import lando.systems.ld58.utils.Util;
 import lando.systems.ld58.utils.accessors.ColorAccessor;
 import lando.systems.ld58.utils.accessors.RectangleAccessor;
 import lando.systems.ld58.utils.accessors.Vector3Accessor;
@@ -257,7 +254,7 @@ public class FlashbackScreen extends BaseScreen {
         }
 
         dialog.act(delta);
-        if (Gdx.input.justTouched() && deBounce <= 0) {
+        if ((Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()) && deBounce <= 0) {
             if (!dialog.hasEnded()) {
                 dialog.skipToTheEnd();
             } else {

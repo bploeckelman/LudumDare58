@@ -3,6 +3,7 @@ package lando.systems.ld58.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld58.game.Factory;
 import lombok.AllArgsConstructor;
@@ -89,7 +90,7 @@ public interface TilemapObject {
             this(tilemap, object,
                 object.getProperties().get("type", "", String.class),
                 object.getProperties().get("id", -1, Integer.class),
-                object.getProperties().get("rectangle", new Rectangle(), Rectangle.class),
+                ((RectangleMapObject) object).getRectangle(),
                 false);
         }
 

@@ -14,6 +14,7 @@ public class Systems {
     public static EnemySystem            enemies;
     public static InputSystem            input;
     public static InterpSystem           interp;
+    public static MapTriggerSystem       mapTrigger;
     public static MovementSystem         movement;
     public static ParticleSystem         particles;
     public static RenderDebugSystem      renderDebug;
@@ -31,6 +32,7 @@ public class Systems {
         Systems.enemies          = new EnemySystem();
         Systems.input            = new InputSystem();
         Systems.interp           = new InterpSystem();
+        Systems.mapTrigger       = new MapTriggerSystem();
         Systems.movement         = new MovementSystem();
         Systems.particles        = new ParticleSystem();
         Systems.renderDebug      = new RenderDebugSystem();
@@ -45,6 +47,7 @@ public class Systems {
         engine.addSystem(enemies);
         engine.addSystem(input);
         engine.addSystem(interp);
+        engine.addSystem(mapTrigger);
         engine.addSystem(movement);
         engine.addSystem(particles);
         engine.addSystem(renderDebug);

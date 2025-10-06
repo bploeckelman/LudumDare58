@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="160" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="3">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="160" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="6" nextobjectid="4">
  <tileset firstgid="1" source="tilesets/mario3.tsx"/>
  <tileset firstgid="901" source="tilesets/mario.tsx"/>
  <tileset firstgid="1925" source="tilesets/castle.tsx"/>
@@ -67,7 +67,12 @@
   </object>
   <object id="2" name="trigger" x="208" y="0" width="16" height="400">
    <properties>
-    <property name="dialog" value="test-1"/>
+    <property name="type" value="dialog-test-1"/>
+   </properties>
+  </object>
+  <object id="3" name="trigger" x="544" y="0" width="16" height="400">
+   <properties>
+    <property name="type" value="dialog-test-2"/>
    </properties>
   </object>
  </objectgroup>

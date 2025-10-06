@@ -27,12 +27,11 @@ public class MapTriggerSystem extends IteratingSystem {
     @Override
     public void update(float delta) {
         // Make sure we have a current scene reference, if available
-        Util.streamOf(getEngine().getEntitiesFor(SCENE))
+        scene = Util.streamOf(getEngine().getEntitiesFor(SCENE))
+            .map(SceneContainer::get)
+            .map(SceneContainer::scene)
             .findFirst()
-            .ifPresent(entity -> scene = Components
-                .optional(entity, SceneContainer.class)
-                .map(SceneContainer::scene)
-                .orElse(null));
+            .orElse(null);
 
         super.update(delta);
     }
