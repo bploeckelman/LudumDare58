@@ -49,7 +49,7 @@ public class GameScreen extends BaseScreen {
 //            game.setScreen(new EndingScreen());
 //        }
         // TODO: temporary for testing scene changes -------------
-        if (!transitioning && Gdx.input.justTouched()) {
+        if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
             if      (scene instanceof SceneTest)   switchScene(SceneType.RELIC_1);
             else if (scene instanceof SceneRelic1) switchScene(SceneType.RELIC_2);
             else if (scene instanceof SceneRelic2) switchScene(SceneType.RELIC_3);

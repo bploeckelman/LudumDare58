@@ -91,6 +91,7 @@ public class GoombaNormalState extends PlayerState {
         var input     = input();
         var animator  = animator();
         var velocity  = velocity();
+        var kirby     = kirby();
 
         // Update horizontal speed based on input
         var accel = isGrounded
@@ -98,8 +99,10 @@ public class GoombaNormalState extends PlayerState {
             : input.moveDirX * Constants.MOVE_ACCEL_AIR;
         velocity.value.x += accel * delta;
 
+        var maxAirSpeed = kirby == null ? Constants.MOVE_SPEED_MAX_AIR : kirby.maxAirSpeed();
+        var maxGroundSpeed = kirby == null ? Constants.MOVE_SPEED_MAX_GROUND : kirby.maxGroundSpeed();
         // Constrain horizontal speed
-        var maxSpeed = isGrounded ? Constants.MOVE_SPEED_MAX_GROUND : Constants.MOVE_SPEED_MAX_AIR;
+        var maxSpeed = isGrounded ? maxGroundSpeed: maxAirSpeed;
         if (Calc.abs(velocity.value.x) > maxSpeed) {
             // NOTE: this version is a hard cap on max speed
             velocity.value.x = animator.facing * maxSpeed;
@@ -127,60 +130,33 @@ public class GoombaNormalState extends PlayerState {
         var animator  = animator();
         var cooldowns = cooldowns();
         var velocity  = velocity();
+        var kirby = kirby();
 
         jumpTime += delta;
+        var ignoreGround = kirby != null && kirby.ignoreGround();
 
         var jumpRequested = input.wasJumpJustPressed;
         if (jumpRequested && cooldowns.isReady("jump")) {
-            if ((isGrounded || lastOnGround < COYOTE_TIME) && player.jumpState() == Player.JumpState.GROUNDED) {
+            if ((ignoreGround || (isGrounded || lastOnGround < COYOTE_TIME) && player.jumpState() == Player.JumpState.GROUNDED)) {
                 // start a new jump!
                 jumpTime = 0;
                 player.jumpState(Player.JumpState.JUMPED);
 
-                velocity.value.y = Constants.JUMP_ACCEL_SINGLE;
+                var jumpAccel = kirby() == null ? Constants.JUMP_ACCEL_SINGLE : kirby().jumpImpulse();
+                velocity.value.y = jumpAccel;
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
                 Signals.animStart.dispatch(new AnimationEvent.Start(animator, getJumpAnimation()));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
-            else if (player.jumpState() == Player.JumpState.JUMPED && allowGrab) {
-                player.jumpState(Player.JumpState.GRABBED);
-
-                velocity.stop();
-
-                Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
-                Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 1.2f, 1.2f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_YELL));
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
-            }
-            else if (player.jumpState() == Player.JumpState.GRABBED) {
-                player.jumpState(Player.JumpState.DOUBLE_JUMPED);
-
-                velocity.value.y = Constants.JUMP_ACCEL_DOUBLE;
-
-                Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
-                Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, getJumpAnimation()));
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
-            }
-            // ...otherwise if it's a double jump do nothing until the player is grounded again
         }
 
-        // no movement when grabbing
-        if (player.jumpState() == Player.JumpState.GRABBED) {
-            velocity.stop();
-
-            // For now just boop the player a bit to indicate they tried to move
-            if (input.moveDirX != 0) {
-                Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 1.1f, animator.scale.y));
-            }
-        }
-
+        var jumpHeldAccel = kirby() == null ? Constants.JUMP_HELD_ACCEL : kirby().jumpHeld();
         if (player.jumpState() == Player.JumpState.JUMPED) {
             if (input.isJumpHeld || input.wasControllerJumpButtonDown) {
                 float jumpAccelAmount = MathUtils.clamp(.5f - jumpTime, 0f, 1f);
-                velocity.value.y += jumpAccelAmount * Constants.JUMP_HELD_ACCEL;
+                velocity.value.y += jumpAccelAmount * jumpHeldAccel;
             }
         }
     }
@@ -274,6 +250,8 @@ public class GoombaNormalState extends PlayerState {
         var animator = Components.get(entity, Animator.class);
         if (animator == null) return;
         Signals.animStart.dispatch(new AnimationEvent.Play(animator(), kirbyPower.getBillyEnemyWalkAnimType()));
+        var grav = entity.getComponent(Gravity.class);
+        grav.value = kirbyPower.getGravity();
     }
 
     public AnimType getWalkAnimation() {

@@ -2,6 +2,7 @@ package lando.systems.ld58.game.components;
 
 import com.badlogic.ashley.core.Component;
 import lando.systems.ld58.assets.AnimType;
+import lando.systems.ld58.game.Constants;
 
 public class KirbyPower implements Component {
     public enum PowerType {KOOPA, LAKITU, HAMMER, BULLET, SUN}
@@ -43,5 +44,80 @@ public class KirbyPower implements Component {
 //            case SUN:    return AnimType.BILLY_ANGRY_SUN;
             default:     return AnimType.COIN_BLOCK;
         }
+    }
+
+    public float getGravity() {
+        switch (powerType) {
+            case LAKITU:
+            case SUN:
+                return Constants.GRAVITY * .4f;
+        }
+        return Constants.GRAVITY;
+    }
+
+    public float jumpImpulse() {
+        switch (powerType) {
+            case SUN:
+            case LAKITU:
+                return Constants.JUMP_ACCEL_SINGLE * .5f;
+            case HAMMER:
+            case KOOPA:
+            case BULLET:
+                return Constants.JUMP_ACCEL_SINGLE;
+        }
+        return Constants.JUMP_ACCEL_SINGLE;
+    }
+
+    public float jumpHeld() {
+        switch (powerType) {
+            case SUN:
+            case LAKITU:
+                return Constants.JUMP_HELD_ACCEL * .5f;
+            case HAMMER:
+            case KOOPA:
+            case BULLET:
+                return Constants.JUMP_HELD_ACCEL;
+        }
+        return Constants.JUMP_HELD_ACCEL;
+    }
+
+    public boolean ignoreGround() {
+        switch (powerType) {
+            case SUN:
+            case LAKITU:
+                return true;
+            case HAMMER:
+            case KOOPA:
+            case BULLET:
+                return false;
+        }
+        return false;
+    }
+
+
+    public float maxGroundSpeed() {
+        switch (powerType) {
+            case SUN:
+            case LAKITU:
+                return Constants.MOVE_SPEED_MAX_GROUND * .3f;
+            case HAMMER:
+            case KOOPA:
+            case BULLET:
+                return Constants.MOVE_SPEED_MAX_GROUND;
+        }
+        return Constants.MOVE_SPEED_MAX_GROUND;
+    }
+
+    public float maxAirSpeed() {
+        switch (powerType) {
+            case SUN:
+            case LAKITU:
+                    return Constants.MOVE_SPEED_MAX_AIR * .3f;
+            case HAMMER:
+            case KOOPA:
+            case BULLET:
+                return Constants.MOVE_SPEED_MAX_AIR;
+        }
+        return Constants.MOVE_SPEED_MAX_AIR;
     }
 }

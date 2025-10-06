@@ -77,4 +77,7 @@ public abstract class PlayerState {
     public Name name()           { return Components.get(entity, Name.class); }
     public Position position()   { return Components.get(entity, Position.class); }
     public Velocity velocity()   { return Components.get(entity, Velocity.class); }
+
+    // Optional ones, do null checks
+    public KirbyPower kirby()    { return Components.get(entity, KirbyPower.class); }
 }
