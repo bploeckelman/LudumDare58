@@ -19,10 +19,12 @@ public class InputSystem extends IteratingSystem {
     private static final String TAG = InputSystem.class.getSimpleName();
 
     private Controller controller;
+    private boolean downLastFrame;
 
     public InputSystem() {
         super(Family.one(Player.class, Input.class).get());
         this.controller = null;
+        downLastFrame = false;
     }
 
     @Override
@@ -43,6 +45,7 @@ public class InputSystem extends IteratingSystem {
         input.isMoveLeftHeld   = Gdx.input.isKeyPressed(controls.left());
         input.isMoveRightHeld  = Gdx.input.isKeyPressed(controls.right());
         input.isDownHeld = Gdx.input.isKeyPressed(controls.down());
+        input.isDownJustPressed = Gdx.input.isKeyJustPressed(controls.down());
         input.isActionHeld = Gdx.input.isKeyPressed(controls.enter());
         input.isActionHeld |= Gdx.input.isTouched();
         input.isActionJustPressed = Gdx.input.isKeyJustPressed(controls.enter());
@@ -69,11 +72,17 @@ public class InputSystem extends IteratingSystem {
             var moveRight = controller.getButton(mapping.buttonDpadRight) || controller.getAxis(mapping.axisLeftX) >  deadzone;
             var moveDown = controller.getButton(mapping.buttonDpadDown)   || controller.getAxis(mapping.axisLeftY) < -deadzone;
 
+            var downJustPressed = moveDown && !downLastFrame;
+
+
             input.isJumpHeld      = input.isJumpHeld      || jump;
             input.isActionHeld    = input.isActionHeld    || action;
             input.isMoveLeftHeld  = input.isMoveLeftHeld  || moveLeft;
             input.isMoveRightHeld = input.isMoveRightHeld || moveRight;
             input.isDownHeld      = input.isDownHeld      || moveDown;
+            input.isDownJustPressed = input.isDownJustPressed || downJustPressed;
+
+            downLastFrame = moveDown;
         }
 
         input.moveDirX = input.isMoveLeftHeld ? -1 : input.isMoveRightHeld ? 1 : 0;

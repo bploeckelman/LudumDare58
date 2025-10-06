@@ -31,6 +31,7 @@ public class GoombaNormalState extends PlayerState {
     private float lastOnGround;
     private float jumpTime;
     private boolean allowGrab = false;
+    private boolean suckActive = false;
 
     public GoombaNormalState(Engine engine, Entity entity) {
         super(engine, entity);
@@ -60,7 +61,14 @@ public class GoombaNormalState extends PlayerState {
 
             var actuallyMoving = (moving && wantsToMove && !colliderBlocking);
 
-            var animType = actuallyMoving ? AnimType.BILLY_WALK : AnimType.BILLY_IDLE;
+            var animType = AnimType.COIN;
+            var kirbyPower = entity.getComponent(KirbyPower.class);
+            if (kirbyPower == null) {
+                animType = actuallyMoving ? AnimType.BILLY_WALK : AnimType.BILLY_IDLE;
+            } else {
+                animType = kirbyPower.getWalkAnimation();
+            }
+
             Signals.animStart.dispatch(new AnimationEvent.Play(animator(), animType));
         } else {
             lastOnGround += delta;
@@ -125,7 +133,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_JUMP));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, getJumpAnimation()));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
             else if (player.jumpState() == Player.JumpState.JUMPED && allowGrab) {
@@ -145,7 +153,7 @@ public class GoombaNormalState extends PlayerState {
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
                 Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, AnimType.BILLY_JUMP));
+                Signals.animStart.dispatch(new AnimationEvent.Start(animator, getJumpAnimation()));
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
             }
             // ...otherwise if it's a double jump do nothing until the player is grounded again
@@ -175,12 +183,19 @@ public class GoombaNormalState extends PlayerState {
         var power = Components.optional(entity, KirbyPower.class).orElse(null);
         if (kirby == null) return;
 
+        if (suckActive) {
+            kirby.targetStrength = 1f;
+        } else {
+            kirby.targetStrength = 0f;
+        }
 
         if (power == null) {
+            if (input().isDownJustPressed){
+                suckActive = true;
+            }
             // no power right now
-            if (input().isDownHeld) {
+            if (input().isDownHeld && suckActive) {
                 Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.SUCK, 0.25f));
-                kirby.targetStrength = 1f;
                 var enemies = engine.getEntitiesFor(Family.one(KirbyPower.class).get());
                 for (Entity enemy : enemies) {
                     if (enemy == this.entity) continue; // Don't take from yourself?
@@ -190,25 +205,59 @@ public class GoombaNormalState extends PlayerState {
                         // TODO: suck this guy off
                         enemy.getComponent(Animator.class).tint.set(Color.MAGENTA);
                         enemy.remove(KirbyPower.class);
-                        this.entity.add(new KirbyPower(enemyKirby.powerType));
+                        gainPower(enemyKirby.powerType);
                         Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP, .75f));
                         break;
                     }
                 }
             } else {
                 Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
-                kirby.targetStrength = 0f;
+                suckActive = false;
             }
         } else {
             // You have a power
-            kirby.targetStrength = 0;
+            suckActive = false;
             Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
 
             if (input().isDownHeld && input().isActionJustPressed) {
                 entity.remove(KirbyPower.class);
-
+                Signals.animStart.dispatch(new AnimationEvent.Play(animator(), AnimType.BILLY_IDLE));
             }
         }
+    }
 
+    public void gainPower(KirbyPower.PowerType powerType) {
+        var kirbyPower = new KirbyPower(powerType);
+        this.entity.add(kirbyPower);
+        var animator = Components.optional(entity, Animator.class).orElse(null);
+        if (animator == null) return;
+        Signals.animStart.dispatch(new AnimationEvent.Play(animator(), kirbyPower.getWalkAnimation()));
+    }
+
+    public AnimType getWalkAnimation() {
+        var kirbyPower =  Components.optional(entity, KirbyPower.class).orElse(null);
+        if (kirbyPower == null) {
+            return AnimType.BILLY_WALK;
+        } else {
+            return kirbyPower.getWalkAnimation();
+        }
+    }
+
+    public AnimType getJumpAnimation() {
+        var kirbyPower =  Components.optional(entity, KirbyPower.class).orElse(null);
+        if (kirbyPower == null) {
+            return AnimType.BILLY_JUMP;
+        } else {
+            return kirbyPower.getWalkAnimation();
+        }
+    }
+
+    public AnimType getActionAnimation() {
+        var kirbyPower =  Components.optional(entity, KirbyPower.class).orElse(null);
+        if (kirbyPower == null) {
+            return AnimType.BILLY_WALK;
+        } else {
+            return kirbyPower.getActionAnimation();
+        }
     }
 }

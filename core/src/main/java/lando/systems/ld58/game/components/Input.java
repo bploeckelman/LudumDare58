@@ -13,6 +13,7 @@ public class Input implements Component {
     public boolean wasJumpJustPressed;
     public boolean wasControllerJumpButtonDown;
     public boolean isDownHeld;
+    public boolean isDownJustPressed;
     public boolean isActionHeld;
     public boolean isActionJustPressed;
 
@@ -42,7 +43,9 @@ public class Input implements Component {
         wasControllerJumpButtonDown = false;
         moveDirX = 0;
         isDownHeld = false;
+        isDownJustPressed = false;
         isActionHeld = false;
         isActionJustPressed = false;
+
     }
 }
