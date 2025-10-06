@@ -1,17 +1,19 @@
 - ** [HTML/WebGL](https://lando.systems/games/ld58-LINKHERE) **
 - ** [Desktop/Java](https://lando.systems/games/ld58-LINKHERE) **
 - ** [Source](https://github.com/bploeckelman/LudumDare58) **
-# TITLEHERE #
+# Goomba Simulator: 2025 #
 
-...DESCRIPTION....
+You're a Goomba that collects the dropped artifacts that Mario left
+
+When, in the course of human events, it becomes necessary for a Ludum Dare team to revisit past work, only a fool doesn't heed that call. This is the 10th anniversary sequel to the 2015 Ludum Dare   
 
 # Controls:
 ---
 
-* WASD or controller
+* WASD or controller to move
 * Space to jump
-* J or left-mouse for main attack
-* K or right-mouse for super attack
+* S to suck in other enemies and use their powers!
+* S + Enter to jettison your enemy so you can use new powers!
 
 
 # About the Team:
@@ -25,20 +27,12 @@
 Code:
 - Doug Graham [dsgraham](https://twitter.com/dsgraham) :elephant: [dsgraham on mastodon](https://mastodon.gamedev.place/@dsgraham)
 - Brian Ploeckelman [PalpatinesSmile](https://twitter.com/PalpatinesSmile) :elephant: [brian on mastodon](https://mastodon.gamedev.place/@brian)
-- Jeffrey Hwang :elephant: [jeffreyhwang on mastodon](https://mastodon.gamedev.place/@jeffreyhwang)
-- Brian Rossman
 
 Art:
 - Matt Neumann
 
 Music and Text:
 - Pete V
-
-Assorted Coolness:
-- Luke Bain
-- Clayton Mays
-- Melisa Erman
-
 
 ### Attribution:
 ---

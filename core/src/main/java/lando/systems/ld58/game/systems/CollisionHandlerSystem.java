@@ -161,7 +161,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             case RELIC_PLUNGER:
             case RELIC_TORCH:
             case RELIC_WRENCH: {
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.THUD));
+                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.BREAK));
                 playerEntity.add(new RelicPickupRender(pickup.type));
             } break;
         }
@@ -285,7 +285,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
         }
 
         // TODO: replace with 'block breaking' sound
-        Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.THUD));
+        Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.BREAK));
 
         // Particle effect
         var destructPos = Components.get(destructibleEntity, Position.class);
