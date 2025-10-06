@@ -32,13 +32,19 @@ import java.util.Map;
 
 public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
-    private static final float DEBOUNCE_DURATION = 1f;
+    private static final float DEBOUNCE_DURATION = .31f;
 
-    private final Color backgroundColor = new Color(0xbbebf3ff);
+//    private final Color backgroundColor = new Color(0xaaaaddff);
+    private final Color backgroundColor = new Color(.1F, .5F, 1f, 1f);
 
     private final Map<String, String> dialogText = Map.of(
-        "dialog-test-1", "This is a test of the map triggered dialog event system.\nThis is only a test!",
-        "dialog-test-2", "He that is wounded in the stones,\nor hath his privy member cut off,\nshall not enter into the congregation of the Lord.\n\n- Deuteronomy 23:1"
+        "dialog-test-1", "Something is definitely wrong.\nIt reeks of garlic and decaying human waste in this otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?",
+//        "dialog-test-2", "He that is wounded in the stones,\nor hath his privy member cut off,\nshall not enter into the congregation of the Lord.\n\n- Deuteronomy 23:1"
+        "dialog-test-2", "At the last Cabal Strategic Alignment meeting, I vaguely remember Gannon complaining about getting stuck with Collector duty again...\n\nWe all know the 'dorf is a messy bitch who lives for drama, but would even HE be petty enough to leave the Ur-Artifacts scattered around after the last release?"
+        ,"dialog-test-3", "He knows as well as we do that as long as the Ur-Artifacts are lying around the Kingdom, we're at risk of another incursion situation like the Brooklyn Incident.\n\nWe can't be getting invaded by malevolent entities who wish us ill all the time! Where does he think he is, Hyrule?"
+        ,"dialog-test-4", "I guess it's up to me now.\n\nI will collect these 3 Mario artifacts that are by their mere existence causing the Mushroom Kingdom to tumble into disrepair!"
+        ,"dialog-test-5", "Coincidentally, there happen to be exact replicas of these very items in the case below.\n\n That should make them considerably easier to identify."
+        ,"dialog-test-6", "Nice job holding the jump button down slightly longer than usual! \nThat might come in handy later.\n\nOr actually, it might not (I honestly can't remember where we landed with the level design...)"
     );
 
     public final Scene<IntroScreen> scene;
@@ -168,7 +174,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     private void drawDialog(SpriteBatch batch, float delta) {
        if (!dialog.getOriginalText().toString().isEmpty()) {
-            batch.setColor(0, 0, 0, .4f);
+            batch.setColor(0, 0, 0, .65f);
             batch.draw(assets.pixel, dialog.getX()- 5, dialog.getY()-5, dialog.getWidth()+10, dialog.getHeight()+10);
             batch.setColor(Color.WHITE);
         }
