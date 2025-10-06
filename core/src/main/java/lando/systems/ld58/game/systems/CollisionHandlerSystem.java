@@ -12,6 +12,7 @@ import lando.systems.ld58.game.components.Player;
 import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.game.components.Velocity;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
+import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CollisionEvent;
 import lando.systems.ld58.utils.FramePool;
@@ -68,6 +69,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             case RELIC_TORCH:
             case RELIC_WRENCH: {
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.THUD));
+                playerEntity.add(new RelicPickupRender(pickup.type));
             } break;
         }
 

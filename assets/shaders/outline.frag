@@ -20,7 +20,11 @@ void main() {
     vec4 texColor = getTexture(vec2(0.));
     float outline = 0.;
     vec2 p = vec2(v_texCoord);
-    if (texColor.a <= 0.) {
+    if (texColor.a <= 0.05) {
+        outline += getTexture(vec2(u_thickness.x, u_thickness.y)).a;
+        outline += getTexture(vec2(u_thickness.x, -u_thickness.y)).a;
+        outline += getTexture(vec2(-u_thickness.x, -u_thickness.y)).a;
+        outline += getTexture(vec2(-u_thickness.x, u_thickness.y)).a;
         outline += getTexture(vec2(0., u_thickness.y)).a;
         outline += getTexture(vec2(0., -u_thickness.y)).a;
         outline += getTexture(vec2(u_thickness.x, 0.)).a;

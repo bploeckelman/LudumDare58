@@ -43,6 +43,7 @@ public class Components {
         entry(Image.class,                 ComponentMapper.getFor(Image.class)),
         entry(KirbyShaderRenderable.class, ComponentMapper.getFor(KirbyShaderRenderable.class)),
         entry(Outline.class,               ComponentMapper.getFor(Outline.class)),
+        entry(RelicPickupRender.class,           ComponentMapper.getFor(RelicPickupRender.class)),
 
         entry(EnemyAngrySun.class,     ComponentMapper.getFor(EnemyAngrySun.class)),
         entry(EnemyBulletBill.class,   ComponentMapper.getFor(EnemyBulletBill.class)),

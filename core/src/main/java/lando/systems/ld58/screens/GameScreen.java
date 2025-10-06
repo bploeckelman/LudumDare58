@@ -94,6 +94,11 @@ public class GameScreen extends BaseScreen {
         Systems.renderDebug.draw(shapes);
         batch.end();
 
+        batch.setProjectionMatrix(windowCamera.combined);
+        batch.begin();
+        Systems.render.drawInWindowSpace(batch, windowCamera);
+        batch.end();
+
         // Screen name overlay
         if (Flag.DEBUG_RENDER.isEnabled()) {
             batch.setProjectionMatrix(windowCamera.combined);

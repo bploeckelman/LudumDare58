@@ -4,11 +4,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.SortedIteratingSystem;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.game.Components;
@@ -36,10 +38,26 @@ public class RenderSystem extends SortedIteratingSystem {
     };
 
     private final Map<Entity, TiledMapRenderer> mapRenderers;
+    private float accum = 0;
 
     public RenderSystem() {
         super(RENDERABLES, comparator);
         this.mapRenderers = new HashMap<>();
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        super.update(deltaTime);
+        accum += deltaTime;
+
+        for (Entity e : getEngine().getEntitiesFor(Family.one(RelicPickupRender.class).get())) {
+            var pickup = e.getComponent(RelicPickupRender.class);
+            pickup.accum += deltaTime;
+
+//            if (pickup.accum > RelicPickupRender.DURATION) {
+//                e.remove(RelicPickupRender.class);
+//            }
+        }
     }
 
     @Override
@@ -77,6 +95,17 @@ public class RenderSystem extends SortedIteratingSystem {
             renderKirbyShader(batch, entity);
             renderFlameShader(batch, entity);
         }
+
+    }
+
+    public void drawInWindowSpace(SpriteBatch batch, OrthographicCamera camera) {
+        var relicPickups = getEngine().getEntitiesFor(Family.one(RelicPickupRender.class).get());
+        for (var entity : relicPickups) {
+            if (!entity.getComponent(RelicPickupRender.class).isComplete()) {
+                renderRelicShader(entity, batch, camera);
+            }
+        }
+
     }
 
     private void renderFlameShader(SpriteBatch batch, Entity entity) {
@@ -112,6 +141,36 @@ public class RenderSystem extends SortedIteratingSystem {
         batch.draw(kirby.texture, rect.x, rect.y, rect.width, rect.height);
 
         batch.setShader(null);
+    }
+
+    public void renderRelicShader(Entity entity, SpriteBatch batch, OrthographicCamera camera) {
+        var pickup = Components.optional(entity, RelicPickupRender.class).orElse(null);
+        if (pickup == null) return;
+        var shader = Main.game.assets.relicShader;
+        batch.setShader(shader);
+
+        float alpha = MathUtils.clamp(Math.min(pickup.accum * 2f, RelicPickupRender.DURATION - pickup.accum), 0f, 1f);
+
+        shader.setUniformf("u_rotation", pickup.getRotation());
+        batch.setColor(1,1,1,alpha);
+
+        batch.draw(Main.game.assets.pixel, 0, 0, camera.viewportWidth, camera.viewportHeight);
+        batch.setColor(Color.WHITE);
+
+        var outlineShader = Main.game.assets.outlineShader;
+        var thickness = 3f;
+        var region = pickup.getRelicTexture();
+        batch.setShader(outlineShader);
+        batch.setColor(1, 1, 1, alpha);
+        outlineShader.setUniformf("u_fill_color", Color.CLEAR_WHITE);
+        outlineShader.setUniformf("u_outline_color", Util.hsvToRgb(accum * 1f, 1f, 1f, FramePool.color()));
+        outlineShader.setUniformf("u_thickness",
+            thickness / (float) region.getTexture().getWidth(),
+            thickness / (float) region.getTexture().getHeight());
+        batch.draw(region, camera.viewportWidth/2 - 100, camera.viewportHeight/2 - 100, 200, 200);
+        batch.setColor(Color.WHITE);
+        batch.setShader(null);
+
     }
 
     private void renderTileLayer(SpriteBatch batch, Entity entity) {
@@ -179,7 +238,5 @@ public class RenderSystem extends SortedIteratingSystem {
         }
         batch.setColor(prevColor);
         batch.setShader(null);
-
-        renderKirbyShader(batch, entity);
     }
 }
