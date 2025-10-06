@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.particles.ParticleEffect;
+import lando.systems.ld58.particles.effects.BlockBreakEffect;
 import lando.systems.ld58.particles.effects.SpitEffect;
 import lando.systems.ld58.particles.effects.SuckEffect;
 import lando.systems.ld58.particles.effects.TestEffect;
@@ -15,6 +16,7 @@ public enum EmitterType implements AssetType<ParticleEffect> {
       TEST(TestEffect.class)
     , POWER_SUCK(SuckEffect.class)
     , POWER_SPIT(SpitEffect.class)
+    , BLOCK_BREAK(BlockBreakEffect.class)
     ;
 
     private static final String TAG = EmitterType.class.getSimpleName();
