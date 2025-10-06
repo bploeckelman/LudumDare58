@@ -35,18 +35,19 @@ public class GoombaStartState extends PlayerState {
         var startPos = FramePool.pos(spawner.x(), spawner.y());
 
         var introSequence = new SequentialActions(
-            new SetPositionAction(startPos),
-            new DelayAction(0.5f),
-            new ParallelActions(
-                new MoveRelativeAction(0.5f, 0, 50),
-                new PlayAnimAction(AnimType.BILLY_JUMP),
-                new PlaySoundAction(SoundType.JUMP)
-            ),
-            new DelayAction(0.3f),
-            new PlayAnimAction(AnimType.BILLY_YELL),
-            new DelayAction(0.2f),
-            new PlayAnimAction(AnimType.BILLY_IDLE),
-            new DelayAction(0.5f)
+            new SetPositionAction(startPos)
+//            ,
+//            new DelayAction(0.5f),
+//            new ParallelActions(
+//                new MoveRelativeAction(0.5f, 0, 50),
+//                new PlayAnimAction(AnimType.BILLY_JUMP),
+//                new PlaySoundAction(SoundType.JUMP)
+//            ),
+//            new DelayAction(0.3f),
+//            new PlayAnimAction(AnimType.BILLY_YELL),
+//            new DelayAction(0.2f),
+//            new PlayAnimAction(AnimType.BILLY_IDLE),
+//            new DelayAction(0.5f)
         );
 
         startActions(introSequence);
