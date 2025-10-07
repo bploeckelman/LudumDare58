@@ -12,6 +12,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     // object animations ----------------------------------------
     , COIN(Path.OBJ_COIN)
     , COIN_BLOCK(Path.FLASHBACK, "coin-block")
+    , SHROOM(Path.OBJ_SHROOM)
     , RELIC_PLUNGER(Path.OBJ_RELIC)
     , RELIC_TORCH(Path.OBJ_RELIC)
     , RELIC_WRENCH(Path.OBJ_RELIC)
@@ -118,6 +119,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
         private static final String OBJECTS = "objects/";
         private static final String OBJ_COIN = OBJECTS + "coin/";
         private static final String OBJ_RELIC = OBJECTS + "relics/";
+        private static final String OBJ_SHROOM = OBJECTS + "shroom/";
 
         private static final String BLOCKS = "blocks/";
 

@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component;
 
 public class Pickup implements Component {
 
-    public enum Type { COIN, RELIC_PLUNGER, RELIC_TORCH, RELIC_WRENCH }
+    public enum Type { SHROOM, COIN, RELIC_PLUNGER, RELIC_TORCH, RELIC_WRENCH }
 
     public final Type type;
 
@@ -12,6 +12,7 @@ public class Pickup implements Component {
         this.type = type;
     }
 
+    public static Pickup shroom()  { return new Pickup(Type.SHROOM); }
     public static Pickup coin()    { return new Pickup(Type.COIN); }
     public static Pickup plunger() { return new Pickup(Type.RELIC_PLUNGER); }
     public static Pickup torch()   { return new Pickup(Type.RELIC_TORCH); }

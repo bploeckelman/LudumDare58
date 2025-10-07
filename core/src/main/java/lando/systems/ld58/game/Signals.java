@@ -22,4 +22,5 @@ public class Signals {
     public static final Signal<EntityEvent> removeEntity = new Signal<>();
 
     public static final Signal<TriggerEvent> dialogTrigger = new Signal<>();
+    public static final Signal<TriggerEvent> collectTrigger = new Signal<>();
 }

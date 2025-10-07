@@ -18,6 +18,7 @@ import lando.systems.ld58.game.components.collision.CollisionResponse;
 import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CollisionEvent;
+import lando.systems.ld58.game.signals.TriggerEvent;
 import lando.systems.ld58.particles.effects.BlockBreakEffect;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Time;
@@ -157,6 +158,10 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
         switch (pickup.type) {
             case COIN: {
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.COIN));
+            } break;
+            case SHROOM: {
+                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP));
+                Signals.collectTrigger.dispatch(new TriggerEvent.Collect(pickup.type));
             } break;
             case RELIC_PLUNGER:
             case RELIC_TORCH:

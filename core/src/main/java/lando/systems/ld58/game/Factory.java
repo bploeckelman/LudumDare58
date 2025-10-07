@@ -513,6 +513,35 @@ public class Factory {
         return entity;
     }
 
+    public static Entity shroom(TilemapObject.Spawner spawner) {
+        if (!"shroom".equals(spawner.type)) {
+            throw new GdxRuntimeException(TAG + ": tried to create shroom from spawner without matching type");
+        }
+
+        var entity = createEntity();
+
+        entity.add(new Name("Shroom"));
+        entity.add(Pickup.shroom());
+
+        // NOTE: 'tile' map object 'position' is a bit off of where we'd want it in game, manually adjusting it here
+        var tileMapObject = (TiledMapTileMapObject) spawner.mapObject;
+        var x = spawner.x + tileMapObject.getProperties().get("width", 0f, Float.class) / 2f;
+        var y = spawner.y + tileMapObject.getProperties().get("height", 0f, Float.class) / 2f;
+        entity.add(new Position(x, y));
+        entity.add(new Outline(Color.YELLOW, Color.CLEAR_WHITE, 1f));
+
+        var anim = new Animator(AnimType.SHROOM);
+        anim.origin.set(8, 8);
+        anim.depth = Constants.Z_DEPTH_DEFAULT + 1;
+        entity.add(anim);
+
+        var bounds = new Circle(0, 0, 6);
+        var collidesWith  = new CollisionMask[] { CollisionMask.PLAYER };
+        entity.add(Collider.circ(CollisionMask.PICKUP, bounds.x, bounds.y, bounds.radius, collidesWith));
+
+        return entity;
+    }
+
     public static Entity block(TilemapObject.Spawner spawner) {
         if (!"block".equals(spawner.type)) {
             throw new GdxRuntimeException(TAG + ": tried to create destructible block from spawner without matching type");

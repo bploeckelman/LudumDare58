@@ -5,11 +5,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
-import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
@@ -23,7 +21,6 @@ import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
-import lando.systems.ld58.utils.Util;
 
 public class GameScreen extends BaseScreen {
 
@@ -80,8 +77,6 @@ public class GameScreen extends BaseScreen {
 //        }
 //        // TODO: temporary for testing scene changes -------------
 
-
-
         if (Flag.FRAME_STEP.isEnabled()) {
             Config.stepped_frame = Gdx.input.isKeyJustPressed(Input.Keys.NUM_9);
             if (!Config.stepped_frame) {
@@ -95,15 +90,6 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(backgroundColor);
-
-        // TEMP: libgdx background
-        batch.setProjectionMatrix(windowCamera.combined);
-//        batch.begin();
-//        Util.draw(batch, gdx, FramePool.rect(
-//            (windowCamera.viewportWidth - gdx.getRegionWidth()) / 2f,
-//            (windowCamera.viewportHeight - gdx.getRegionHeight()) / 2f,
-//            gdx.getRegionWidth(), gdx.getRegionHeight()));
-//        batch.end();
 
         // Draw scene
         batch.setProjectionMatrix(worldCamera.combined);

@@ -1,5 +1,7 @@
 package lando.systems.ld58.screens;
 
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
@@ -23,6 +25,7 @@ import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
+import lando.systems.ld58.game.components.Pickup;
 import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.scenes.SceneIntro;
@@ -40,8 +43,9 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     private FrameBuffer fbo;
     private Texture screenTexture;
     private float accum;
-    private float trippyAmount = 0;
+    private MutableFloat trippyAmount = new MutableFloat(0);
     private boolean changeToGameScreen = false;
+    private boolean alreadyPickedUpShroom = false;
 
 //    private final Color backgroundColor = new Color(0xaaaaddff);
     private final Color backgroundColor = new Color(.1F, .5F, 1f, 1f);
@@ -57,8 +61,25 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         ,"dialog-test-7", "Thank you, Goomba!\n\nBut our exit is not in another castle!\n\n(Which is to say, you complete levels by collecting each respective relic, rather than by reaching any particular structure.)"
         ,"dialog-test-8", "One of the benefits of working in the Mushroom Kingdom is everybody wants to see you succeed.\n\nIf you hold the Down button, you can to suck in your comrades and use their powers. Cute!\n\nAlso uncomfortably intimate!"
         ,"dialog-test-9", "After you suck your comrade, you can hit Enter to use their powers!\n\nSharing is caring."
-        ,"dialog-test-10", "When you're done having your friends inside you, you can simply hold Down and hit Enter.\n\nGoodbye, social obligations!"
+        ,"dialog-test-10", "When you're done having your friends inside you,\nyou can simply hold Down and hit Enter.\n\nGoodbye, social obligations!"
     );
+
+    private boolean readingTransitionText = false;
+    private int currentTransitionDialogText = 0;
+    private final String[] transitionDialogText = new String[] {
+        "You see fuzzy images floating in your visual field...\n\n"
+            + "a plunger... a torch... a pipe wrench...\n"
+            + "They don't belong here, they're from... elsewhere\n\n"
+            + "You see a weird old man who looks kind of like... Mario?",
+        "So that's what's been happening in the Mushroom Kingdom!\n\n"
+            + "Weird old man Mario crossed over from another dimension\n"
+            + "and brought relics with him that are damaging our home.\n",
+        "The cabal is useless... ten years and they haven't figured this out.\n\n"
+            + "I guess it's up to me to set this right.\n\n"
+            + "I'll collect powers from others to search out those relics\n"
+            + "and destroy them in order to send Mario back!\n",
+        "Let's... uh... go!"
+    };
 
     public final Scene<IntroScreen> scene;
     public TypingLabel dialog;
@@ -66,6 +87,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     public IntroScreen() {
         Signals.dialogTrigger.add(this);
+        Signals.collectTrigger.add(this);
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
 //        screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
@@ -83,7 +105,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.55f));
+        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.2f));
 
         font = FontType.ROUNDABOUT.font("medium");
         this.dialog = new TypingLabel("", font);
@@ -138,9 +160,25 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
                     deBounce = DEBOUNCE_DURATION;
                 }
             }
-            return;
-        } else {
-            deBounce = MathUtils.clamp(deBounce - delta, 0, DEBOUNCE_DURATION);
+
+            // Pause while reading normal story dialog triggered text,
+            // but transition text should keep things running
+            if (!readingTransitionText) {
+                return;
+            }
+        }
+        deBounce = MathUtils.clamp(deBounce - delta, 0, DEBOUNCE_DURATION);
+
+        if (readingTransitionText && !changeToGameScreen) {
+            var dialogEmpty = dialog.getOriginalText().toString().isEmpty();
+            if (currentTransitionDialogText != transitionDialogText.length && dialogEmpty) {
+                currentTransitionDialogText++;
+                if (currentTransitionDialogText < transitionDialogText.length) {
+                    dialog.setText(transitionDialogText[currentTransitionDialogText]);
+                } else {
+                    changeToGameScreen = true;
+                }
+            }
         }
 
         if (Flag.FRAME_STEP.isEnabled()) {
@@ -180,7 +218,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         shader.setUniformi("u_texture2", 1);
         shader.setUniformf("u_time", accum);
         shader.setUniformf("u_res", windowCamera.viewportWidth, windowCamera.viewportHeight);
-        shader.setUniformf("u_strength", trippyAmount);
+        shader.setUniformf("u_strength", trippyAmount.floatValue());
         screenTexture.bind(0);
         shader.setUniformi("u_texture", 0);
         batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());
@@ -212,6 +250,14 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
             var text = dialogText.get(dialogEvent.key);
             if (text != null) {
                 dialog.setText(text);
+            }
+        } else if (event instanceof TriggerEvent.Collect) {
+            var collectEvent = (TriggerEvent.Collect) event;
+            if (!alreadyPickedUpShroom && collectEvent.pickupType == Pickup.Type.SHROOM) {
+                alreadyPickedUpShroom = true;
+                readingTransitionText = true;
+                Tween.to(trippyAmount, -1, 2f).target(1f).start(tween);
+                dialog.setText(transitionDialogText[currentTransitionDialogText]);
             }
         }
     }
