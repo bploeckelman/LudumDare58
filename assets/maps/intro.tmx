@@ -128,7 +128,7 @@
     <property name="type" value="dialog-test-9"/>
    </properties>
   </object>
-  <object id="16" name="spawner" gid="3205" x="148" y="340" width="16" height="16">
+  <object id="16" name="spawner" gid="3205" x="1904" y="96" width="16" height="16">
    <properties>
     <property name="type" value="shroom"/>
    </properties>
