@@ -8,10 +8,8 @@ public class SceneFinale extends Scene<GameScreen> {
     public SceneFinale(GameScreen screen) {
         super(screen);
 
-        setupView(640, 360);
-        setupMap("maps/finale.tmx");
-
-        spawnEntities();
+        createView(640, 360);
+        createMap("maps/finale.tmx");
 
         // Follow the player
         screen.engine.getSystem(ViewSystem.class).target(player);

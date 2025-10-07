@@ -19,7 +19,7 @@ public class Constants {
     public static final float FRICTION_MAX_AIR = .2f;
     public static final float FRICTION_CLIMBER = 0.95f;//200f;
 
-    public static final float GRAVITY = -500f;
+    public static final float DEFAULT_GRAVITY = -500f;
 
     public static final int Z_DEPTH_BACKGROUND = -100;
     public static final int Z_DEPTH_DEFAULT    = 0;

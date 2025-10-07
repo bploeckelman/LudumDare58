@@ -15,8 +15,6 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.FontType;
-import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.scenes.Scene;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -57,8 +55,6 @@ public abstract class BaseScreen implements Screen {
         layout.setTargetWidth(windowCamera.viewportWidth);
         font.markup(getClass().getSimpleName(), layout);
         font.regenerateLayout(layout);
-
-        Factory.init(this);
     }
 
     public Scene<? extends BaseScreen> scene() {

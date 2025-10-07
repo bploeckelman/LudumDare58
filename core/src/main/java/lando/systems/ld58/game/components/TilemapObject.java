@@ -5,10 +5,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.github.tommyettinger.digital.Stringf;
+import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
 import lombok.AllArgsConstructor;
 
 public interface TilemapObject {
+
+    String TAG = TilemapObject.class.getSimpleName();
 
     Tilemap tilemap();
     MapObject mapObject();
@@ -44,6 +50,13 @@ public interface TilemapObject {
     @AllArgsConstructor
     class Spawner implements TilemapObject, Component {
 
+        /**
+         * Convenience method for stream operations on entities
+         */
+        public static Spawner get(Entity entity) {
+            return Components.get(entity, Spawner.class);
+        }
+
         public final Tilemap tilemap;
         public final MapObject mapObject;
         public final String type;
@@ -63,6 +76,15 @@ public interface TilemapObject {
         public int id() { return id; }
         public int x() { return x; }
         public int y() { return y; }
+
+        @SuppressWarnings("unchecked")
+        public <T extends MapObject> T mapObject(Class<T> mapObjectClass) {
+            if (!ClassReflection.isInstance(mapObjectClass, mapObject)) {
+                throw new GdxRuntimeException(Stringf.format("%s: %s is not an instance of %s",
+                    TAG, mapObject.getClass().getSimpleName(), mapObjectClass.getSimpleName()));
+            }
+            return (T) mapObject;
+        }
 
         @Override
         public Tilemap tilemap() {

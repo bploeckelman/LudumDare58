@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
@@ -22,7 +21,6 @@ import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
-import lando.systems.ld58.utils.Util;
 
 public class GameScreen extends BaseScreen {
 

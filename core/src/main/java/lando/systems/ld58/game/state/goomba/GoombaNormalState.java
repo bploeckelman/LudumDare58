@@ -3,7 +3,6 @@ package lando.systems.ld58.game.state.goomba;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.EmitterType;
@@ -271,7 +270,7 @@ public class GoombaNormalState extends PlayerState {
         var friction = friction();
         var animator = animator();
 
-        gravity.value = Constants.GRAVITY;
+        gravity.value = Constants.DEFAULT_GRAVITY;
         velocity.maxHorizontalSpeedAir = Constants.MOVE_SPEED_MAX_AIR;
         velocity.maxHorizontalSpeedGround = Constants.MOVE_SPEED_MAX_GROUND;
         velocity.maxFallSpeed = Constants.MOVE_SPEED_MAX_AIR;
@@ -354,7 +353,7 @@ public class GoombaNormalState extends PlayerState {
         var fireballEntity = engine.createEntity();
         fireballEntity.add(new Position(position().x, position().y + 20));
         fireballEntity.add(vel);
-        fireballEntity.add(new Gravity(Constants.GRAVITY));
+        fireballEntity.add(new Gravity(Constants.DEFAULT_GRAVITY));
         fireballEntity.add(new Fireball());
         var fireballAnim = new Animator(AnimType.MARIO_FIREBALL);
         fireballAnim.size.set(16,16f);

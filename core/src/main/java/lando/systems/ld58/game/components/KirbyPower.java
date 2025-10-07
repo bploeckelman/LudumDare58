@@ -51,12 +51,12 @@ public class KirbyPower implements Component {
         switch (powerType) {
             case LAKITU:
             case SUN:
-                return Constants.GRAVITY * .4f;
+                return Constants.DEFAULT_GRAVITY * .4f;
             case BULLET:
                 if (activeTimer > 0) return 0;
 
         }
-        return Constants.GRAVITY;
+        return Constants.DEFAULT_GRAVITY;
     }
 
     public float jumpImpulse() {

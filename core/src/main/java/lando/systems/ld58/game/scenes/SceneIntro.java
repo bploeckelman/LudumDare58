@@ -8,10 +8,8 @@ public class SceneIntro extends Scene<IntroScreen> {
     public SceneIntro(IntroScreen screen) {
         super(screen);
 
-        setupView(640, 360);
-        setupMap("maps/intro.tmx");
-
-        spawnEntities();
+        createView(640, 360);
+        createMap("maps/intro.tmx");
 
         // Follow the player
         screen.engine.getSystem(ViewSystem.class).target(player);

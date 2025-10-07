@@ -3,6 +3,7 @@ package lando.systems.ld58.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import lando.systems.ld58.game.Constants;
 
 import java.util.Optional;
 
@@ -17,7 +18,7 @@ public class Gravity implements Component {
     public float value;
 
     public Gravity() {
-        this(0);
+        this(Constants.DEFAULT_GRAVITY);
     }
 
     public Gravity(float value) {

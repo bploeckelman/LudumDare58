@@ -11,10 +11,8 @@ public class SceneRelic1 extends Scene<GameScreen> {
     public SceneRelic1(GameScreen screen) {
         super(screen);
 
-        setupView(640, 360);
-        setupMap("maps/relic1.tmx");
-
-        spawnEntities();
+        createView(640, 360);
+        createMap("maps/relic1.tmx");
 
         // Follow the player
         screen.engine.getSystem(ViewSystem.class).target(player);

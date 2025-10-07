@@ -37,7 +37,7 @@ public class Outline implements Component {
         this.fillColor = fillColor;
     }
 
-    public void OutlineColor(Color outlineColor) {
+    public void outlineColor(Color outlineColor) {
         this.outlineColor = outlineColor;
     }
 
