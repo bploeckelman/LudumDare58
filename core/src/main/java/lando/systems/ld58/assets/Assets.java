@@ -19,22 +19,19 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.utils.Util;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Assets implements Disposable {
 
     public enum Load {SYNC, ASYNC}
 
     public boolean loaded = false;
 
-    public final List<Class<? extends AssetType<?>>> assetClasses;
     public final Preferences prefs;
     public final AssetManager mgr;
     public final SpriteBatch batch;
     public final ShapeDrawer shapes;
     public final GlyphLayout glyphLayout;
     public final Array<Disposable> disposables;
+    public final AssetTypeRegistry assetTypeRegistry;
 
     public TextureAtlas atlas;
     public I18NBundle strings;
@@ -61,17 +58,7 @@ public class Assets implements Disposable {
         prefs = Gdx.app.getPreferences(Config.preferences_name);
 
         disposables = new Array<>();
-        assetClasses = new ArrayList<>();
-        assetClasses.add(AnimType.class);
-        assetClasses.add(ColorType.class);
-        assetClasses.add(EffectType.class);
-        assetClasses.add(EmitterType.class);
-        assetClasses.add(FontType.class);
-        assetClasses.add(IconType.class);
-        assetClasses.add(ImageType.class);
-        assetClasses.add(MusicType.class);
-        assetClasses.add(SkinType.class);
-        assetClasses.add(SoundType.class);
+        assetTypeRegistry = new AssetTypeRegistry();
 
         // create a single pixel texture and associated region
         var pixmap = new Pixmap(2, 2, Pixmap.Format.RGBA8888);
@@ -112,9 +99,7 @@ public class Assets implements Disposable {
             // TODO: does FreeTypistSkin have a supported loader?
 //            mgr.load("ui/uiskin.json", Skin.class);
 
-            for (var assets : assetClasses) {
-                AssetType.load(assets, this);
-            }
+            assetTypeRegistry.loadAll(this);
         }
 
         if (load == Load.SYNC) {
@@ -140,9 +125,7 @@ public class Assets implements Disposable {
         atlas = mgr.get("sprites/sprites.atlas");
         strings = mgr.get("i18n/strings");
 
-        for (var assets : assetClasses) {
-            AssetType.init(assets, this);
-        }
+        assetTypeRegistry.initAll(this);
 
         plainNine = new NinePatch(atlas.findRegion("patch/plain"), 5, 5, 5, 5);
         dimNine = new NinePatch(atlas.findRegion("patch/plain-dim"), 5, 5, 5, 5);

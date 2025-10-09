@@ -4,7 +4,7 @@ buildscript {
     gradlePluginPortal()
   }
   dependencies {
-    classpath "io.github.fourlastor:construo:1.7.1"
+    classpath "io.github.fourlastor:construo:2.0.1"
     if(enableGraalNative == 'true') {
       classpath "org.graalvm.buildtools.native:org.graalvm.buildtools.native.gradle.plugin:0.9.28"
     }
@@ -22,24 +22,26 @@ sourceSets.main.resources.srcDirs += [ rootProject.file('assets').path ]
 mainClassName = 'lando.systems.ld58.lwjgl3.Lwjgl3Launcher'
 application.setMainClass(mainClassName)
 eclipse.project.name = appName + '-lwjgl3'
-java.sourceCompatibility = 11
-java.targetCompatibility = 11
+java.sourceCompatibility = 21
+java.targetCompatibility = 21
 if (JavaVersion.current().isJava9Compatible()) {
-        compileJava.options.release.set(11)
+        compileJava.options.release.set(21)
 }
 
 dependencies {
   implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
   implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+  implementation "com.badlogicgames.gdx:gdx-lwjgl3-angle:$gdxVersion"
   implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
   implementation project(':core')
-  implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion"){exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'}
+  implementation("com.badlogicgames.gdx:gdx-tools:$gdxVersion") {
+    exclude group: 'com.badlogicgames.gdx', module: 'gdx-backend-lwjgl'
+  }
 
-  if(enableGraalNative == 'true') {
+  if (enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-backend-lwjgl3:$graalHelperVersion"
-      implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
-
+    implementation "io.github.berstanio:gdx-svmhelper-extension-freetype:$graalHelperVersion"
     }
 }
 
@@ -47,8 +49,8 @@ def os = System.properties['os.name'].toLowerCase()
 
 run {
   workingDir = rootProject.file('assets').path
-// You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
-  //setIgnoreExitValue(true)
+  // You can uncomment the next line if your IDE claims a build failure even when the app closed properly.
+  setIgnoreExitValue(true)
 
   if (os.contains('mac')) jvmArgs += "-XstartOnFirstThread"
 }
@@ -123,8 +125,6 @@ construo {
     name.set(appName)
     // human-readable name, used for example in the `.app` name for macOS
     humanName.set(appName)
-    // Optional, defaults to project version property
-    version.set("$projectVersion")
 
     targets.configure {
       register("linuxX64", Target.Linux) {

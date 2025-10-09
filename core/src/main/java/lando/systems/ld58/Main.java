@@ -14,13 +14,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
-import com.github.tommyettinger.textra.TypingLabel;
 import com.kotcrab.vis.ui.VisUI;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.EffectType;
-import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.SkinType;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.screens.*;
@@ -43,6 +40,8 @@ public class Main extends Game {
     public Engine engine;
 
     public BaseScreen currentScreen;
+
+    // TODO: remove me (available per-screen)
     Layout layout;
 
     public Main() {
@@ -53,9 +52,6 @@ public class Main extends Game {
     public void create() {
         Time.init();
         layout = new Layout();
-
-        assets = new Assets();
-        Transition.init(assets);
 
         tween = new TweenManager();
         Tween.setWaypointsLimit(4);
@@ -83,11 +79,14 @@ public class Main extends Game {
         windowCamera.setToOrtho(false, Config.window_width, Config.window_height);
         windowCamera.update();
 
-        VisUI.setSkipGdxVersionCheck(true);
-        VisUI.load(SkinType.ZENDO.get());
+        assets = new Assets();
+        Transition.init(assets);
 
         engine = new Engine();
         Systems.init(engine);
+
+        VisUI.setSkipGdxVersionCheck(true);
+        VisUI.load(SkinType.ZENDO.get());
 
         var showLaunchScreen = (Gdx.app.getType() == ApplicationType.WebGL || Flag.LAUNCH_SCREEN.isEnabled());
         var startScreen = showLaunchScreen ? new LaunchScreen()

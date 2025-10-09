@@ -13,9 +13,9 @@ project.ext.mainClassName = "lando.systems.ld58.teavm.TeaVMBuilder"
 eclipse.project.name = appName + "-teavm"
 
 // This must be at least 11, and no higher than the JDK version this project is built with.
-java.targetCompatibility = "11"
+java.targetCompatibility = "21"
 // This should probably be equal to targetCompatibility, above. This only affects the TeaVM module.
-java.sourceCompatibility = "11"
+java.sourceCompatibility = "21"
 
 
 dependencies {
@@ -28,7 +28,6 @@ dependencies {
   implementation "org.teavm:teavm-jso:$teaVMVersion"
   implementation "org.teavm:teavm-tooling:$teaVMVersion"
   implementation project(':core')
-
 }
 
 tasks.register("buildJavaScript", JavaExec) {
