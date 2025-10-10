@@ -84,7 +84,9 @@ public class Main extends Game {
         windowCamera.update();
 
         VisUI.setSkipGdxVersionCheck(true);
-        VisUI.load(SkinType.ZENDO.get());
+//        VisUI.load(SkinType.ZENDO.get());
+        // TODO: restore zendo skin after fixing up skin loading with textra fonts
+        VisUI.load();
 
         engine = new Engine();
         Systems.init(engine);

@@ -61,7 +61,6 @@ dependencies {
   implementation "com.github.tommyettinger:textratypist:$textratypistVersion:sources"
   implementation "com.github.tommyettinger:freetypist:$freetypistVersion:sources"
   implementation "com.kotcrab.vis:vis-ui:$visUiVersion:sources"
-  implementation "com.rafaskoberg.gdx:typing-label:$typingLabelVersion:sources"
   implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-mapping:$controllerMappingVersion:sources"
   implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-scene2d:$controllerScene2DVersion:sources"
   implementation "org.mini2Dx:universal-tween-engine:$universalTweenVersion:sources"

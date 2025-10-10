@@ -20,6 +20,7 @@ public class Systems {
     public static ParticleSystem         particles;
     public static RenderDebugSystem      renderDebug;
     public static RenderSystem           render;
+    public static StorySystem            story;
     public static ViewSystem             view;
 
     public static PlayerStateSystem<? extends BaseScreen> playerState;
@@ -39,6 +40,7 @@ public class Systems {
         Systems.particles        = new ParticleSystem();
         Systems.renderDebug      = new RenderDebugSystem();
         Systems.render           = new RenderSystem();
+        Systems.story            = new StorySystem();
         Systems.view             = new ViewSystem();
 
         engine.addSystem(animation);
@@ -55,6 +57,7 @@ public class Systems {
         engine.addSystem(particles);
         engine.addSystem(renderDebug);
         engine.addSystem(render);
+        engine.addSystem(story);
         engine.addSystem(view);
     }
 }

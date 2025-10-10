@@ -22,7 +22,6 @@ dependencies {
   api "com.github.tommyettinger:sjInGameConsole:$inGameConsoleVersion"
   api "com.github.tommyettinger:textratypist:$textratypistVersion"
   api "com.kotcrab.vis:vis-ui:$visUiVersion"
-  api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
   api "de.golfgl.gdxcontrollerutils:gdx-controllerutils-mapping:$controllerMappingVersion"
   api "de.golfgl.gdxcontrollerutils:gdx-controllerutils-scene2d:$controllerScene2DVersion"
   api "org.mini2Dx:universal-tween-engine:$universalTweenVersion"

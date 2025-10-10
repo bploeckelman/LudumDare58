@@ -12,12 +12,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.TypingLabel;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
-import lando.systems.ld58.assets.FontType;
+import lando.systems.ld58.assets.AnimType;
+import lando.systems.ld58.assets.FontType2;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
@@ -27,11 +30,13 @@ import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.Pickup;
 import lando.systems.ld58.game.components.SceneContainer;
+import lando.systems.ld58.game.components.Story;
 import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.scenes.SceneIntro;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.TriggerEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
+import lando.systems.ld58.game.systems.StorySystem;
 import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
 
@@ -86,41 +91,57 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public float deBounce;
 
     public IntroScreen() {
+        this.accum = 0;
+        this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
+        this.screenTexture = fbo.getColorBufferTexture();
+        //this.screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
+        this.deBounce = DEBOUNCE_DURATION;
+
+        // Listen for signals
         Signals.dialogTrigger.add(this);
         Signals.collectTrigger.add(this);
-        fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
-        screenTexture = fbo.getColorBufferTexture();
-//        screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
 
-        var entity = Factory.createEntity();
+        // Create scene and entity/container
         this.scene = new SceneIntro(this);
-        entity.add(new SceneContainer(scene));
-        engine.addEntity(entity);
+        var sceneEntity = Factory.createEntity();
+        sceneEntity.add(new SceneContainer(scene));
+        engine.addEntity(sceneEntity);
 
+        // Setup systems
         Systems.playerState = new PlayerStateSystem<>(this);
         engine.addSystem(Systems.playerState);
 
         var mapBounds = Components.get(scene.map(), Bounds.class);
         Systems.movement.mapBounds(mapBounds);
 
+        // Create story entity/container
+        var story = new Story(
+            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                "You see fuzzy images floating in your visual field...\n\n"
+                    + "a plunger... a torch... a pipe wrench...\n"
+                    + "They don't belong here, they're from... elsewhere\n\n"
+                    + "You see a weird old man who looks kind of like... Mario?"),
+            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                "So that's what's been happening in the Mushroom Kingdom!\n\n"
+                    + "Weird old man Mario crossed over from another dimension\n"
+                    + "and brought relics with him that are damaging our home.\n"),
+            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                "The cabal is useless... ten years and they haven't figured this out.\n\n"
+                    + "I guess it's up to me to set this right.\n\n"
+                    + "I'll collect powers from others to search out those relics\n"
+                    + "and destroy them in order to send Mario back!\n"),
+            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!"));
+        var storyEntity = Factory.createEntity();
+        storyEntity.add(story);
+        engine.addEntity(storyEntity);
+
+        initializeUI();
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
 
         Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.2f));
 
-        font = FontType.ROUNDABOUT.font("medium");
-        this.dialog = new TypingLabel("", font);
-        this.dialog.setWrap(true);
-        this.dialog.setAlignment(Align.center);
-        this.dialog.setBounds(
-            200, Config.window_height/2f,
-            Config.window_width - 400,
-            Config.window_height/3f);
-        this.dialog.restart("");
-        this.deBounce = DEBOUNCE_DURATION;
-
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
-        accum = 0;
     }
 
     public Scene<? extends BaseScreen> scene() {
@@ -146,40 +167,40 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
 
         // Pause if dialog is showing so player can't progress through to next dialog until it's cleared
-        var isDialogShowing = !dialog.getOriginalText().toString().isEmpty();
-        if (isDialogShowing) {
-            // Update the dialog and early out until the player clears it
-            dialog.act(delta);
-
-            // Handle clearing or fast forwarding dialog
-            if ((Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()) && deBounce <= 0) {
-                if (!dialog.hasEnded()) {
-                    dialog.skipToTheEnd();
-                } else {
-                    dialog.restart("");
-                    deBounce = DEBOUNCE_DURATION;
-                }
-            }
-
-            // Pause while reading normal story dialog triggered text,
-            // but transition text should keep things running
-            if (!readingTransitionText) {
-                return;
-            }
-        }
+//        var isDialogShowing = !dialog.getOriginalText().toString().isEmpty();
+//        if (isDialogShowing) {
+//            // Update the dialog and early out until the player clears it
+//            dialog.act(delta);
+//
+//            // Handle clearing or fast forwarding dialog
+//            if ((Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()) && deBounce <= 0) {
+//                if (!dialog.hasEnded()) {
+//                    dialog.skipToTheEnd();
+//                } else {
+//                    dialog.restart("");
+//                    deBounce = DEBOUNCE_DURATION;
+//                }
+//            }
+//
+//            // Pause while reading normal story dialog triggered text,
+//            // but transition text should keep things running
+//            if (!readingTransitionText) {
+//                return;
+//            }
+//        }
         deBounce = MathUtils.clamp(deBounce - delta, 0, DEBOUNCE_DURATION);
 
-        if (readingTransitionText && !changeToGameScreen) {
-            var dialogEmpty = dialog.getOriginalText().toString().isEmpty();
-            if (currentTransitionDialogText != transitionDialogText.length && dialogEmpty) {
-                currentTransitionDialogText++;
-                if (currentTransitionDialogText < transitionDialogText.length) {
-                    dialog.setText(transitionDialogText[currentTransitionDialogText]);
-                } else {
-                    changeToGameScreen = true;
-                }
-            }
-        }
+//        if (readingTransitionText && !changeToGameScreen) {
+//            var dialogEmpty = dialog.getOriginalText().toString().isEmpty();
+//            if (currentTransitionDialogText != transitionDialogText.length && dialogEmpty) {
+//                currentTransitionDialogText++;
+//                if (currentTransitionDialogText < transitionDialogText.length) {
+//                    dialog.setText(transitionDialogText[currentTransitionDialogText]);
+//                } else {
+//                    changeToGameScreen = true;
+//                }
+//            }
+//        }
 
         if (Flag.FRAME_STEP.isEnabled()) {
             Config.stepped_frame = Gdx.input.isKeyJustPressed(Input.Keys.NUM_9);
@@ -189,6 +210,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
 
         engine.update(delta);
+        uiStage.act(delta);
     }
 
     @Override
@@ -214,22 +236,25 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         batch.setShader(shader);
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
-        ImageType.NOISE.get().bind(1);
-        shader.setUniformi("u_texture2", 1);
-        shader.setUniformf("u_time", accum);
-        shader.setUniformf("u_res", windowCamera.viewportWidth, windowCamera.viewportHeight);
-        shader.setUniformf("u_strength", trippyAmount.floatValue());
-        screenTexture.bind(0);
-        shader.setUniformi("u_texture", 0);
-        batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());
+        {
+            ImageType.NOISE.get().bind(1);
+            shader.setUniformi("u_texture2", 1);
+            shader.setUniformf("u_time", accum);
+            shader.setUniformf("u_res", windowCamera.viewportWidth, windowCamera.viewportHeight);
+            shader.setUniformf("u_strength", trippyAmount.floatValue());
+            screenTexture.bind(0);
+            shader.setUniformi("u_texture", 0);
+            batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());
+        }
         batch.end();
         batch.setShader(null);
 
         // Draw ui / dialog / story stuff
-        batch.setProjectionMatrix(windowCamera.combined);
-        batch.begin();
-        drawDialog(batch, delta);
-        batch.end();
+//        batch.setProjectionMatrix(windowCamera.combined);
+//        batch.begin();
+//        drawDialog(batch, delta);
+//        batch.end();
+        uiStage.draw();
 
         // Screen name overlay
         if (Flag.DEBUG_RENDER.isEnabled()) {
@@ -269,5 +294,21 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
             batch.setColor(Color.WHITE);
         }
         dialog.draw(batch, 1f);
+    }
+
+    @Override
+    public void initializeUI() {
+        var root = new VisTable();
+        root.setFillParent(true);
+        uiStage.addActor(root);
+
+        // Setup story dialog ui
+        var margin = 200;
+        var storySystem = engine.getSystem(StorySystem.class);
+        storySystem.setup(new Rectangle(
+            margin, Config.window_height / 2f,
+            Config.window_width - 2*margin,
+            Config.window_height / 3f));
+        root.add(storySystem.uiRoot);
     }
 }

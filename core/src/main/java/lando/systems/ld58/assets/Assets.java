@@ -15,7 +15,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.github.tommyettinger.textra.FWSkin;
+import com.github.tommyettinger.textra.FWSkinLoader;
+import com.github.tommyettinger.textra.Font;
 import lando.systems.ld58.Config;
+import lando.systems.ld58.utils.FontAssetLoader;
 import lando.systems.ld58.utils.Util;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -92,6 +96,10 @@ public class Assets implements Disposable {
         mgr.setLoader(FreeTypeFontGenerator.class, fontGenLoader);
         mgr.setLoader(BitmapFont.class, ".ttf", fontLoader);
         mgr.setLoader(BitmapFont.class, ".otf", fontLoader);
+
+        var textraFontLoader = new FontAssetLoader(resolver, disposables);
+        mgr.setLoader(Font.class, ".ttf", textraFontLoader);
+        mgr.setLoader(Font.class, ".otf", textraFontLoader);
 
         // populate asset manager
         {

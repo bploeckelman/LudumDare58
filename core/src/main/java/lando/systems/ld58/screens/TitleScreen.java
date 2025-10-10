@@ -120,7 +120,9 @@ public class TitleScreen extends BaseScreen {
         if (!transitioning && Gdx.input.justTouched()){
             transitioning = true;
             Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
-            game.setScreen(new FlashbackScreen(), EffectType.DREAMY);
+            // TODO: flashback is broken until I get FontType2 sorted... come back to it
+//            game.setScreen(new FlashbackScreen(), EffectType.DREAMY);
+            game.setScreen(new IntroScreen(), EffectType.DREAMY);
         }
 
         animTime += delta;

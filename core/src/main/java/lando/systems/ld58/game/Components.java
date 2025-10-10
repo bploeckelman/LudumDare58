@@ -19,9 +19,9 @@ public class Components {
         entry(Bounds.class,         ComponentMapper.getFor(Bounds.class)),
         entry(Collider.class,       ComponentMapper.getFor(Collider.class)),
         entry(Cooldowns.class,      ComponentMapper.getFor(Cooldowns.class)),
-        entry(BlockBreakable.class,   ComponentMapper.getFor(BlockBreakable.class)),
-        entry(BlockLava.class,   ComponentMapper.getFor(BlockLava.class)),
-        entry(BlockSpike.class,   ComponentMapper.getFor(BlockSpike.class)),
+        entry(BlockBreakable.class, ComponentMapper.getFor(BlockBreakable.class)),
+        entry(BlockLava.class,      ComponentMapper.getFor(BlockLava.class)),
+        entry(BlockSpike.class,     ComponentMapper.getFor(BlockSpike.class)),
         entry(Emitter.class,        ComponentMapper.getFor(Emitter.class)),
         entry(EnemyTag.class,       ComponentMapper.getFor(EnemyTag.class)),
         entry(Fireball.class,       ComponentMapper.getFor(Fireball.class)),
@@ -39,11 +39,13 @@ public class Components {
         entry(Position.class,       ComponentMapper.getFor(Position.class)),
         entry(SceneContainer.class, ComponentMapper.getFor(SceneContainer.class)),
         entry(Sensors.class,        ComponentMapper.getFor(Sensors.class)),
+        entry(Story.class,          ComponentMapper.getFor(Story.class)),
         entry(TileLayer.class,      ComponentMapper.getFor(TileLayer.class)),
         entry(Tilemap.class,        ComponentMapper.getFor(Tilemap.class)),
         entry(Velocity.class,       ComponentMapper.getFor(Velocity.class)),
         entry(Viewer.class,         ComponentMapper.getFor(Viewer.class)),
 
+        // Renderables --------------------------------------------------------
         entry(Animator.class,              ComponentMapper.getFor(Animator.class)),
         entry(FlameShaderRenderable.class, ComponentMapper.getFor(FlameShaderRenderable.class)),
         entry(Image.class,                 ComponentMapper.getFor(Image.class)),
@@ -51,6 +53,7 @@ public class Components {
         entry(Outline.class,               ComponentMapper.getFor(Outline.class)),
         entry(RelicPickupRender.class,     ComponentMapper.getFor(RelicPickupRender.class)),
 
+        // Enemies ------------------------------------------------------------
         entry(EnemyAngrySun.class,     ComponentMapper.getFor(EnemyAngrySun.class)),
         entry(EnemyBulletBill.class,   ComponentMapper.getFor(EnemyBulletBill.class)),
         entry(EnemyCaptainLou.class,   ComponentMapper.getFor(EnemyCaptainLou.class)),
@@ -61,6 +64,7 @@ public class Components {
         entry(EnemyMario.class,        ComponentMapper.getFor(EnemyMario.class)),
         entry(EnemyMisty.class,        ComponentMapper.getFor(EnemyMario.class)),
 
+        // Map Objects --------------------------------------------------------
         entry(TilemapObject.Simple.class,  ComponentMapper.getFor(TilemapObject.Simple.class)),
         entry(TilemapObject.Spawner.class, ComponentMapper.getFor(TilemapObject.Spawner.class)),
         entry(TilemapObject.Trigger.class, ComponentMapper.getFor(TilemapObject.Trigger.class))
