@@ -10,13 +10,6 @@ import java.util.List;
 
 public class Story implements Component {
 
-    // TODO: need to keep track of a set of dialog elements each of which include:
-    //  - String for text to be displayed in a single dialog
-    //  - AnimType or Image ref for a 'talking head' to display alongside the string in a single dialog
-    //  - possibly an id to instantiate an entity with a story component from a map trigger
-    //  - timing / 'isDone' fields
-    //  - possibly a flag to indicate that the game should be paused while showing the dialogs, but that could also be a flag in StorySystem instead
-
     @RequiredArgsConstructor
     public static class Dialog {
         public final FontType2 fontType;
@@ -25,21 +18,41 @@ public class Story implements Component {
     }
 
     private final List<Dialog> dialogs;
+
     private int index;
     private boolean started;
     private boolean completed;
+    private boolean completedTyping;
+    private boolean shouldClear;  // NEW: flag to indicate story should be removed
+
+    public final boolean pauseGame;
 
     public Story(Dialog... dialogs) {
+        this(true, dialogs);
+    }
+
+    public Story(boolean pauseGame, Dialog... dialogs) {
+        this.pauseGame = pauseGame;
         this.dialogs = Arrays.asList(dialogs);
         this.index = -1;
         this.started = false;
         this.completed = this.dialogs.isEmpty();
+        this.completedTyping = false;
     }
 
     public List<Dialog> dialogs() { return dialogs; }
     public int index() { return index; }
     public boolean isStarted() { return started; }
     public boolean isComplete() { return completed; }
+    public boolean isTyping() { return !completedTyping; }
+    public boolean shouldClear() { return shouldClear; }
+
+    public void finishTyping() { completedTyping = true; }
+
+    public void clear() {
+        if (!completed) return;
+        shouldClear = true;
+    }
 
     public Dialog currentDialog() {
         if (index < 0 || index >= dialogs.size()) return null;
@@ -53,6 +66,9 @@ public class Story implements Component {
         index = dialogs.isEmpty() ? -1 : 0;
         if (index == -1) {
             completed = true;
+            completedTyping = true;
+        } else {
+            completedTyping = false;
         }
     }
 
@@ -63,6 +79,8 @@ public class Story implements Component {
         if (index >= dialogs.size()) {
             index = -1;
             completed = true;
+        } else {
+            completedTyping = false;
         }
 
         return completed;

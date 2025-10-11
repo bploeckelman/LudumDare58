@@ -7,12 +7,12 @@ import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -44,7 +44,6 @@ import java.util.Map;
 public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     private static final Color BACKGROUND_COLOR = new Color(.1f, .5f, 1f, 1f);
-    private static final float DEBOUNCE_DURATION = .3f;
 
     private final StorySystem storySystem;
     private final FrameBuffer fbo;
@@ -54,11 +53,8 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public final Scene<IntroScreen> scene;
     public final Entity storyEntity;
 
-    private int currentTransitionDialogText;
-    private boolean readingTransitionText;
     private boolean changeToGameScreen;
     private boolean alreadyPickedUpShroom;
-    private float deBounce;
     private float accum;
 
     private final Map<String, String> dialogText = Map.of(
@@ -81,10 +77,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         this.screenTexture = fbo.getColorBufferTexture();
         //this.screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
         this.trippyAmount = new MutableFloat(0);
-        this.deBounce = DEBOUNCE_DURATION;
         this.accum = 0;
-        this.currentTransitionDialogText = 0;
-        this.readingTransitionText = false;
         this.changeToGameScreen = false;
         this.alreadyPickedUpShroom = false;
         this.scene = new SceneIntro(this);
@@ -121,7 +114,9 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         Systems.movement.mapBounds(mapBounds);
 
         initializeUI();
-        Gdx.input.setInputProcessor(new ScreenInputHandler(this));
+
+        var inputMux = new InputMultiplexer(storySystem, new ScreenInputHandler(this));
+        Gdx.input.setInputProcessor(inputMux);
 
         Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.2f));
 
@@ -151,42 +146,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
             game.setScreen(new GameScreen());
         }
 
-        // Pause if dialog is showing so player can't progress through to next dialog until it's cleared
-//        var isDialogShowing = !dialog.getOriginalText().toString().isEmpty();
-//        if (isDialogShowing) {
-//            // Update the dialog and early out until the player clears it
-//            dialog.act(delta);
-//
-//            // Handle clearing or fast forwarding dialog
-//            if ((Gdx.input.isKeyJustPressed(Input.Keys.ANY_KEY) || Gdx.input.justTouched()) && deBounce <= 0) {
-//                if (!dialog.hasEnded()) {
-//                    dialog.skipToTheEnd();
-//                } else {
-//                    dialog.restart("");
-//                    deBounce = DEBOUNCE_DURATION;
-//                }
-//            }
-//
-//            // Pause while reading normal story dialog triggered text,
-//            // but transition text should keep things running
-//            if (!readingTransitionText) {
-//                return;
-//            }
-//        }
-        deBounce = MathUtils.clamp(deBounce - delta, 0, DEBOUNCE_DURATION);
-
-//        if (readingTransitionText && !changeToGameScreen) {
-//            var dialogEmpty = dialog.getOriginalText().toString().isEmpty();
-//            if (currentTransitionDialogText != transitionDialogText.length && dialogEmpty) {
-//                currentTransitionDialogText++;
-//                if (currentTransitionDialogText < transitionDialogText.length) {
-//                    dialog.setText(transitionDialogText[currentTransitionDialogText]);
-//                } else {
-//                    changeToGameScreen = true;
-//                }
-//            }
-//        }
-
+        // Pause for frame-stepping if enabled
         if (Flag.FRAME_STEP.isEnabled()) {
             Config.stepped_frame = Gdx.input.isKeyJustPressed(Input.Keys.NUM_9);
             if (!Config.stepped_frame) {
@@ -194,7 +154,14 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
             }
         }
 
-        engine.update(delta);
+        // Pause for story if needed, otherwise update everything
+        var shouldPauseForStory = storySystem.shouldPauseGame();
+        if (shouldPauseForStory) {
+            storySystem.update(delta);
+            // TODO: might need manual update for RenderSystem here too
+        } else {
+            engine.update(delta);
+        }
         uiStage.act(delta);
     }
 
@@ -254,6 +221,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
     }
 
+    // TODO: rework this once story system is fully refactored
     @Override
     public void receive(Signal<TriggerEvent> signal, TriggerEvent event) {
         if (event instanceof TriggerEvent.Dialog) {
@@ -262,11 +230,11 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 //            if (text != null) {
 //                dialog.setText(text);
 //            }
-        } else if (event instanceof TriggerEvent.Collect) {
+        }
+        else if (event instanceof TriggerEvent.Collect) {
             var collectEvent = (TriggerEvent.Collect) event;
             if (!alreadyPickedUpShroom && collectEvent.pickupType == Pickup.Type.SHROOM) {
                 alreadyPickedUpShroom = true;
-                readingTransitionText = true;
                 Tween.to(trippyAmount, -1, 2f).target(1f).start(tween);
             }
         }
