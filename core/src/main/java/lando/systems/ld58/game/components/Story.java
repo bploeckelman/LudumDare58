@@ -17,6 +17,10 @@ public class Story implements Component {
         public final String text;
     }
 
+    public static Dialog dialog(FontType2 fontType, AnimType animType, String text) {
+        return new Dialog(fontType, animType, text);
+    }
+
     private final List<Dialog> dialogs;
 
     private int index;

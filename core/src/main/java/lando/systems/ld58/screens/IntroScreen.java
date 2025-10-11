@@ -2,7 +2,6 @@ package lando.systems.ld58.screens;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.primitives.MutableFloat;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
@@ -51,7 +50,6 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     private final MutableFloat trippyAmount;
 
     public final Scene<IntroScreen> scene;
-    public final Entity storyEntity;
 
     private boolean changeToGameScreen;
     private boolean alreadyPickedUpShroom;
@@ -59,7 +57,6 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     private final Map<String, String> dialogText = Map.of(
         "dialog-test-1", "Okay, something is definitely wrong.\nIt reeks of garlic and raw sewage in our otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?",
-//        "dialog-test-2", "He that is wounded in the stones,\nor hath his privy member cut off,\nshall not enter into the congregation of the Lord.\n\n- Deuteronomy 23:1"
         "dialog-test-2", "At the last Cabal Strategic Alignment meeting, I vaguely remember Gannon complaining about getting stuck with Collector duty again...\n\nWe all know the 'dorf is a messy bitch who lives for drama, but would even HE be petty enough to leave the Ur-Artifacts scattered around after the last release?"
         ,"dialog-test-3", "He knows as well as we do that having the Ur-Artifacts lying around the Kingdom puts us at risk of another incursion situation like the Brooklyn Incident.\n\nWe can't be getting invaded by malevolent entities who wish us ill all the time! Where does he think he is, Hyrule?"
         ,"dialog-test-4", "I guess it's up to me now.\n\nI will collect these 3 Mario artifacts that are by their mere existence causing the Mushroom Kingdom to tumble into disrepair!"
@@ -88,23 +85,6 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
         // Create entities and components for this screen
         engine.addEntity(Factory.createEntity().add(new SceneContainer(scene)));
-        this.storyEntity = Factory.createEntity().add(new Story(
-            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
-                "You see fuzzy images floating in your visual field...\n\n"
-                    + "a plunger... a torch... a pipe wrench...\n"
-                    + "They don't belong here, they're from... elsewhere\n\n"
-                    + "You see a weird old man who looks kind of like... Mario?"),
-            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
-                "So that's what's been happening in the Mushroom Kingdom!\n\n"
-                    + "Weird old man Mario crossed over from another dimension\n"
-                    + "and brought relics with him that are damaging our home.\n"),
-            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
-                "The cabal is useless... ten years and they haven't figured this out.\n\n"
-                    + "I guess it's up to me to set this right.\n\n"
-                    + "I'll collect powers from others to search out those relics\n"
-                    + "and destroy them in order to send Mario back!\n"),
-            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!")));
-        engine.addEntity(storyEntity);
 
         // Setup systems and initialize remaining bits
         Systems.playerState = new PlayerStateSystem<>(this);
@@ -226,16 +206,35 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public void receive(Signal<TriggerEvent> signal, TriggerEvent event) {
         if (event instanceof TriggerEvent.Dialog) {
             var dialogEvent = (TriggerEvent.Dialog) event;
-//            var text = dialogText.get(dialogEvent.key);
-//            if (text != null) {
-//                dialog.setText(text);
-//            }
+            var text = dialogText.get(dialogEvent.key);
+            if (text != null) {
+                engine.addEntity(Factory.createEntity().add(new Story(
+                    Story.dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, text)
+                )));
+            }
         }
         else if (event instanceof TriggerEvent.Collect) {
             var collectEvent = (TriggerEvent.Collect) event;
             if (!alreadyPickedUpShroom && collectEvent.pickupType == Pickup.Type.SHROOM) {
                 alreadyPickedUpShroom = true;
                 Tween.to(trippyAmount, -1, 2f).target(1f).start(tween);
+                engine.addEntity(Factory.createEntity().add(new Story(
+                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                        "You see fuzzy images floating in your visual field...\n\n"
+                            + "a plunger... a torch... a pipe wrench...\n"
+                            + "They don't belong here, they're from... elsewhere\n\n"
+                            + "You see a weird old man who looks kind of like... Mario?"),
+                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                        "So that's what's been happening in the Mushroom Kingdom!\n\n"
+                            + "Weird old man Mario crossed over from another dimension\n"
+                            + "and brought relics with him that are damaging our home.\n"),
+                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                        "The cabal is useless... ten years and they haven't figured this out.\n\n"
+                            + "I guess it's up to me to set this right.\n\n"
+                            + "I'll collect powers from others to search out those relics\n"
+                            + "and destroy them in order to send Mario back!\n"),
+                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!")
+                )));
             }
         }
     }

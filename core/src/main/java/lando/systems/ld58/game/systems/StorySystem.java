@@ -71,6 +71,7 @@ public class StorySystem extends IteratingSystem implements InputProcessor, List
         uiRoot.setBounds(
             dialogBounds.getX(), dialogBounds.getY(),
             dialogBounds.getWidth(), dialogBounds.getHeight());
+        uiRoot.setVisible(false);
 
         speaker.setAlign(Align.center);
         speakerStack.add(speakerBorder);
