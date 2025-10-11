@@ -27,7 +27,6 @@
   <inherits name="com.github.tommyettinger.textratypist" />
   <inherits name="com.github.tommyettinger.freetypist" />
   <inherits name="com.kotcrab.vis.vis-ui" />
-  <inherits name="com.rafaskoberg.gdx.typinglabel.typinglabel" />
   <inherits name="com.ray3k.tenpatch.tenpatch" />
   <inherits name="com.strongjoshua.console" />
   <inherits name="de.golfgl.gdx.controllers.controller_scene2d" />
