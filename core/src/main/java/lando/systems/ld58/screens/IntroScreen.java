@@ -2,6 +2,7 @@ package lando.systems.ld58.screens;
 
 import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.primitives.MutableFloat;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.gdx.Gdx;
@@ -14,8 +15,6 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.tommyettinger.textra.TypingLabel;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
@@ -44,16 +43,23 @@ import java.util.Map;
 
 public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
-    private static final float DEBOUNCE_DURATION = .31f;
-    private FrameBuffer fbo;
-    private Texture screenTexture;
-    private float accum;
-    private MutableFloat trippyAmount = new MutableFloat(0);
-    private boolean changeToGameScreen = false;
-    private boolean alreadyPickedUpShroom = false;
+    private static final Color BACKGROUND_COLOR = new Color(.1f, .5f, 1f, 1f);
+    private static final float DEBOUNCE_DURATION = .3f;
 
-//    private final Color backgroundColor = new Color(0xaaaaddff);
-    private final Color backgroundColor = new Color(.1F, .5F, 1f, 1f);
+    private final StorySystem storySystem;
+    private final FrameBuffer fbo;
+    private final Texture screenTexture;
+    private final MutableFloat trippyAmount;
+
+    public final Scene<IntroScreen> scene;
+    public final Entity storyEntity;
+
+    private int currentTransitionDialogText;
+    private boolean readingTransitionText;
+    private boolean changeToGameScreen;
+    private boolean alreadyPickedUpShroom;
+    private float deBounce;
+    private float accum;
 
     private final Map<String, String> dialogText = Map.of(
         "dialog-test-1", "Okay, something is definitely wrong.\nIt reeks of garlic and raw sewage in our otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?",
@@ -69,53 +75,27 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         ,"dialog-test-10", "When you're done having your friends inside you,\nyou can simply hold Down and hit Enter.\n\nGoodbye, social obligations!"
     );
 
-    private boolean readingTransitionText = false;
-    private int currentTransitionDialogText = 0;
-    private final String[] transitionDialogText = new String[] {
-        "You see fuzzy images floating in your visual field...\n\n"
-            + "a plunger... a torch... a pipe wrench...\n"
-            + "They don't belong here, they're from... elsewhere\n\n"
-            + "You see a weird old man who looks kind of like... Mario?",
-        "So that's what's been happening in the Mushroom Kingdom!\n\n"
-            + "Weird old man Mario crossed over from another dimension\n"
-            + "and brought relics with him that are damaging our home.\n",
-        "The cabal is useless... ten years and they haven't figured this out.\n\n"
-            + "I guess it's up to me to set this right.\n\n"
-            + "I'll collect powers from others to search out those relics\n"
-            + "and destroy them in order to send Mario back!\n",
-        "Let's... uh... go!"
-    };
-
-    public final Scene<IntroScreen> scene;
-    public TypingLabel dialog;
-    public float deBounce;
-
     public IntroScreen() {
-        this.accum = 0;
+        this.storySystem = engine.getSystem(StorySystem.class);
         this.fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         this.screenTexture = fbo.getColorBufferTexture();
         //this.screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
+        this.trippyAmount = new MutableFloat(0);
         this.deBounce = DEBOUNCE_DURATION;
+        this.accum = 0;
+        this.currentTransitionDialogText = 0;
+        this.readingTransitionText = false;
+        this.changeToGameScreen = false;
+        this.alreadyPickedUpShroom = false;
+        this.scene = new SceneIntro(this);
 
         // Listen for signals
         Signals.dialogTrigger.add(this);
         Signals.collectTrigger.add(this);
 
-        // Create scene and entity/container
-        this.scene = new SceneIntro(this);
-        var sceneEntity = Factory.createEntity();
-        sceneEntity.add(new SceneContainer(scene));
-        engine.addEntity(sceneEntity);
-
-        // Setup systems
-        Systems.playerState = new PlayerStateSystem<>(this);
-        engine.addSystem(Systems.playerState);
-
-        var mapBounds = Components.get(scene.map(), Bounds.class);
-        Systems.movement.mapBounds(mapBounds);
-
-        // Create story entity/container
-        var story = new Story(
+        // Create entities and components for this screen
+        engine.addEntity(Factory.createEntity().add(new SceneContainer(scene)));
+        this.storyEntity = Factory.createEntity().add(new Story(
             new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
                 "You see fuzzy images floating in your visual field...\n\n"
                     + "a plunger... a torch... a pipe wrench...\n"
@@ -130,10 +110,15 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
                     + "I guess it's up to me to set this right.\n\n"
                     + "I'll collect powers from others to search out those relics\n"
                     + "and destroy them in order to send Mario back!\n"),
-            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!"));
-        var storyEntity = Factory.createEntity();
-        storyEntity.add(story);
+            new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!")));
         engine.addEntity(storyEntity);
+
+        // Setup systems and initialize remaining bits
+        Systems.playerState = new PlayerStateSystem<>(this);
+        engine.addSystem(Systems.playerState);
+
+        var mapBounds = Components.get(scene.map(), Bounds.class);
+        Systems.movement.mapBounds(mapBounds);
 
         initializeUI();
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
@@ -217,7 +202,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public void renderOffscreenBuffers(SpriteBatch batch) {
         fbo.begin();
 
-        ScreenUtils.clear(backgroundColor);
+        ScreenUtils.clear(BACKGROUND_COLOR);
         // Draw scene
         batch.setProjectionMatrix(worldCamera.combined);
         batch.begin();
@@ -230,7 +215,7 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(backgroundColor);
+        ScreenUtils.clear(BACKGROUND_COLOR);
 
         var shader = assets.hippieShader;
         batch.setShader(shader);
@@ -242,18 +227,19 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
             shader.setUniformf("u_time", accum);
             shader.setUniformf("u_res", windowCamera.viewportWidth, windowCamera.viewportHeight);
             shader.setUniformf("u_strength", trippyAmount.floatValue());
+
+            // Draw scene with inverted y so it's right-side up
             screenTexture.bind(0);
             shader.setUniformi("u_texture", 0);
-            batch.draw(screenTexture, 0, screenTexture.getHeight(), screenTexture.getWidth(), -screenTexture.getHeight());
+            batch.draw(screenTexture,
+                0, screenTexture.getHeight(),
+                screenTexture.getWidth(),
+                -screenTexture.getHeight());
         }
         batch.end();
         batch.setShader(null);
 
         // Draw ui / dialog / story stuff
-//        batch.setProjectionMatrix(windowCamera.combined);
-//        batch.begin();
-//        drawDialog(batch, delta);
-//        batch.end();
         uiStage.draw();
 
         // Screen name overlay
@@ -272,28 +258,18 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public void receive(Signal<TriggerEvent> signal, TriggerEvent event) {
         if (event instanceof TriggerEvent.Dialog) {
             var dialogEvent = (TriggerEvent.Dialog) event;
-            var text = dialogText.get(dialogEvent.key);
-            if (text != null) {
-                dialog.setText(text);
-            }
+//            var text = dialogText.get(dialogEvent.key);
+//            if (text != null) {
+//                dialog.setText(text);
+//            }
         } else if (event instanceof TriggerEvent.Collect) {
             var collectEvent = (TriggerEvent.Collect) event;
             if (!alreadyPickedUpShroom && collectEvent.pickupType == Pickup.Type.SHROOM) {
                 alreadyPickedUpShroom = true;
                 readingTransitionText = true;
                 Tween.to(trippyAmount, -1, 2f).target(1f).start(tween);
-                dialog.setText(transitionDialogText[currentTransitionDialogText]);
             }
         }
-    }
-
-    private void drawDialog(SpriteBatch batch, float delta) {
-       if (!dialog.getOriginalText().toString().isEmpty()) {
-            batch.setColor(0, 0, 0, .65f);
-            batch.draw(assets.pixel, dialog.getX()- 5, dialog.getY()-5, dialog.getWidth()+10, dialog.getHeight()+10);
-            batch.setColor(Color.WHITE);
-        }
-        dialog.draw(batch, 1f);
     }
 
     @Override
@@ -304,7 +280,6 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
 
         // Setup story dialog ui
         var margin = 200;
-        var storySystem = engine.getSystem(StorySystem.class);
         storySystem.setup(new Rectangle(
             margin, Config.window_height / 2f,
             Config.window_width - 2*margin,

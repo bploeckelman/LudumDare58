@@ -29,7 +29,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
     , BILLY_IDLE(Path.CHAR_BILLY)
     , BILLY_JUMP(Path.CHAR_BILLY)
     , BILLY_WALK(Path.CHAR_BILLY)
-    , BILLY_YELL(Path.CHAR_BILLY)
+    , BILLY_YELL(Path.CHAR_BILLY, new Data(0.2f, Animation.PlayMode.LOOP))
     , BILLY_BULLET_BILL_ACTION(Path.CHAR_BULLET_BILL)
     , BILLY_BULLET_BILL_WALK(Path.CHAR_BULLET_BILL)
     , BILLY_LAKITU_ACTION(Path.CHAR_LAKITU)
