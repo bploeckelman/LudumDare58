@@ -36,18 +36,25 @@ public enum SkinType implements AssetType<FreeTypistSkin> {
             var skin = new FreeTypistSkin(file);
             assets.disposables.add(skin);
 
+            // Add all FontType fonts to the skin for ease of use
             for (var fontType : FontType.values()) {
-                var typeName = fontType.name().toLowerCase();
+                var font = fontType.get();
+                var fontKey = fontType.name().toLowerCase();
+                skin.add(fontKey, font);
 
-                for (var variant : fontType.variants) {
-                    var key = fontType.get().key(variant.name);
-                    var font = fontType.font(variant.name);
-                    skin.add(key, font);
+                // Create and add a TypingLabel style for this font
+                var labelStyleKey = "label-" + fontKey;
+                var labelStyle = new Styles.LabelStyle(font, Color.WHITE);
+                skin.add(labelStyleKey, labelStyle);
 
-                    var styleName = "textra-label-" + key;
-                    var style = new Styles.LabelStyle(font, Color.WHITE);
-                    skin.add(styleName, style);
-                }
+                // Create and add a TextraLabel style for this font
+                var textraLabelStyleKey = "textra-label-" + fontKey;
+                var textraLabelStyle = new Styles.LabelStyle(font, Color.WHITE);
+                skin.add(textraLabelStyleKey, textraLabelStyle);
+
+                // TODO: maybe add styles similarly for other textra widget types:
+                //  - TextraArea, TextraButton, TextraCheckBox, ...
+                //  - TypingButton, TypingCheckBox, TypingTooltip, ...
             }
 
             container.put(type, skin);

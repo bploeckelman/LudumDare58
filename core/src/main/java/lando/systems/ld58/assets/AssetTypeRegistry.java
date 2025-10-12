@@ -17,12 +17,11 @@ public class AssetTypeRegistry {
         register(ColorType.class,   ColorType::init);
         register(EffectType.class,  EffectType::init);
         register(EmitterType.class, EmitterType::init);
-        register(FontType.class,   FontType::init,  FontType::load);
+        register(FontType.class,    FontType::init, FontType::load);
         register(IconType.class,    IconType::init);
         register(ImageType.class,   ImageType::init, ImageType::load);
         register(MusicType.class,   MusicType::init, MusicType::load);
-        // TODO: restore after fixing up loading of skins with textra fonts
-//        register(SkinType.class,    SkinType::init);
+        register(SkinType.class,    SkinType::init);
         register(SoundType.class,   SoundType::init, SoundType::load);
     }
 

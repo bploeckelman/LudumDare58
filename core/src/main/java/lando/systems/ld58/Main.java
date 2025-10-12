@@ -18,6 +18,7 @@ import com.github.tommyettinger.textra.Layout;
 import com.kotcrab.vis.ui.VisUI;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.EffectType;
+import lando.systems.ld58.assets.SkinType;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.screens.*;
 import lando.systems.ld58.utils.FramePool;
@@ -80,9 +81,7 @@ public class Main extends Game {
         windowCamera.update();
 
         VisUI.setSkipGdxVersionCheck(true);
-//        VisUI.load(SkinType.ZENDO.get());
-        // TODO: restore zendo skin after fixing up skin loading with textra fonts
-        VisUI.load();
+        VisUI.load(SkinType.ZENDO.get());
 
         engine = new Engine();
         Systems.init(engine);
