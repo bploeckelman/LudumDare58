@@ -2,13 +2,18 @@ package lando.systems.ld58.game.signals;
 
 import com.badlogic.ashley.core.Entity;
 import lando.systems.ld58.game.state.PlayerState;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
-public interface StateEvent {
+public interface StateEvent extends SignalEvent {
 
     Entity entity();
 
-    @RequiredArgsConstructor
+    static void change(Entity entity, Class<? extends PlayerState> fromState, Class<? extends PlayerState> toState) {
+        signal.dispatch(new Change(entity, fromState, toState));
+    }
+
+    @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
     class Change implements StateEvent {
         public final Entity entity;
         public final Class<? extends PlayerState> fromState;

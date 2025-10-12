@@ -23,7 +23,6 @@ import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.Pickup;
@@ -119,8 +118,8 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             //  or make abstract method in BaseScreen to keep cleanup code together
             // Cleanup ECS stuff from this screen before moving to the next screen/scene
             SignalEvent.removeListener(this);
-            Signals.removeEntity.remove(scene);
-            Signals.changeState.remove(Systems.playerState);
+            SignalEvent.removeListener(scene);
+            SignalEvent.removeListener(Systems.playerState);
             engine.removeSystem(Systems.playerState);
             engine.removeAllEntities();
 

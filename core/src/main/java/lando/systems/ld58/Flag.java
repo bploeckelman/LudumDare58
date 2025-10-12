@@ -18,6 +18,7 @@ public enum Flag {
     , LOG_EVENT     (false)
     , DEBUG_RENDER  (false)
     , DEBUG_UI      (false)
+    , DEBUG_SCENES  (false)
     , FRAME_STEP    (false)
     , LAUNCH_SCREEN (false)
     , GAME_SCREEN   (false)

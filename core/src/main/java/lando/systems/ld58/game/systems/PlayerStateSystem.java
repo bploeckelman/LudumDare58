@@ -8,10 +8,10 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.Id;
 import lando.systems.ld58.game.components.Player;
 import lando.systems.ld58.game.scenes.Scene;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.game.signals.StateEvent;
 import lando.systems.ld58.game.state.PlayerState;
 import lando.systems.ld58.game.state.goomba.GoombaNormalState;
@@ -21,7 +21,7 @@ import lando.systems.ld58.screens.BaseScreen;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingSystem implements Listener<StateEvent> {
+public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingSystem implements Listener<SignalEvent> {
 
     public static final int PRIORITY = 10;
 
@@ -41,7 +41,7 @@ public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingS
         this.scene = (Scene<ScreenType>) screen.scene();
         this.currentStates = new HashMap<>();
         this.allStates = new HashMap<>();
-        Signals.changeState.add(this);
+        SignalEvent.addListener(this);
     }
 
     public ScreenType screen() { return screen; }
@@ -72,7 +72,7 @@ public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingS
     }
 
     @Override
-    public void receive(Signal<StateEvent> signal, StateEvent event) {
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof StateEvent.Change) {
             var change = (StateEvent.Change) event;
             var entity = change.entity();
@@ -118,7 +118,7 @@ public class PlayerStateSystem<ScreenType extends BaseScreen> extends IteratingS
         var statesByType = allStates.computeIfAbsent(entity, k -> new HashMap<>());
         if (statesByType.isEmpty()) {
             populateStates(entity, scene, statesByType);
-            Signals.changeState.dispatch(new StateEvent.Change(entity, null, GoombaStartState.class));
+            StateEvent.change(entity, null, GoombaStartState.class);
         }
     }
 

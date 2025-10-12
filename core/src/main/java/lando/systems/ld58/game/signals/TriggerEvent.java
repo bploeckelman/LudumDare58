@@ -2,7 +2,6 @@ package lando.systems.ld58.game.signals;
 
 import lando.systems.ld58.game.components.Pickup;
 import lando.systems.ld58.game.components.TilemapObject;
-import lombok.AllArgsConstructor;
 
 public interface TriggerEvent extends SignalEvent {
 

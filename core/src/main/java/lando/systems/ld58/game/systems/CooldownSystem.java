@@ -7,14 +7,16 @@ import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld58.game.components.Cooldowns;
 import lando.systems.ld58.game.signals.CooldownEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.utils.Util;
 
-public class CooldownSystem extends IteratingSystem implements Listener<CooldownEvent> {
+public class CooldownSystem extends IteratingSystem implements Listener<SignalEvent> {
 
     private static final String TAG = CooldownSystem.class.getSimpleName();
 
     public CooldownSystem() {
         super(Family.one(Cooldowns.class).get());
+        SignalEvent.addListener(this);
     }
 
     @Override
@@ -26,13 +28,16 @@ public class CooldownSystem extends IteratingSystem implements Listener<Cooldown
     }
 
     @Override
-    public void receive(Signal<CooldownEvent> signal, CooldownEvent event) {
-        var cooldowns = event.cooldowns();
-        if (event instanceof CooldownEvent.Reset) {
-            var reset = (CooldownEvent.Reset) event;
-            cooldowns.reset(reset.name);
-        } else {
-            Util.warn(TAG, "unhandled cooldown event type: " + event.getClass().getSimpleName());
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
+        if (event instanceof CooldownEvent) {
+            var cooldowns = ((CooldownEvent) event).cooldowns();
+
+            if (event instanceof CooldownEvent.Reset) {
+                var reset = (CooldownEvent.Reset) event;
+                cooldowns.reset(reset.name);
+            } else {
+                Util.warn(TAG, "unhandled cooldown event type: " + event.getClass().getSimpleName());
+            }
         }
     }
 }

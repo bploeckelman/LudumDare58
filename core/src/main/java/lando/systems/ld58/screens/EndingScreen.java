@@ -21,7 +21,6 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.assets.*;
 import lando.systems.ld58.flashback.FlashbackObject;
 import lando.systems.ld58.flashback.FlashbackParticle;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.accessors.RectangleAccessor;
@@ -50,7 +49,7 @@ public class EndingScreen extends BaseScreen {
 
     public EndingScreen() {
         worldCamera.setToOrtho(false, 20, 15);
-        font = FontType.ROUNDABOUT.font("large");
+        font = FontType2.ROUNDABOUT.get();
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
         backgroundColor.set(330/255f, 20/255f, 60/255f, 1.0f);

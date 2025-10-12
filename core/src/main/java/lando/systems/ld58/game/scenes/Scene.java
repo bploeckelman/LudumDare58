@@ -7,16 +7,16 @@ import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.factories.MapFactory;
 import lando.systems.ld58.game.signals.EntityEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.screens.BaseScreen;
 import lando.systems.ld58.utils.Util;
 
 import static lando.systems.ld58.game.Constants.*;
 
-public abstract class Scene<ScreenType extends BaseScreen> implements Listener<EntityEvent> {
+public abstract class Scene<ScreenType extends BaseScreen> implements Listener<SignalEvent> {
 
     public static final Family SPAWNERS = Family.one(TilemapObject.Spawner.class).get();
 
@@ -28,7 +28,7 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<E
 
     public Scene(ScreenType screen) {
         this.screen = screen;
-        Signals.removeEntity.add(this);
+        SignalEvent.addListener(this);
     }
 
     public ScreenType screen() { return screen; }
@@ -37,7 +37,8 @@ public abstract class Scene<ScreenType extends BaseScreen> implements Listener<E
     public Entity map()        { return map; }
     public Entity view()       { return view; }
 
-    public void receive(Signal<EntityEvent> signal, EntityEvent event) {
+    @Override
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof EntityEvent.Remove) {
             var remove = (EntityEvent.Remove) event;
             engine().removeEntity(remove.entity);

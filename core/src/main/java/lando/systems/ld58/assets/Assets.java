@@ -15,16 +15,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.github.tommyettinger.textra.FWSkin;
-import com.github.tommyettinger.textra.FWSkinLoader;
 import com.github.tommyettinger.textra.Font;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.utils.FontAssetLoader;
 import lando.systems.ld58.utils.Util;
 import space.earlygrey.shapedrawer.ShapeDrawer;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Assets implements Disposable {
 

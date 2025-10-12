@@ -3,7 +3,6 @@ package lando.systems.ld58.game.actions.types;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import lando.systems.ld58.assets.SoundType;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.actions.Action;
 import lando.systems.ld58.game.signals.AudioEvent;
 

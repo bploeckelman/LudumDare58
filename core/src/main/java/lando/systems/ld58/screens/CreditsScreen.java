@@ -4,23 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.assets.FontType;
-import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.ui.Button;
-import lando.systems.ld58.utils.FramePool;
-import lando.systems.ld58.utils.Util;
 
 public class CreditsScreen extends BaseScreen {
 

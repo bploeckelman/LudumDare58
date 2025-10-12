@@ -5,13 +5,11 @@ import aurelienribon.tweenengine.Tween;
 import aurelienribon.tweenengine.primitives.MutableFloat;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.assets.EffectType;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.accessors.Vector2Accessor;
 

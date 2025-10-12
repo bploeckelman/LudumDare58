@@ -3,7 +3,6 @@ package lando.systems.ld58.game.components;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.Entity;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.signals.EntityEvent;
 import lando.systems.ld58.utils.Util;
@@ -45,13 +44,13 @@ public class Sensors implements Component {
     public void remove(String key) {
         var entity = entities.remove(key);
         if (entity != null) {
-            Signals.removeEntity.dispatch(new EntityEvent.Remove(entity));
+            EntityEvent.remove(entity);
         }
     }
 
     public void clear() {
         for (var entity : entities.values()) {
-            Signals.removeEntity.dispatch(new EntityEvent.Remove(entity));
+            EntityEvent.remove(entity);
         }
     }
 }

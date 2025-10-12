@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Pools;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.Emitter;
 import lando.systems.ld58.game.components.Particle;
 import lando.systems.ld58.game.components.Position;
@@ -48,7 +47,7 @@ public class ParticleSystem extends IteratingSystem implements Disposable {
             var particle = Components.get(entity, Particle.class);
             if (particle != null && particle.data.isDead()) {
                 activeParticles.remove(i);
-                Signals.removeEntity.dispatch(new EntityEvent.Remove(entity));
+                EntityEvent.remove(entity);
             }
         }
 

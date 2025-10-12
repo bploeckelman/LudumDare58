@@ -11,7 +11,6 @@ import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Constants;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.components.renderable.Animator;
@@ -153,7 +152,7 @@ public class GoombaNormalState extends PlayerState {
                 var jumpAccel = kirby() == null ? Constants.JUMP_ACCEL_SINGLE : kirby().jumpImpulse();
                 velocity.value.y = jumpAccel;
 
-                Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
+                CooldownEvent.reset(cooldowns, "jump");
                 AnimationEvent.scale(animator, 0.66f, 1.33f);
                 AnimationEvent.start(animator, getJumpAnimation());
                 AudioEvent.playSound(SoundType.JUMP);

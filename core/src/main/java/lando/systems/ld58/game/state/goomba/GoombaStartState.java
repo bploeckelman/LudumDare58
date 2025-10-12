@@ -4,13 +4,9 @@ import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Signals;
-import lando.systems.ld58.game.actions.ParallelActions;
 import lando.systems.ld58.game.actions.SequentialActions;
-import lando.systems.ld58.game.actions.types.*;
+import lando.systems.ld58.game.actions.types.SetPositionAction;
 import lando.systems.ld58.game.components.TilemapObject;
 import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.signals.StateEvent;
@@ -58,7 +54,7 @@ public class GoombaStartState extends PlayerState {
         super.update(delta);
 
         if (actionsCompleted()) {
-            Signals.changeState.dispatch(new StateEvent.Change(entity, this.getClass(), GoombaNormalState.class));
+            StateEvent.change(entity, this.getClass(), GoombaNormalState.class);
         }
     }
 

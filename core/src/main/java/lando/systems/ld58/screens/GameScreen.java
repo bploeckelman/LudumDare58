@@ -11,13 +11,13 @@ import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.game.components.Bounds;
 import lando.systems.ld58.game.components.SceneContainer;
 import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.scenes.*;
 import lando.systems.ld58.game.signals.AudioEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
 import lando.systems.ld58.utils.FramePool;
@@ -54,29 +54,30 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-//        if (!transitioning && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.justTouched()) {
-//            transitioning = true;
-//            game.setScreen(new EndingScreen());
-//        }
-//        // TODO: temporary for testing scene changes -------------
-//        if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
-//            if      (scene instanceof SceneTest)   switchScene(SceneType.RELIC_1);
-//            else if (scene instanceof SceneRelic1) switchScene(SceneType.RELIC_2);
-//            else if (scene instanceof SceneRelic2) switchScene(SceneType.RELIC_3);
-//            else if (scene instanceof SceneRelic3) switchScene(SceneType.FINALE);
-//            else if (scene instanceof SceneFinale && !transitioning) {
-//                transitioning = true;
-//
-//                // Cleanup ECS stuff from this screen before moving to the next screen/scene
-//                Signals.changeState.remove(Systems.playerState);
-//                engine.removeSystem(Systems.playerState);
-//                engine.removeAllEntities();
-//
-//                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
-//                game.setScreen(new EndingScreen());
-//            }
-//        }
-//        // TODO: temporary for testing scene changes -------------
+        if (Flag.DEBUG_SCENES.isEnabled()) {
+            if (!transitioning && Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && Gdx.input.justTouched()) {
+                transitioning = true;
+                game.setScreen(new EndingScreen());
+            }
+
+            if (!transitioning && Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+                if      (scene instanceof SceneTest)   switchScene(SceneType.RELIC_1);
+                else if (scene instanceof SceneRelic1) switchScene(SceneType.RELIC_2);
+                else if (scene instanceof SceneRelic2) switchScene(SceneType.RELIC_3);
+                else if (scene instanceof SceneRelic3) switchScene(SceneType.FINALE);
+                else if (scene instanceof SceneFinale && !transitioning) {
+                    transitioning = true;
+
+                    // Cleanup ECS stuff from this screen before moving to the next screen/scene
+                    SignalEvent.removeListener(Systems.playerState);
+                    engine.removeSystem(Systems.playerState);
+                    engine.removeAllEntities();
+
+                    AudioEvent.stopAllMusic();
+                    game.setScreen(new EndingScreen());
+                }
+            }
+        }
 
         if (Flag.FRAME_STEP.isEnabled()) {
             Config.stepped_frame = Gdx.input.isKeyJustPressed(Input.Keys.NUM_9);
@@ -116,7 +117,7 @@ public class GameScreen extends BaseScreen {
         }
     }
 
-    private SceneType nextScene () {
+    private SceneType nextScene() {
         if (scene instanceof SceneTest) { return SceneType.RELIC_1; }
         if (scene instanceof SceneRelic1) { return SceneType.RELIC_2; }
         if (scene instanceof SceneRelic2) { return SceneType.RELIC_3; }
@@ -126,8 +127,8 @@ public class GameScreen extends BaseScreen {
 
     private void switchScene(SceneType sceneType) {
         // Cleanup ECS stuff from this screen before moving to the next screen/scene
-        Signals.removeEntity.remove(scene);
-        Signals.changeState.remove(Systems.playerState);
+        SignalEvent.removeListener(scene);
+        SignalEvent.removeListener(Systems.playerState);
         engine.removeSystem(Systems.playerState);
         engine.removeAllEntities();
 
@@ -154,9 +155,6 @@ public class GameScreen extends BaseScreen {
         Systems.movement.mapBounds(mapBounds);
 
         Gdx.input.setInputProcessor(new ScreenInputHandler(this));
-
-//        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN, 0.25f));
-//        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.DIRGE, 0.25f));
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
