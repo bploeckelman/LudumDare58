@@ -57,6 +57,8 @@ dependencies {
   implementation "com.github.tommyettinger:regexodus:$regExodusVersion:sources"
   implementation "com.github.tommyettinger:sjInGameConsole:$inGameConsoleVersion:sources"
   implementation "com.github.tommyettinger:freetypist:$freetypistVersion:sources"
+  // NOTE: technically this should come through freetypist, but it doesn't seem like it is?
+  implementation "com.github.tommyettinger:textratypist:$textratypistVersion:sources"
   implementation "com.kotcrab.vis:vis-ui:$visUiVersion:sources"
   implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-mapping:$controllerMappingVersion:sources"
   implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-scene2d:$controllerScene2DVersion:sources"
