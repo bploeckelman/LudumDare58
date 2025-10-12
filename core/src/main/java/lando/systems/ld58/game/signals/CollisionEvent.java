@@ -9,7 +9,7 @@ import lando.systems.ld58.game.components.Name;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
 import lando.systems.ld58.utils.Util;
 
-public interface CollisionEvent {
+public interface CollisionEvent extends SignalEvent {
 
     String TAG = CollisionEvent.class.getSimpleName();
 
@@ -22,7 +22,9 @@ public interface CollisionEvent {
             Util.log(TAG, Stringf.format("Move: mover=%s target=%s",
                 Components.get(a, Name.class), Components.get(b, Name.class)));
         }
-        return new Move(a, b, xDir, yDir);
+        var event = new Move(a, b, xDir, yDir);
+        signal.dispatch(event);
+        return event;
     }
 
     static Overlap overlap(Entity a, Entity b) {
@@ -30,7 +32,9 @@ public interface CollisionEvent {
             Util.log(TAG, Stringf.format("Overlap between entities: a=%s b=%s",
                 Components.get(a, Name.class), Components.get(b, Name.class)));
         }
-        return new Overlap(a, b);
+        var event = new Overlap(a, b);
+        signal.dispatch(event);
+        return event;
     }
 
     final class Move implements CollisionEvent {

@@ -21,7 +21,7 @@ public class PlaySoundAction extends Action {
 
     @Override
     public void start(Entity entity, Engine engine) {
-        Signals.playSound.dispatch(new AudioEvent.PlaySound(soundType));
+        AudioEvent.playSound(soundType);
         dispatched = true;
     }
 

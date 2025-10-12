@@ -38,6 +38,7 @@ public class GoombaNormalState extends PlayerState {
     private boolean wasGrounded;
     private float lastOnGround;
     private float jumpTime;
+    private float actionDelay = 0;
     private boolean allowGrab = false;
     private boolean suckActive = false;
 
@@ -55,7 +56,7 @@ public class GoombaNormalState extends PlayerState {
         var justLanded = isGrounded && !wasGrounded;
         if (justLanded) {
             player().jumpState(Player.JumpState.GROUNDED);
-            Signals.animScale.dispatch(new AnimationEvent.Scale(animator(), 1.2f, 0.8f));
+            AnimationEvent.scale(animator(), 1.2f, 0.8f);
         }
 
         // Set the correct 'base' animation, may be overridden later
@@ -77,7 +78,7 @@ public class GoombaNormalState extends PlayerState {
                 animType = kirbyPower.getBillyEnemyWalkAnimType();
             }
 
-            Signals.animStart.dispatch(new AnimationEvent.Play(animator(), animType));
+            AnimationEvent.play(animator(), animType);
         } else {
             lastOnGround += delta;
         }
@@ -127,7 +128,7 @@ public class GoombaNormalState extends PlayerState {
         // Update animator's facing based on input, otherwise leave as-is
         if (input.moveDirX != 0) {
             var newFacing = Calc.sign(input.moveDirX);
-            Signals.animFacing.dispatch(new AnimationEvent.Facing(animator, newFacing));
+            AnimationEvent.facing(animator, newFacing);
         }
     }
 
@@ -153,9 +154,9 @@ public class GoombaNormalState extends PlayerState {
                 velocity.value.y = jumpAccel;
 
                 Signals.cooldownReset.dispatch(new CooldownEvent.Reset(cooldowns, "jump"));
-                Signals.animScale.dispatch(new AnimationEvent.Scale(animator, 0.66f, 1.33f));
-                Signals.animStart.dispatch(new AnimationEvent.Start(animator, getJumpAnimation()));
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.JUMP));
+                AnimationEvent.scale(animator, 0.66f, 1.33f);
+                AnimationEvent.start(animator, getJumpAnimation());
+                AudioEvent.playSound(SoundType.JUMP);
 
                 if ((kirby != null ? kirby.powerType : null) == KirbyPower.PowerType.KOOPA) {
                     kirby.activeTimer = 0;
@@ -190,7 +191,7 @@ public class GoombaNormalState extends PlayerState {
             }
             // no power right now
             if (input().isDownHeld && suckActive) {
-                Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.SUCK, 0.25f));
+                AudioEvent.playMusic(MusicType.SUCK, 0.25f);
 
                 var enemiesWithPower = engine.getEntitiesFor(ENEMY_WITH_POWER);
                 for (var enemyEntity : enemiesWithPower) {
@@ -203,7 +204,7 @@ public class GoombaNormalState extends PlayerState {
                         if (enemyPower == null) continue;
 
                         // Suck this guy off....
-                        Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP, .75f));
+                        AudioEvent.playSound(SoundType.SLURP, 0.75f);
 
                         // Create a particle emitter to show the enemy power being sucked in
                         var params = new SuckEffect.Params(enemyPower, entity, enemyPos);
@@ -234,13 +235,13 @@ public class GoombaNormalState extends PlayerState {
                     }
                 }
             } else {
-                Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
+                AudioEvent.stopMusic(MusicType.SUCK);
                 suckActive = false;
             }
         } else {
             // You have a power
             suckActive = false;
-            Signals.stopMusic.dispatch(new AudioEvent.StopMusic(MusicType.SUCK));
+            AudioEvent.stopMusic(MusicType.SUCK);
 
             if (input().isDownHeld && input().isActionJustPressed) {
                 // Create a particle emitter to show the enemy power being spat out
@@ -250,7 +251,7 @@ public class GoombaNormalState extends PlayerState {
 
                 // Remove the power from billy and restore his original animation
                 entity.remove(KirbyPower.class);
-                Signals.animStart.dispatch(new AnimationEvent.Play(animator(), AnimType.BILLY_IDLE));
+                AnimationEvent.play(animator(), AnimType.BILLY_IDLE);
             }
         }
     }
@@ -258,12 +259,13 @@ public class GoombaNormalState extends PlayerState {
     public void gainPower(KirbyPower.PowerType powerType) {
         var kirbyPower = new KirbyPower(powerType);
         this.entity.add(kirbyPower);
+
         var animator = Components.get(entity, Animator.class);
         if (animator == null) return;
-        Signals.animStart.dispatch(new AnimationEvent.Play(animator(), kirbyPower.getBillyEnemyWalkAnimType()));
+
+        AnimationEvent.play(animator(), kirbyPower.getBillyEnemyWalkAnimType());
     }
 
-    float actionDelay = 0;
     public void handleAction(float delta) {
         var gravity = gravity();
         var velocity = velocity();

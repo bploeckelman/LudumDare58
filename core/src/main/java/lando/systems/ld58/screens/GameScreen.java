@@ -32,7 +32,7 @@ public class GameScreen extends BaseScreen {
     public Scene<GameScreen> scene;
 
     public GameScreen() {
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.5f));
+        AudioEvent.playMusic(MusicType.MAIN_THEME, 0.5f);
         switchScene(SceneType.RELIC_1);
     }
 
@@ -139,7 +139,7 @@ public class GameScreen extends BaseScreen {
             case RELIC_3: scene = new SceneRelic3(this); break;
             case FINALE:
                 game.setScreen(new EndingScreen());
-                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+                AudioEvent.stopAllMusic();
                 return;
         }
 

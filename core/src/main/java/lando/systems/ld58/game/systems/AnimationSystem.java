@@ -6,22 +6,19 @@ import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.renderable.Animator;
-import lando.systems.ld58.game.components.renderable.KirbyShaderRenderable;
 import lando.systems.ld58.game.signals.AnimationEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.utils.Calc;
 import lando.systems.ld58.utils.Util;
 
-public class AnimationSystem extends IteratingSystem implements Listener<AnimationEvent> {
+public class AnimationSystem extends IteratingSystem implements Listener<SignalEvent> {
 
     private static final String TAG = AnimationSystem.class.getSimpleName();
 
     public AnimationSystem() {
         super(Family.one(Animator.class).get());
-        Signals.animFacing.add(this);
-        Signals.animScale.add(this);
-        Signals.animStart.add(this);
+        SignalEvent.addListener(this);
     }
 
     @Override
@@ -39,26 +36,32 @@ public class AnimationSystem extends IteratingSystem implements Listener<Animati
 
         // Apply facing
         anim.scale.set(anim.facing * sx, sy);
-
-
     }
 
     @Override
-    public void receive(Signal<AnimationEvent> signal, AnimationEvent event) {
-        var animator = event.animator();
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
+        var isAnimEvent = event instanceof AnimationEvent;
+        if (!isAnimEvent) return;
+
+        var animator = ((AnimationEvent) event).animator();
+
         if (event instanceof AnimationEvent.Facing) {
             var facing = (AnimationEvent.Facing) event;
             animator.facing = facing.newFacing;
-        } else if (event instanceof AnimationEvent.Play) {
+        }
+        else if (event instanceof AnimationEvent.Play) {
             var play = (AnimationEvent.Play) event;
             animator.play(play.animType);
-        } else if (event instanceof AnimationEvent.Scale) {
+        }
+        else if (event instanceof AnimationEvent.Scale) {
             var scale = (AnimationEvent.Scale) event;
             animator.scale.set(scale.newScale);
-        } else if (event instanceof AnimationEvent.Start) {
+        }
+        else if (event instanceof AnimationEvent.Start) {
             var start = (AnimationEvent.Start) event;
             animator.start(start.animType);
-        } else {
+        }
+        else {
             Util.warn(TAG, "unhandled AnimationEvent type: " + event.getClass().getSimpleName());
         }
     }

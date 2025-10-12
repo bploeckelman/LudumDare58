@@ -1,15 +1,15 @@
 package lando.systems.ld58.screens;
 
-import aurelienribon.tweenengine.*;
+import aurelienribon.tweenengine.Timeline;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenEquations;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -24,7 +24,6 @@ import lando.systems.ld58.flashback.FlashbackParticle;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.utils.FramePool;
-import lando.systems.ld58.utils.Util;
 import lando.systems.ld58.utils.accessors.RectangleAccessor;
 
 public class EndingScreen extends BaseScreen {
@@ -64,8 +63,8 @@ public class EndingScreen extends BaseScreen {
 
         dialog.restart("");
         currentPhase = PHASE.START;
-        Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MAIN_THEME, 0.5f));
+        AudioEvent.stopAllMusic();
+        AudioEvent.playMusic(MusicType.MAIN_THEME, 0.5f);
         setupPhase();
     }
 
@@ -172,7 +171,7 @@ public class EndingScreen extends BaseScreen {
                 break;
             case DESTROY_LOU:
                 transitioning = true;
-                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+                AudioEvent.stopAllMusic();
                 game.setScreen(new CreditsScreen(), EffectType.HEART);
                 break;
 

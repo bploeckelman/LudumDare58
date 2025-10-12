@@ -3,7 +3,6 @@ package lando.systems.ld58.game.actions.types;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import lando.systems.ld58.assets.MusicType;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.actions.Action;
 import lando.systems.ld58.game.signals.AudioEvent;
 
@@ -21,7 +20,7 @@ public class PlayMusicAction extends Action {
 
     @Override
     public void start(Entity entity, Engine engine) {
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(musicType));
+        AudioEvent.playMusic(musicType);
         dispatched = true;
     }
 

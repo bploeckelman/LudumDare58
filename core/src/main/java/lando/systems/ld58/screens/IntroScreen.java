@@ -97,8 +97,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
         var inputMux = new InputMultiplexer(storySystem, new ScreenInputHandler(this));
         Gdx.input.setInputProcessor(inputMux);
 
-        // TODO: cleanup w/new signal pattern
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.2f));
+        AudioEvent.playMusic(MusicType.MARIO_DEGRADED, 0.2f);
 
         // Tick the engine for one frame first to get everything initialized
         engine.update(0f);
@@ -125,8 +124,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             engine.removeSystem(Systems.playerState);
             engine.removeAllEntities();
 
-            // TODO: cleanup w/new signal pattern
-            Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+            AudioEvent.stopAllMusic();
             game.setScreen(new GameScreen());
         }
 

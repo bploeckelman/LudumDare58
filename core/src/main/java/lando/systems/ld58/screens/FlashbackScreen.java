@@ -65,7 +65,7 @@ public class FlashbackScreen extends BaseScreen {
         dialog.setWrap(true);
         dialog.setAlignment(Align.center);
         dialog.setBounds(200, Config.window_height/2f, Config.window_width - 400, Config.window_height/3f);
-        Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.DIRGE, 0.25f));
+        AudioEvent.playMusic(MusicType.DIRGE, 0.25f);
         setUpPhase();
     }
 
@@ -236,7 +236,7 @@ public class FlashbackScreen extends BaseScreen {
                 break;
             case EXIT:
                 transitioning = true;
-                Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+                AudioEvent.stopAllMusic();
                 game.setScreen(new IntroScreen(), EffectType.DREAMY);
                 break;
         }
@@ -257,7 +257,7 @@ public class FlashbackScreen extends BaseScreen {
 
         if (skipTimer >= SKIP_TIME && !transitioning) {
             transitioning = true;
-            Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
+            AudioEvent.stopAllMusic();
             game.setScreen(new IntroScreen());
         }
 

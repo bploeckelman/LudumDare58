@@ -6,22 +6,21 @@ import lombok.AllArgsConstructor;
 
 public interface TriggerEvent extends SignalEvent {
 
-    static void dialog(TilemapObject.Trigger trigger) {
-        signal.dispatch(new Dialog(trigger.type));
-        trigger.activated = true;
-    }
+    static void dialog(TilemapObject.Trigger trigger) { signal.dispatch(new Dialog(trigger)); }
+    static void collect(Pickup.Type type)             { signal.dispatch(new Collect(type)); }
 
-    static void collect(Pickup.Type type) {
-        signal.dispatch(new Collect(type));
-    }
-
-    @AllArgsConstructor
     class Dialog implements TriggerEvent {
         public final String key;
+        private Dialog(TilemapObject.Trigger trigger) {
+            this.key = trigger.type;
+            trigger.activated = true;
+        }
     }
 
-    @AllArgsConstructor
     class Collect implements TriggerEvent {
         public final Pickup.Type pickupType;
+        private Collect(Pickup.Type pickupType) {
+            this.pickupType = pickupType;
+        }
     }
 }

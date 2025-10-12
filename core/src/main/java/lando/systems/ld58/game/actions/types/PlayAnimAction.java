@@ -5,10 +5,9 @@ import com.badlogic.ashley.core.Entity;
 import com.github.tommyettinger.digital.Stringf;
 import lando.systems.ld58.assets.AnimType;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.actions.Action;
-import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.components.Id;
+import lando.systems.ld58.game.components.renderable.Animator;
 import lando.systems.ld58.game.signals.AnimationEvent;
 import lando.systems.ld58.utils.Util;
 
@@ -33,7 +32,7 @@ public class PlayAnimAction extends Action {
             return;
         }
 
-        Signals.animStart.dispatch(new AnimationEvent.Start(animator, animType));
+        AnimationEvent.start(animator, animType);
         dispatched = true;
     }
 

@@ -11,31 +11,33 @@ import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
 import lando.systems.ld58.game.components.collision.CollisionResponse;
 import lando.systems.ld58.game.components.renderable.RelicPickupRender;
 import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.CollisionEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.game.signals.TriggerEvent;
 import lando.systems.ld58.particles.effects.BlockBreakEffect;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Time;
 import lando.systems.ld58.utils.Util;
 
-public class CollisionHandlerSystem extends EntitySystem implements Listener<CollisionEvent> {
+public class CollisionHandlerSystem extends EntitySystem implements Listener<SignalEvent> {
 
     private static final String TAG = CollisionHandlerSystem.class.getSimpleName();
 
     public CollisionHandlerSystem() {
-        Signals.collision.add(this);
+        SignalEvent.addListener(this);
     }
 
     @Override
-    public void receive(Signal<CollisionEvent> signal, CollisionEvent event) {
-        if      (event instanceof CollisionEvent.Move)    handleMoveCollision((CollisionEvent.Move) event);
-        else if (event instanceof CollisionEvent.Overlap) handleOverlapCollision((CollisionEvent.Overlap) event);
-        else Util.warn(TAG, "unhandled collision event type: " + event.getClass().getSimpleName());
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
+        if (event instanceof CollisionEvent) {
+            if      (event instanceof CollisionEvent.Move)    handleMoveCollision((CollisionEvent.Move) event);
+            else if (event instanceof CollisionEvent.Overlap) handleOverlapCollision((CollisionEvent.Overlap) event);
+            else Util.warn(TAG, "unhandled collision event type: " + event.getClass().getSimpleName());
+        }
     }
 
     private void handleMoveCollision(CollisionEvent.Move move) {
@@ -156,16 +158,16 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
         //  - increment a coin counter
         switch (pickup.type) {
             case COIN: {
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.COIN));
+                AudioEvent.playSound(SoundType.COIN);
             } break;
             case SHROOM: {
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP));
+                AudioEvent.playSound(SoundType.SLURP);
                 TriggerEvent.collect(pickup.type);
             } break;
             case RELIC_PLUNGER:
             case RELIC_TORCH:
             case RELIC_WRENCH: {
-                Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.BREAK));
+                AudioEvent.playSound(SoundType.BREAK);
                 playerEntity.add(new RelicPickupRender(pickup.type));
             } break;
         }
@@ -289,7 +291,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
         }
 
         // TODO: replace with 'block breaking' sound
-        Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.BREAK));
+        AudioEvent.playSound(SoundType.BREAK);
 
         // Particle effect
         var destructPos = Components.get(destructibleEntity, Position.class);

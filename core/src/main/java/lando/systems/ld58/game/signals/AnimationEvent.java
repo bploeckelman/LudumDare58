@@ -7,15 +7,20 @@ import lando.systems.ld58.utils.FramePool;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public abstract class AnimationEvent {
+public abstract class AnimationEvent implements SignalEvent {
 
     public Animator animator;
     public Animator animator() { return animator; }
 
+    public static void facing(Animator animator, int newFacing)         { signal.dispatch(new AnimationEvent.Facing(animator, newFacing)); }
+    public static void play(Animator animator, AnimType type)           { signal.dispatch(new AnimationEvent.Play(animator, type)); }
+    public static void scale(Animator animator, float newX, float newY) { signal.dispatch(new AnimationEvent.Scale(animator, newX, newY)); }
+    public static void scale(Animator animator, Vector2 newScale)       { signal.dispatch(new AnimationEvent.Scale(animator, newScale.x, newScale.y)); }
+    public static void start(Animator animator, AnimType type)          { signal.dispatch(new AnimationEvent.Start(animator, type)); }
+
     public static final class Facing extends AnimationEvent {
         public int newFacing;
-
-        public Facing(Animator animator, int newFacing) {
+        private Facing(Animator animator, int newFacing) {
             super(animator);
             this.newFacing = newFacing;
         }
@@ -23,8 +28,7 @@ public abstract class AnimationEvent {
 
     public static final class Play extends AnimationEvent {
         public AnimType animType;
-
-        public Play(Animator animator, AnimType animType) {
+        private Play(Animator animator, AnimType animType) {
             super(animator);
             this.animType = animType;
         }
@@ -32,12 +36,10 @@ public abstract class AnimationEvent {
 
     public static final class Scale extends AnimationEvent {
         public Vector2 newScale;
-
-        public Scale(Animator animator, float newScaleX, float newScaleY) {
+        private Scale(Animator animator, float newScaleX, float newScaleY) {
             this(animator, FramePool.vec2(newScaleX, newScaleY));
         }
-
-        public Scale(Animator animator, Vector2 newScale) {
+        private Scale(Animator animator, Vector2 newScale) {
             super(animator);
             this.newScale = newScale;
         }
@@ -45,8 +47,7 @@ public abstract class AnimationEvent {
 
     public static final class Start extends AnimationEvent {
         public AnimType animType;
-
-        public Start(Animator animator, AnimType animType) {
+        private Start(Animator animator, AnimType animType) {
             super(animator);
             this.animType = animType;
         }

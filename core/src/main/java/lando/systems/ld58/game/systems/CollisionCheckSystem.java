@@ -4,14 +4,16 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.Collider;
 import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.game.components.collision.CollisionMask;
 import lando.systems.ld58.game.signals.CollisionEvent;
 import lando.systems.ld58.utils.FramePool;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class CollisionCheckSystem extends IteratingSystem {
 
@@ -28,7 +30,7 @@ public class CollisionCheckSystem extends IteratingSystem {
         var overlaps = getOverlappingEntities(entity, collider.collidesWith(), 0, 0);
         for (var other : overlaps) {
             if (entity == other) continue;
-            Signals.collision.dispatch(CollisionEvent.overlap(entity, other));
+            CollisionEvent.overlap(entity, other);
         }
     }
 

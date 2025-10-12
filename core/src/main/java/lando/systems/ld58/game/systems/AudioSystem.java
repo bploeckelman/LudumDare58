@@ -4,19 +4,17 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.signals.Listener;
 import com.badlogic.ashley.signals.Signal;
 import lando.systems.ld58.assets.MusicType;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.signals.AudioEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
 
-public class AudioSystem extends EntitySystem implements Listener<AudioEvent> {
+public class AudioSystem extends EntitySystem implements Listener<SignalEvent> {
 
     public AudioSystem() {
-        Signals.playSound.add(this);
-        Signals.playMusic.add(this);
-        Signals.stopMusic.add(this);
+        SignalEvent.addListener(this);
     }
 
     @Override
-    public void receive(Signal<AudioEvent> signal, AudioEvent event) {
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof AudioEvent.PlaySound) {
             var play = (AudioEvent.PlaySound) event;
             play.soundType.get().play(play.volume);
