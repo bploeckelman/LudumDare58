@@ -126,7 +126,7 @@ public enum AnimType implements AssetType<Animation<TextureRegion>> {
         private static final String FLASHBACK = "flashback/";
     }
 
-    private static final String TAG = FontType.class.getSimpleName();
+    private static final String TAG = AnimType.class.getSimpleName();
     private static final EnumMap<AnimType, Animation<TextureRegion>> container = AssetType.createContainer(AnimType.class);
 
     private final String path;

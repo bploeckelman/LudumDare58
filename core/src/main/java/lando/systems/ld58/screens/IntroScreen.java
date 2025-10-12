@@ -18,7 +18,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.FontType2;
+import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.ImageType;
 import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.game.Components;
@@ -208,7 +208,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
             var text = dialogText.get(dialogEvent.key);
             if (text != null) {
                 engine.addEntity(Factory.createEntity().add(new Story(dialogEvent.key,
-                    Story.dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, text)
+                    Story.dialog(FontType.ROUNDABOUT, AnimType.BILLY_YELL, text)
                 )));
             }
         }
@@ -219,21 +219,21 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
                 Tween.to(trippyAmount, -1, 2f).target(1f).start(tween);
                 // TODO: move text to i18n/strings.properties
                 engine.addEntity(Factory.createEntity().add(new Story("shroom",
-                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                    new Story.Dialog(FontType.SOURCE_CODE_PRO_OUTLINED, AnimType.BILLY_YELL,
                         "You see fuzzy images floating in your visual field...\n\n"
                             + "a plunger... a torch... a pipe wrench...\n"
                             + "They don't belong here, they're from... elsewhere\n\n"
                             + "You see a weird old man who looks kind of like... Mario?"),
-                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                    new Story.Dialog(FontType.ROUNDABOUT, AnimType.BILLY_YELL,
                         "So that's what's been happening in the Mushroom Kingdom!\n\n"
                             + "Weird old man Mario crossed over from another dimension\n"
                             + "and brought relics with him that are damaging our home.\n"),
-                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
+                    new Story.Dialog(FontType.ROUNDABOUT, AnimType.BILLY_YELL,
                         "The cabal is useless... ten years and they haven't figured this out.\n\n"
                             + "I guess it's up to me to set this right.\n\n"
                             + "I'll collect powers from others to search out those relics\n"
                             + "and destroy them in order to send Mario back!\n"),
-                    new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!")
+                    new Story.Dialog(FontType.ROUNDABOUT_LARGE, AnimType.BILLY_YELL, "Let's... uh... go!")
                 )));
             }
         }

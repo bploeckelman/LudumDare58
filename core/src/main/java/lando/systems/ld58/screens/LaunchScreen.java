@@ -2,23 +2,14 @@ package lando.systems.ld58.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.github.tommyettinger.textra.Font;
-import com.github.tommyettinger.textra.Layout;
-import lando.systems.ld58.Main;
-import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.utils.FramePool;
 
 public class LaunchScreen extends BaseScreen {
 
-    private final Font font;
-    private final Layout layout;
+    // TODO: use TypingLabel instead of direct font rendering
 
     public LaunchScreen() {
-        this.font = FontType.ROUNDABOUT.font();
-        this.layout = new Layout(font);
-
         layout.setTargetWidth(windowCamera.viewportWidth);
         font.markup("Click to Begin", layout);
         font.regenerateLayout(layout);

@@ -48,10 +48,11 @@ public class CreditsScreen extends BaseScreen {
     public CreditsScreen() {
         super();
 
-        var extraLargeTypingFont = FontType.ROUNDABOUT.get().font("large");
-        var largeTypingFont = FontType.ROUNDABOUT.get().font("large");
-        var typingFont = FontType.ROUNDABOUT.get().font("medium");
-        var smallTypingFont = FontType.ROUNDABOUT.get().font("small");
+        // TODO: add variants to FontType2
+        var extraLargeTypingFont = FontType.ROUNDABOUT.get();//.font("large");
+        var largeTypingFont = FontType.ROUNDABOUT.get();//.font("large");
+        var typingFont = FontType.ROUNDABOUT.get();//.font("medium");
+        var smallTypingFont = FontType.ROUNDABOUT.get();//.font("small");
 
 //        font.setColor(Color.WHITE);
 

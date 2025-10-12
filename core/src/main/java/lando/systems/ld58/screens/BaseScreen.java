@@ -15,7 +15,6 @@ import lando.systems.ld58.Config;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.assets.Assets;
 import lando.systems.ld58.assets.FontType;
-import lando.systems.ld58.assets.FontType2;
 import lando.systems.ld58.game.scenes.Scene;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -52,7 +51,7 @@ public abstract class BaseScreen implements Screen {
         worldCamera.update();
 
 //        this.font = FontType.ROUNDABOUT.font();
-        this.font = FontType2.ROUNDABOUT.get();
+        this.font = FontType.ROUNDABOUT.get();
         this.layout = new Layout(font);
         layout.setTargetWidth(windowCamera.viewportWidth);
         font.markup(getClass().getSimpleName(), layout);

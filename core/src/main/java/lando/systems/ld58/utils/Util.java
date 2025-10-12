@@ -64,7 +64,8 @@ public class Util {
     // Font related
     // ------------------------------------------------------------------------
 
-    public static void addGameIconsToFont(FontType fontType, String fontVariant) {
+    // TODO: maybe just do this for all fonts directly in FontType2 instead of rewriting the font after loading?
+    public static void addGameIconsToFont(FontType fontType) {
         // sheesh... all this just to initialize the game icon fonts at an appropriate size
 
         // NOTE: this is only needed if we're using `KnownFonts.addGameIcons(otherFont)`
@@ -79,15 +80,12 @@ public class Util {
         var atlas = Gdx.files.internal("fonts/textra/Game-Icons.atlas");
         if (Gdx.files.internal("fonts/textra/Game-Icons.png").exists()) {
             var gameIcons = new TextureAtlas(atlas, atlas.parent(), false);
-
-            var font = fontType.font(fontVariant);
+            var font = fontType.get();
             // NOTE: doing this manually instead of `font = KnownFonts.addGameIcons(font);`
             //  because the `offsetXChange` value in `addAtlas` below shifts left by 20px
             //  for some unknown reason, resulting in icons floating too far left
             // TODO: ping ettinger about this, I wouldn't be surprised if my usage is wrong
             font.addAtlas(gameIcons, "", "", 0, 0, 0);
-
-            fontType.get().put(fontVariant, font);
         }
     }
 

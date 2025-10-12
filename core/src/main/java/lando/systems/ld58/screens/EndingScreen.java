@@ -49,7 +49,7 @@ public class EndingScreen extends BaseScreen {
 
     public EndingScreen() {
         worldCamera.setToOrtho(false, 20, 15);
-        font = FontType2.ROUNDABOUT.get();
+        font = FontType.ROUNDABOUT.get();
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
         backgroundColor.set(330/255f, 20/255f, 60/255f, 1.0f);

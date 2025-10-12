@@ -2,7 +2,7 @@ package lando.systems.ld58.game.components;
 
 import com.badlogic.ashley.core.Component;
 import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.FontType2;
+import lando.systems.ld58.assets.FontType;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
@@ -12,12 +12,12 @@ public class Story implements Component {
 
     @RequiredArgsConstructor
     public static class Dialog {
-        public final FontType2 fontType;
+        public final FontType fontType;
         public final AnimType animType;
         public final String text;
     }
 
-    public static Dialog dialog(FontType2 fontType, AnimType animType, String text) {
+    public static Dialog dialog(FontType fontType, AnimType animType, String text) {
         return new Dialog(fontType, animType, text);
     }
 

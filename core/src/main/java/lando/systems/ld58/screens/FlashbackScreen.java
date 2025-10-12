@@ -20,7 +20,10 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
-import lando.systems.ld58.assets.*;
+import lando.systems.ld58.assets.AnimType;
+import lando.systems.ld58.assets.EffectType;
+import lando.systems.ld58.assets.ImageType;
+import lando.systems.ld58.assets.MusicType;
 import lando.systems.ld58.flashback.FlashbackObject;
 import lando.systems.ld58.flashback.FlashbackParticle;
 import lando.systems.ld58.game.signals.AudioEvent;
@@ -53,7 +56,6 @@ public class FlashbackScreen extends BaseScreen {
 
     public FlashbackScreen() {
         drawParticles = false;
-        font = FontType.ROUNDABOUT.font("large");
         fbo = new FrameBuffer(Pixmap.Format.RGBA8888, Config.window_width, Config.window_height, false);
         screenTexture = fbo.getColorBufferTexture();
 

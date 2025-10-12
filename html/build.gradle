@@ -53,12 +53,9 @@ dependencies {
   implementation "com.github.tommyettinger:digital:$digitalVersion:sources"
   implementation "com.github.tommyettinger:funderby:$funderbyVersion:sources"
   implementation "com.github.tommyettinger:gdcrux:$gdcruxVersion:sources"
-//  implementation "com.github.tommyettinger:jdkgdxds:$jdkgdxdsVersion:sources"
-//  implementation "com.github.tommyettinger:jdkgdxds_interop:$jdkgdxdsInteropVersion:sources"
   implementation "com.github.tommyettinger:juniper:$juniperVersion:sources"
   implementation "com.github.tommyettinger:regexodus:$regExodusVersion:sources"
   implementation "com.github.tommyettinger:sjInGameConsole:$inGameConsoleVersion:sources"
-  implementation "com.github.tommyettinger:textratypist:$textratypistVersion:sources"
   implementation "com.github.tommyettinger:freetypist:$freetypistVersion:sources"
   implementation "com.kotcrab.vis:vis-ui:$visUiVersion:sources"
   implementation "de.golfgl.gdxcontrollerutils:gdx-controllerutils-mapping:$controllerMappingVersion:sources"
@@ -66,7 +63,9 @@ dependencies {
   implementation "org.mini2Dx:universal-tween-engine:$universalTweenVersion:sources"
   implementation "space.earlygrey:shapedrawer:$shapeDrawerVersion:sources"
   implementation project(':core')
-  implementation("com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion:sources"){exclude group: "com.badlogicgames.gdx", module: "gdx-backend-gwt"}
+  implementation("com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion:sources"){
+    exclude group: "com.badlogicgames.gdx", module: "gdx-backend-gwt"
+  }
 
 }
 

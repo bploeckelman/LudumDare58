@@ -17,8 +17,7 @@ public class AssetTypeRegistry {
         register(ColorType.class,   ColorType::init);
         register(EffectType.class,  EffectType::init);
         register(EmitterType.class, EmitterType::init);
-//        register(FontType.class,    FontType::init,  FontType::load);
-        register(FontType2.class,   FontType2::init,  FontType2::load);
+        register(FontType.class,   FontType::init,  FontType::load);
         register(IconType.class,    IconType::init);
         register(ImageType.class,   ImageType::init, ImageType::load);
         register(MusicType.class,   MusicType::init, MusicType::load);
