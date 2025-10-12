@@ -10,7 +10,6 @@ import lando.systems.ld58.Flag;
 import lando.systems.ld58.assets.EmitterType;
 import lando.systems.ld58.assets.SoundType;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.components.BlockBreakable;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.*;
@@ -161,7 +160,7 @@ public class CollisionHandlerSystem extends EntitySystem implements Listener<Col
             } break;
             case SHROOM: {
                 Signals.playSound.dispatch(new AudioEvent.PlaySound(SoundType.SLURP));
-                Signals.collectTrigger.dispatch(new TriggerEvent.Collect(pickup.type));
+                TriggerEvent.collect(pickup.type);
             } break;
             case RELIC_PLUNGER:
             case RELIC_TORCH:

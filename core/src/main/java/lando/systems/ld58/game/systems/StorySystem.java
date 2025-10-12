@@ -19,13 +19,13 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld58.Flag;
 import lando.systems.ld58.Main;
 import lando.systems.ld58.game.Components;
-import lando.systems.ld58.game.Signals;
 import lando.systems.ld58.game.components.Story;
+import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.game.signals.StoryEvent;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Util;
 
-public class StorySystem extends IteratingSystem implements InputProcessor, Listener<StoryEvent> {
+public class StorySystem extends IteratingSystem implements InputProcessor, Listener<SignalEvent> {
 
     private static final float DEBOUNCE_DURATION = 0.3f;
 
@@ -63,7 +63,7 @@ public class StorySystem extends IteratingSystem implements InputProcessor, List
         var rootBg = new NinePatchDrawable(Main.game.assets.plainNine);
         uiRoot.setBackground(rootBg);
 
-        Signals.advanceStory.add(this);
+        SignalEvent.signal.add(this);
     }
 
     public void setup(Rectangle dialogBounds) {
@@ -112,6 +112,10 @@ public class StorySystem extends IteratingSystem implements InputProcessor, List
             activeStoryEntity = entity;
             uiRoot.setVisible(true);
         }
+        // Dispatch a completion signal once
+        else if (story.isComplete() && activeStoryEntity == entity) {
+            StoryEvent.completed(story);
+        }
 
         // Keep animating even when complete (until cleared)
         update(story);
@@ -151,7 +155,7 @@ public class StorySystem extends IteratingSystem implements InputProcessor, List
     }
 
     @Override
-    public void receive(Signal<StoryEvent> signal, StoryEvent event) {
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof StoryEvent.Advance) {
             if (activeStoryEntity == null) return;
             if (debounceTimer > 0) return;
@@ -197,8 +201,9 @@ public class StorySystem extends IteratingSystem implements InputProcessor, List
     public boolean keyDown(int keycode) {
         log(Stringf.format("keyDown: %d", keycode));
         if (isStoryActive()) {
-            Signals.advanceStory.dispatch(StoryEvent.advance());
-            return true; // consume input
+            // Consume input and dispatch a story advance event
+            StoryEvent.advance();
+            return true;
         }
         return false;
     }
@@ -220,7 +225,8 @@ public class StorySystem extends IteratingSystem implements InputProcessor, List
         log(Stringf.format("touchDown: b%d p%d=(%d, %d)", button, pointerIndex, screenX, screenY));
         updatePointer(screenX, screenY);
         if (isStoryActive()) {
-            Signals.advanceStory.dispatch(StoryEvent.advance());
+            // Consume input and dispatch a story advance event
+            StoryEvent.advance();
             return true;
         }
         return false;

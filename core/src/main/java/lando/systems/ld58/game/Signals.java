@@ -5,6 +5,8 @@ import lando.systems.ld58.game.signals.*;
 
 public class Signals {
 
+    // TODO: replace these w/SignalEvent usage and remove the Signals class
+
     public static final Signal<AnimationEvent> animFacing = new Signal<>();
     public static final Signal<AnimationEvent> animScale  = new Signal<>();
     public static final Signal<AnimationEvent> animStart  = new Signal<>();
@@ -20,9 +22,4 @@ public class Signals {
     public static final Signal<StateEvent> changeState = new Signal<>();
 
     public static final Signal<EntityEvent> removeEntity = new Signal<>();
-
-    public static final Signal<TriggerEvent> dialogTrigger = new Signal<>();
-    public static final Signal<TriggerEvent> collectTrigger = new Signal<>();
-
-    public static final Signal<StoryEvent> advanceStory = new Signal<>();
 }

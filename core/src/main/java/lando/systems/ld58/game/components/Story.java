@@ -27,21 +27,26 @@ public class Story implements Component {
     private boolean started;
     private boolean completed;
     private boolean completedTyping;
-    private boolean shouldClear;  // NEW: flag to indicate story should be removed
+    private boolean shouldClear;
 
+    public final String id;
     public final boolean pauseGame;
 
-    public Story(Dialog... dialogs) {
-        this(true, dialogs);
+    public boolean completionDispatched;
+
+    public Story(String id, Dialog... dialogs) {
+        this(id, true, dialogs);
     }
 
-    public Story(boolean pauseGame, Dialog... dialogs) {
+    public Story(String id, boolean pauseGame, Dialog... dialogs) {
+        this.id = id;
         this.pauseGame = pauseGame;
         this.dialogs = Arrays.asList(dialogs);
         this.index = -1;
         this.started = false;
         this.completed = this.dialogs.isEmpty();
         this.completedTyping = false;
+        this.completionDispatched = false;
     }
 
     public List<Dialog> dialogs() { return dialogs; }
@@ -49,6 +54,7 @@ public class Story implements Component {
     public boolean isStarted() { return started; }
     public boolean isComplete() { return completed; }
     public boolean isTyping() { return !completedTyping; }
+    public boolean isCompletionSignalDispatched() { return completionDispatched; }
     public boolean shouldClear() { return shouldClear; }
 
     public void finishTyping() { completedTyping = true; }

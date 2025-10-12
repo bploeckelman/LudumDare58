@@ -32,6 +32,8 @@ import lando.systems.ld58.game.components.Story;
 import lando.systems.ld58.game.scenes.Scene;
 import lando.systems.ld58.game.scenes.SceneIntro;
 import lando.systems.ld58.game.signals.AudioEvent;
+import lando.systems.ld58.game.signals.SignalEvent;
+import lando.systems.ld58.game.signals.StoryEvent;
 import lando.systems.ld58.game.signals.TriggerEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.game.systems.StorySystem;
@@ -40,7 +42,7 @@ import lando.systems.ld58.utils.FramePool;
 
 import java.util.Map;
 
-public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
+public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
 
     private static final Color BACKGROUND_COLOR = new Color(.1f, .5f, 1f, 1f);
 
@@ -49,23 +51,24 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     private final Texture screenTexture;
     private final MutableFloat trippyAmount;
 
-    public final Scene<IntroScreen> scene;
-
     private boolean changeToGameScreen;
-    private boolean alreadyPickedUpShroom;
+    private boolean collectedShroom;
     private float accum;
 
+    public final Scene<IntroScreen> scene;
+
+    // TODO: move to i18n/strings.properties
     private final Map<String, String> dialogText = Map.of(
-        "dialog-test-1", "Okay, something is definitely wrong.\nIt reeks of garlic and raw sewage in our otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?",
-        "dialog-test-2", "At the last Cabal Strategic Alignment meeting, I vaguely remember Gannon complaining about getting stuck with Collector duty again...\n\nWe all know the 'dorf is a messy bitch who lives for drama, but would even HE be petty enough to leave the Ur-Artifacts scattered around after the last release?"
-        ,"dialog-test-3", "He knows as well as we do that having the Ur-Artifacts lying around the Kingdom puts us at risk of another incursion situation like the Brooklyn Incident.\n\nWe can't be getting invaded by malevolent entities who wish us ill all the time! Where does he think he is, Hyrule?"
-        ,"dialog-test-4", "I guess it's up to me now.\n\nI will collect these 3 Mario artifacts that are by their mere existence causing the Mushroom Kingdom to tumble into disrepair!"
-        ,"dialog-test-5", "Coincidentally, this case happens to contain exact replicas of the very items I am looking for, which should make identifying them considerably easier.\n\nHow convenient!"
-        ,"dialog-test-6", "Nice job holding the jump button down slightly longer than usual! \nThat might come in handy later.\n\nOr actually, it might not (I honestly can't remember where we landed with the level design...)"
-        ,"dialog-test-7", "Thank you, Goomba!\n\nBut our exit is not in another castle!\n\n(Which is to say, you complete levels by collecting each respective relic, rather than by reaching any particular structure.)"
-        ,"dialog-test-8", "One of the benefits of working in the Mushroom Kingdom is everybody wants to see you succeed.\n\nIf you hold the Down button, you can to suck in your comrades and use their powers. Cute!\n\nAlso uncomfortably intimate!"
-        ,"dialog-test-9", "After you suck your comrade, you can hit Enter to use their powers!\n\nSharing is caring."
-        ,"dialog-test-10", "When you're done having your friends inside you,\nyou can simply hold Down and hit Enter.\n\nGoodbye, social obligations!"
+          "dialog-test-1",  "Okay, something is definitely wrong.\nIt reeks of garlic and raw sewage in our otherwise bucolic valley.\n\n Usually that only happens after Big M swings through, but he hasn't been by since Super Mario Bros Wonder dropped.\nWhat gives?"
+        , "dialog-test-2",  "At the last Cabal Strategic Alignment meeting, I vaguely remember Gannon complaining about getting stuck with Collector duty again...\n\nWe all know the 'dorf is a messy bitch who lives for drama, but would even HE be petty enough to leave the Ur-Artifacts scattered around after the last release?"
+        , "dialog-test-3",  "He knows as well as we do that having the Ur-Artifacts lying around the Kingdom puts us at risk of another incursion situation like the Brooklyn Incident.\n\nWe can't be getting invaded by malevolent entities who wish us ill all the time! Where does he think he is, Hyrule?"
+        , "dialog-test-4",  "I guess it's up to me now.\n\nI will collect these 3 Mario artifacts that are by their mere existence causing the Mushroom Kingdom to tumble into disrepair!"
+        , "dialog-test-5",  "Coincidentally, this case happens to contain exact replicas of the very items I am looking for, which should make identifying them considerably easier.\n\nHow convenient!"
+        , "dialog-test-6",  "Nice job holding the jump button down slightly longer than usual! \nThat might come in handy later.\n\nOr actually, it might not (I honestly can't remember where we landed with the level design...)"
+        , "dialog-test-7",  "Thank you, Goomba!\n\nBut our exit is not in another castle!\n\n(Which is to say, you complete levels by collecting each respective relic, rather than by reaching any particular structure.)"
+        , "dialog-test-8",  "One of the benefits of working in the Mushroom Kingdom is everybody wants to see you succeed.\n\nIf you hold the Down button, you can to suck in your comrades and use their powers. Cute!\n\nAlso uncomfortably intimate!"
+        , "dialog-test-9",  "After you suck your comrade, you can hit Enter to use their powers!\n\nSharing is caring."
+        , "dialog-test-10", "When you're done having your friends inside you,\nyou can simply hold Down and hit Enter.\n\nGoodbye, social obligations!"
     );
 
     public IntroScreen() {
@@ -74,30 +77,27 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         this.screenTexture = fbo.getColorBufferTexture();
         //this.screenTexture.setWrap(Texture.TextureWrap.MirroredRepeat, Texture.TextureWrap.MirroredRepeat);
         this.trippyAmount = new MutableFloat(0);
-        this.accum = 0;
-        this.changeToGameScreen = false;
-        this.alreadyPickedUpShroom = false;
         this.scene = new SceneIntro(this);
+        this.changeToGameScreen = false;
+        this.collectedShroom = false;
+        this.accum = 0;
 
-        // Listen for signals
-        Signals.dialogTrigger.add(this);
-        Signals.collectTrigger.add(this);
+        // Setup entities, components, systems, listeners for this screen
+        var sceneEntity = Factory.createEntity().add(new SceneContainer(scene));
+        var mapBounds = Components.get(scene.map(), Bounds.class);
 
-        // Create entities and components for this screen
-        engine.addEntity(Factory.createEntity().add(new SceneContainer(scene)));
-
-        // Setup systems and initialize remaining bits
+        SignalEvent.addListener(this);
+        Systems.movement.mapBounds(mapBounds);
         Systems.playerState = new PlayerStateSystem<>(this);
         engine.addSystem(Systems.playerState);
-
-        var mapBounds = Components.get(scene.map(), Bounds.class);
-        Systems.movement.mapBounds(mapBounds);
+        engine.addEntity(sceneEntity);
 
         initializeUI();
 
         var inputMux = new InputMultiplexer(storySystem, new ScreenInputHandler(this));
         Gdx.input.setInputProcessor(inputMux);
 
+        // TODO: cleanup w/new signal pattern
         Signals.playMusic.dispatch(new AudioEvent.PlayMusic(MusicType.MARIO_DEGRADED, 0.2f));
 
         // Tick the engine for one frame first to get everything initialized
@@ -112,16 +112,20 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     public void update(float delta) {
         super.update(delta);
         accum += delta;
+
         if (!transitioning && changeToGameScreen) {
             transitioning = true;
 
+            // TODO: maybe move the cleanup code to a BaseScreen method,
+            //  or make abstract method in BaseScreen to keep cleanup code together
             // Cleanup ECS stuff from this screen before moving to the next screen/scene
-            Signals.dialogTrigger.remove(this);
+            SignalEvent.removeListener(this);
             Signals.removeEntity.remove(scene);
             Signals.changeState.remove(Systems.playerState);
             engine.removeSystem(Systems.playerState);
             engine.removeAllEntities();
 
+            // TODO: cleanup w/new signal pattern
             Signals.stopMusic.dispatch(new AudioEvent.StopMusic());
             game.setScreen(new GameScreen());
         }
@@ -135,10 +139,8 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
 
         // Pause for story if needed, otherwise update everything
-        var shouldPauseForStory = storySystem.shouldPauseGame();
-        if (shouldPauseForStory) {
+        if (storySystem.shouldPauseGame()) {
             storySystem.update(delta);
-            // TODO: might need manual update for RenderSystem here too
         } else {
             engine.update(delta);
         }
@@ -148,15 +150,16 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
     @Override
     public void renderOffscreenBuffers(SpriteBatch batch) {
         fbo.begin();
-
-        ScreenUtils.clear(BACKGROUND_COLOR);
-        // Draw scene
-        batch.setProjectionMatrix(worldCamera.combined);
-        batch.begin();
-        Systems.render.draw(batch);
-        Systems.renderDebug.draw(shapes);
-        batch.end();
-
+        {
+            ScreenUtils.clear(BACKGROUND_COLOR);
+            batch.setProjectionMatrix(worldCamera.combined);
+            batch.begin();
+            {
+                Systems.render.draw(batch);
+                Systems.renderDebug.draw(shapes);
+            }
+            batch.end();
+        }
         fbo.end();
     }
 
@@ -201,24 +204,24 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
         }
     }
 
-    // TODO: rework this once story system is fully refactored
     @Override
-    public void receive(Signal<TriggerEvent> signal, TriggerEvent event) {
+    public void receive(Signal<SignalEvent> signal, SignalEvent event) {
         if (event instanceof TriggerEvent.Dialog) {
             var dialogEvent = (TriggerEvent.Dialog) event;
             var text = dialogText.get(dialogEvent.key);
             if (text != null) {
-                engine.addEntity(Factory.createEntity().add(new Story(
+                engine.addEntity(Factory.createEntity().add(new Story(dialogEvent.key,
                     Story.dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, text)
                 )));
             }
         }
         else if (event instanceof TriggerEvent.Collect) {
             var collectEvent = (TriggerEvent.Collect) event;
-            if (!alreadyPickedUpShroom && collectEvent.pickupType == Pickup.Type.SHROOM) {
-                alreadyPickedUpShroom = true;
+            if (!collectedShroom && collectEvent.pickupType == Pickup.Type.SHROOM) {
+                collectedShroom = true;
                 Tween.to(trippyAmount, -1, 2f).target(1f).start(tween);
-                engine.addEntity(Factory.createEntity().add(new Story(
+                // TODO: move text to i18n/strings.properties
+                engine.addEntity(Factory.createEntity().add(new Story("shroom",
                     new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL,
                         "You see fuzzy images floating in your visual field...\n\n"
                             + "a plunger... a torch... a pipe wrench...\n"
@@ -235,6 +238,13 @@ public class IntroScreen extends BaseScreen implements Listener<TriggerEvent> {
                             + "and destroy them in order to send Mario back!\n"),
                     new Story.Dialog(FontType2.ROUNDABOUT, AnimType.BILLY_YELL, "Let's... uh... go!")
                 )));
+            }
+        }
+        else if (event instanceof StoryEvent.Completed) {
+            var completedEvent = (StoryEvent.Completed) event;
+            var storyId = completedEvent.storyId;
+            if (storyId.equals("shroom") && !changeToGameScreen) {
+                changeToGameScreen = true;
             }
         }
     }
