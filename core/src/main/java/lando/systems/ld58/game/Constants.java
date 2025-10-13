@@ -12,7 +12,7 @@ public class Constants {
     public static final float MOVE_ACCEL_AIR = 250f;
 
     public static final float JUMP_ACCEL_SINGLE = 200f; // 400 ~= 10 tiles, 250 ~= 4 tiles (16px)
-    public static final float JUMP_HELD_ACCEL = 20f;
+    public static final float JUMP_HELD_ACCEL = 1300f;
     public static final float JUMP_ACCEL_DOUBLE = 350f;
 
     public static final float FRICTION_MAX_GROUND = .01f;

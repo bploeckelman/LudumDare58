@@ -167,7 +167,7 @@ public class GoombaNormalState extends PlayerState {
         if (player.jumpState() == Player.JumpState.JUMPED) {
             if (input.isJumpHeld || input.wasControllerJumpButtonDown) {
                 float jumpAccelAmount = MathUtils.clamp(.5f - jumpTime, 0f, 1f);
-                velocity.value.y += jumpAccelAmount * jumpHeldAccel;
+                velocity.value.y += jumpAccelAmount * jumpHeldAccel * delta;
             }
         }
     }
