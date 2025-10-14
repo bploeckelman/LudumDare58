@@ -25,11 +25,11 @@ public class AssetTypeRegistry {
         register(SoundType.class,   SoundType::init, SoundType::load);
     }
 
-    public <E extends Enum<E> & lando.systems.ld58.assets.AssetType<?>> void register(Class<E> enumClass, Consumer<Assets> initializer) {
+    public <E extends Enum<E> & AssetType<?>> void register(Class<E> enumClass, Consumer<Assets> initializer) {
         register(enumClass, initializer, null);
     }
 
-    public <E extends Enum<E> & lando.systems.ld58.assets.AssetType<?>> void register(Class<E> enumClass, Consumer<Assets> initializer, @Null Consumer<Assets> loader) {
+    public <E extends Enum<E> & AssetType<?>> void register(Class<E> enumClass, Consumer<Assets> initializer, @Null Consumer<Assets> loader) {
         Objects.requireNonNull(initializer, "initializer cannot be null");
         initializers.put(enumClass, initializer);
 

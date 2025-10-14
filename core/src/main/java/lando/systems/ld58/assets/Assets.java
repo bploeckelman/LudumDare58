@@ -144,5 +144,6 @@ public class Assets implements Disposable {
     @Override
     public void dispose() {
         disposables.forEach(Disposable::dispose);
+        mgr.dispose();
     }
 }

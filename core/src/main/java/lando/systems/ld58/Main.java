@@ -40,7 +40,6 @@ public class Main extends Game {
     public Engine engine;
 
     public BaseScreen currentScreen;
-    Layout layout;
 
     public Main() {
         Main.game = this;
@@ -49,7 +48,6 @@ public class Main extends Game {
     @Override
     public void create() {
         Time.init();
-        layout = new Layout();
 
         assets = new Assets();
         Transition.init(assets);
