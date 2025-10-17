@@ -21,7 +21,7 @@ public class AssetTypeRegistry {
         register(IconType.class,    IconType::init);
         register(ImageType.class,   ImageType::init, ImageType::load);
         register(MusicType.class,   MusicType::init, MusicType::load);
-        register(SkinType.class,    SkinType::init);
+        register(SkinType.class,    SkinType::init, SkinType::load);
         register(SoundType.class,   SoundType::init, SoundType::load);
     }
 

@@ -1,20 +1,17 @@
 package lando.systems.ld58.assets;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.github.tommyettinger.freetypist.FreeTypistSkin;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.github.tommyettinger.freetypist.FreeTypistSkinLoader;
 import com.github.tommyettinger.textra.Styles;
 
 import java.util.EnumMap;
 
-public enum SkinType implements AssetType<FreeTypistSkin> {
-    //@formatter:off
-      ZENDO("ui/uiskin.json")
-    ;
-    //@formatter:on
+public enum SkinType implements AssetType<Skin> {
+    ZENDO("ui/uiskin.json");
 
     private static final String TAG = SkinType.class.getSimpleName();
-    private static final EnumMap<SkinType, FreeTypistSkin> container = AssetType.createContainer(SkinType.class);
+    private static final EnumMap<SkinType, Skin> container = AssetType.createContainer(SkinType.class);
 
     public final String skinFilePath;
 
@@ -23,20 +20,28 @@ public enum SkinType implements AssetType<FreeTypistSkin> {
     }
 
     @Override
-    public FreeTypistSkin get() {
+    public Skin get() {
         return container.get(this);
     }
 
-    public static void init(Assets assets) {
-        // Manually instantiate a FreeTypistSkin for each Skins.Type,
-        // adding the textratypist font to the skin using its variant name
-        // and creating a custom LabelStyle (using the textratypist version) for each
-        for (var type : values()) {
-            var file = Gdx.files.internal(type.skinFilePath);
-            var skin = new FreeTypistSkin(file);
-            assets.disposables.add(skin);
+    public static void load(Assets assets) {
+        var mgr = assets.mgr;
+        var resolver = mgr.getFileHandleResolver();
 
-            // Add all FontType fonts to the skin for ease of use
+        mgr.setLoader(Skin.class, new FreeTypistSkinLoader(resolver));
+
+        for (var type : values()) {
+            mgr.load(type.skinFilePath, Skin.class);
+        }
+    }
+
+    public static void init(Assets assets) {
+        var mgr = assets.mgr;
+        for (var type : values()) {
+            var skin = mgr.get(type.skinFilePath, Skin.class);
+
+            // Add all FontType fonts to the skin for ease of use,
+            // and create custom LabelStyle for each using the textra style
             for (var fontType : FontType.values()) {
                 var font = fontType.get();
                 var fontKey = fontType.name().toLowerCase();

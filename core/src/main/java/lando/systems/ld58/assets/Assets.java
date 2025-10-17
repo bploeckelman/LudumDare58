@@ -3,21 +3,15 @@ package lando.systems.ld58.assets;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.github.tommyettinger.textra.Font;
 import lando.systems.ld58.Config;
-import lando.systems.ld58.utils.FontAssetLoader;
 import lando.systems.ld58.utils.Util;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -84,29 +78,12 @@ public class Assets implements Disposable {
         disposables.add(mgr);
         disposables.add(batch);
 
-        // setup asset manager to support ttf/otf fonts
-        var resolver = new InternalFileHandleResolver();
-        var fontLoader = new FreetypeFontLoader(resolver);
-        var fontGenLoader = new FreeTypeFontGeneratorLoader(resolver);
-        mgr.setLoader(FreeTypeFontGenerator.class, fontGenLoader);
-        mgr.setLoader(BitmapFont.class, ".ttf", fontLoader);
-        mgr.setLoader(BitmapFont.class, ".otf", fontLoader);
+        // load one-off items
+        mgr.load("sprites/sprites.atlas", TextureAtlas.class);
+        mgr.load("i18n/strings", I18NBundle.class);
 
-        var textraFontLoader = new FontAssetLoader(resolver, disposables);
-        mgr.setLoader(Font.class, ".ttf", textraFontLoader);
-        mgr.setLoader(Font.class, ".otf", textraFontLoader);
-
-        // populate asset manager
-        {
-            // one-off items
-            mgr.load("sprites/sprites.atlas", TextureAtlas.class);
-            mgr.load("i18n/strings", I18NBundle.class);
-
-            // TODO: does FreeTypistSkin have a supported loader?
-//            mgr.load("ui/uiskin.json", Skin.class);
-
-            assetTypeRegistry.loadAll(this);
-        }
+        // load asset type items
+        assetTypeRegistry.loadAll(this);
 
         if (load == Load.SYNC) {
             mgr.finishLoading();
@@ -121,9 +98,9 @@ public class Assets implements Disposable {
         }
 
         outlineShader = Util.loadShader("shaders/default.vert", "shaders/outline.frag");
-        kirbyShader = Util.loadShader("shaders/default.vert",  "shaders/kirby.frag");
+        kirbyShader = Util.loadShader("shaders/default.vert", "shaders/kirby.frag");
         flameShader = Util.loadShader("shaders/default.vert", "shaders/flame.frag");
-        progressShader =  Util.loadShader("shaders/default.vert", "shaders/progress.frag");
+        progressShader = Util.loadShader("shaders/default.vert", "shaders/progress.frag");
         flashbackShader = Util.loadShader("shaders/default.vert", "shaders/flashback.frag");
         relicShader = Util.loadShader("shaders/default.vert", "shaders/relic.frag");
         hippieShader = Util.loadShader("shaders/default.vert", "shaders/hippie.frag");

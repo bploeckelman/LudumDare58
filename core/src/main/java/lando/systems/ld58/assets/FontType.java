@@ -2,6 +2,10 @@ package lando.systems.ld58.assets;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
+import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.github.tommyettinger.digital.Stringf;
 import com.github.tommyettinger.textra.Font;
 import lando.systems.ld58.utils.FontAssetLoader;
@@ -79,6 +83,18 @@ public enum FontType implements AssetType<Font> {
 
     public static void load(Assets assets) {
         var mgr = assets.mgr;
+        var resolver = mgr.getFileHandleResolver();
+
+        var fontLoader = new FreetypeFontLoader(resolver);
+        var fontGenLoader = new FreeTypeFontGeneratorLoader(resolver);
+        var textraFontLoader = new FontAssetLoader(resolver, assets.disposables);
+        mgr.setLoader(FreeTypeFontGenerator.class, fontGenLoader);
+
+        mgr.setLoader(BitmapFont.class, ".ttf", fontLoader);
+        mgr.setLoader(BitmapFont.class, ".otf", fontLoader);
+        mgr.setLoader(Font.class, ".ttf", textraFontLoader);
+        mgr.setLoader(Font.class, ".otf", textraFontLoader);
+
         for (var type : FontType.values()) {
             var key = type.uniqueKey();
             var params = type.loaderParams();
