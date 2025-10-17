@@ -1,4 +1,4 @@
-package lando.systems.ld58.utils;
+package lando.systems.ld58.utils.loaders;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;

@@ -20,13 +20,11 @@ import lando.systems.ld58.game.signals.AudioEvent;
 import lando.systems.ld58.game.signals.SignalEvent;
 import lando.systems.ld58.game.systems.PlayerStateSystem;
 import lando.systems.ld58.input.ScreenInputHandler;
-import lando.systems.ld58.utils.FramePool;
 
 public class GameScreen extends BaseScreen {
 
     private enum SceneType { TEST, RELIC_1, RELIC_2, RELIC_3, FINALE }
 
-//    private final Color backgroundColor = new Color(0x225522ff);
     private final Color backgroundColor = new Color(0x333333ff);
 
     public Scene<GameScreen> scene;
@@ -47,7 +45,7 @@ public class GameScreen extends BaseScreen {
         var entities = engine.getEntitiesFor(Family.one(RelicPickupRender.class).get());
         // Defensive copy to prevent nested Array.iterator use that would crash....
         var relicCollectedEntities = entities.toArray(Entity.class);
-        for (Entity entity : relicCollectedEntities) {
+        for (var entity : relicCollectedEntities) {
             if (!transitioning && entity.getComponent(RelicPickupRender.class).isComplete()) {
                 transitioning = true;
                 switchScene(nextScene());
@@ -104,24 +102,13 @@ public class GameScreen extends BaseScreen {
         batch.begin();
         Systems.render.drawInWindowSpace(batch, windowCamera);
         batch.end();
-
-        // Screen name overlay
-        if (Flag.DEBUG_RENDER.isEnabled()) {
-            batch.setProjectionMatrix(windowCamera.combined);
-            batch.begin();
-            var pos = FramePool.vec2(
-                (windowCamera.viewportWidth - layout.getWidth()) / 2f,
-                windowCamera.viewportHeight - layout.getHeight());
-            font.drawGlyphs(batch, layout, pos.x, pos.y);
-            batch.end();
-        }
     }
 
     private SceneType nextScene() {
-        if (scene instanceof SceneTest) { return SceneType.RELIC_1; }
-        if (scene instanceof SceneRelic1) { return SceneType.RELIC_2; }
-        if (scene instanceof SceneRelic2) { return SceneType.RELIC_3; }
-        if (scene instanceof SceneRelic3) { return SceneType.FINALE; }
+        if (scene instanceof SceneTest)   return SceneType.RELIC_1;
+        if (scene instanceof SceneRelic1) return SceneType.RELIC_2;
+        if (scene instanceof SceneRelic2) return SceneType.RELIC_3;
+        if (scene instanceof SceneRelic3) return SceneType.FINALE;
         return SceneType.FINALE;
     }
 

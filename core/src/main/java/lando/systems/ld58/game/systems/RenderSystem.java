@@ -8,11 +8,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import lando.systems.ld58.Main;
+import lando.systems.ld58.assets.ShaderType;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.game.components.TileLayer;
@@ -29,12 +29,12 @@ public class RenderSystem extends SortedIteratingSystem {
     private static final Family RENDERABLES = Family
         .one(Image.class, Animator.class, Outline.class, TileLayer.class).get();
 
-    private static final Comparator<Entity> comparator = (o1, o2) -> {
-        var r1 = Renderable.getRenderable(o1);
-        var r2 = Renderable.getRenderable(o2);
-        float o1Depth = r1 == null ? 0 : r1.depth;
-        float o2Depth = r2 == null ? 0 : r2.depth;
-        return (int)(o1Depth - o2Depth);
+    private static final Comparator<Entity> comparator = (e1, e2) -> {
+        var r1 = Renderable.getRenderable(e1);
+        var r2 = Renderable.getRenderable(e2);
+        float e1Depth = r1 == null ? 0 : r1.depth;
+        float e2Depth = r2 == null ? 0 : r2.depth;
+        return (int)(e1Depth - e2Depth);
     };
 
     private final Map<Entity, TiledMapRenderer> mapRenderers;
@@ -50,11 +50,12 @@ public class RenderSystem extends SortedIteratingSystem {
         super.update(deltaTime);
         accum += deltaTime;
 
-        for (Entity e : getEngine().getEntitiesFor(Family.one(RelicPickupRender.class).get())) {
-            var pickup = e.getComponent(RelicPickupRender.class);
-            pickup.accum += deltaTime;
-
-//            if (pickup.accum > RelicPickupRender.DURATION) {
+        var family = Family.one(RelicPickupRender.class).get();
+        var relicRenderEntities = getEngine().getEntitiesFor(family);
+        for (var e : relicRenderEntities) {
+            var render = Components.get(e, RelicPickupRender.class);
+            render.accum += deltaTime;
+//            if (render.accum > RelicPickupRender.DURATION) {
 //                e.remove(RelicPickupRender.class);
 //            }
         }
@@ -62,17 +63,19 @@ public class RenderSystem extends SortedIteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float deltaTime) {
-        var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
+        var kirby = Components.get(entity, KirbyShaderRenderable.class);
         if (kirby != null) {
             kirby.accum += deltaTime;
+
             if (kirby.strength < kirby.targetStrength) {
                 float amount = kirby.rampUpTime * deltaTime;
-                if (amount  + kirby.strength > kirby.targetStrength) {
-                    kirby.strength =  kirby.targetStrength;
+                if (amount + kirby.strength > kirby.targetStrength) {
+                    kirby.strength = kirby.targetStrength;
                 } else {
                     kirby.strength += amount;
                 }
-            } else if (kirby.strength > kirby.targetStrength) {
+            }
+            else if (kirby.strength > kirby.targetStrength) {
                 float amount = kirby.rampDownTime * deltaTime;
                 if (kirby.strength - amount < kirby.targetStrength) {
                     kirby.strength =  kirby.targetStrength;
@@ -82,7 +85,7 @@ public class RenderSystem extends SortedIteratingSystem {
             }
         }
 
-        var flames = Components.optional(entity, FlameShaderRenderable.class).orElse(null);
+        var flames = Components.get(entity, FlameShaderRenderable.class);
         if (flames != null) {
             flames.accum += deltaTime;
         }
@@ -95,82 +98,97 @@ public class RenderSystem extends SortedIteratingSystem {
             renderKirbyShader(batch, entity);
             renderFlameShader(batch, entity);
         }
-
     }
 
     public void drawInWindowSpace(SpriteBatch batch, OrthographicCamera camera) {
-        var relicPickups = getEngine().getEntitiesFor(Family.one(RelicPickupRender.class).get());
-        for (var entity : relicPickups) {
-            if (!entity.getComponent(RelicPickupRender.class).isComplete()) {
+        var relicRenderFamily = Family.one(RelicPickupRender.class).get();
+        var relicRenderEntities = getEngine().getEntitiesFor(relicRenderFamily);
+        for (var entity : relicRenderEntities) {
+            var render = Components.get(entity, RelicPickupRender.class);
+            if (!render.isComplete()) {
                 renderRelicShader(entity, batch, camera);
             }
         }
-
     }
 
     private void renderFlameShader(SpriteBatch batch, Entity entity) {
         var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
-        var flame = Components.optional(entity, FlameShaderRenderable.class).orElse(null);
+        var flame = Components.get(entity, FlameShaderRenderable.class);
         if (flame == null) return;
+
+        var rect = flame.rect(pos);
 
         var shader = flame.shaderProgram;
         batch.setShader(shader);
+        {
+            shader.setUniformf("u_color1", flame.color1);
+            shader.setUniformf("u_color2", flame.color2);
+            shader.setUniformf("u_time", flame.accum);
 
-        var rect = flame.rect(pos);
-        shader.setUniformf("u_color1", flame.color1);
-        shader.setUniformf("u_color2", flame.color2);
-        shader.setUniformf("u_time", flame.accum);
-
-        batch.draw(flame.texture, rect.x, rect.y, rect.width, rect.height);
-
+            batch.draw(flame.texture, rect.x, rect.y, rect.width, rect.height);
+        }
         batch.setShader(null);
     }
 
     private void renderKirbyShader(SpriteBatch batch, Entity entity) {
         var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
-        var kirby = Components.optional(entity, KirbyShaderRenderable.class).orElse(null);
+        var kirby = Components.get(entity, KirbyShaderRenderable.class);
         if (kirby == null) return;
+
+        var rect = kirby.rect(pos);
 
         var shader = kirby.shaderProgram;
         batch.setShader(shader);
+        {
+            shader.setUniformf("u_strength", kirby.strength);
+            shader.setUniformf("u_time", kirby.accum);
 
-        var rect = kirby.rect(pos);
-        shader.setUniformf("u_strength", kirby.strength);
-        shader.setUniformf("u_time", kirby.accum);
-
-        batch.draw(kirby.texture, rect.x, rect.y, rect.width, rect.height);
-
+            batch.draw(kirby.texture, rect.x, rect.y, rect.width, rect.height);
+        }
         batch.setShader(null);
     }
 
     public void renderRelicShader(Entity entity, SpriteBatch batch, OrthographicCamera camera) {
-        var pickup = Components.optional(entity, RelicPickupRender.class).orElse(null);
+        var pickup = Components.get(entity, RelicPickupRender.class);
         if (pickup == null) return;
-        var shader = Main.game.assets.relicShader;
-        batch.setShader(shader);
 
-        float alpha = MathUtils.clamp(Math.min(pickup.accum * 2f, RelicPickupRender.DURATION - pickup.accum), 0f, 1f);
+        var relicRegion = pickup.getRelicTexture();
+        var pixel = Main.game.assets.pixel;
+        var alpha = MathUtils.clamp(Math.min(pickup.accum * 2f, RelicPickupRender.DURATION - pickup.accum), 0f, 1f);
+        var color = FramePool.color(1, 1, 1, alpha);
+        var viewWidth = camera.viewportWidth;
+        var viewHeight = camera.viewportHeight;
 
-        shader.setUniformf("u_rotation", pickup.getRotation());
-        batch.setColor(1,1,1,alpha);
+        var relic = ShaderType.RELIC.get();
+        batch.setShader(relic);
+        {
+            relic.setUniformf("u_rotation", pickup.getRotation());
 
-        batch.draw(Main.game.assets.pixel, 0, 0, camera.viewportWidth, camera.viewportHeight);
-        batch.setColor(Color.WHITE);
+            batch.setColor(color);
+            batch.draw(pixel, 0, 0, viewWidth, viewHeight);
+            batch.setColor(Color.WHITE);
+        }
 
-        var outlineShader = Main.game.assets.outlineShader;
-        var thickness = 3f;
-        var region = pickup.getRelicTexture();
-        batch.setShader(outlineShader);
-        batch.setColor(1, 1, 1, alpha);
-        outlineShader.setUniformf("u_fill_color", Color.CLEAR_WHITE);
-        outlineShader.setUniformf("u_outline_color", Util.hsvToRgb(accum * 1f, 1f, 1f, FramePool.color()));
-        outlineShader.setUniformf("u_thickness",
-            thickness / (float) region.getTexture().getWidth(),
-            thickness / (float) region.getTexture().getHeight());
-        batch.draw(region, camera.viewportWidth/2 - 100, camera.viewportHeight/2 - 100, 200, 200);
+        var outline = ShaderType.OUTLINE.get();
+        batch.setShader(outline);
+        {
+            var fillColor = Color.CLEAR_WHITE;
+            var outlineColor = Util.hsvToRgb(accum, 1f, 1f, FramePool.color());
+            var thickness = 3f;
+            var size = 200f;
+
+            outline.setUniformf("u_fill_color", fillColor);
+            outline.setUniformf("u_outline_color", outlineColor);
+            outline.setUniformf("u_thickness",
+                thickness / (float) relicRegion.getTexture().getWidth(),
+                thickness / (float) relicRegion.getTexture().getHeight());
+
+            batch.setColor(color);
+            batch.draw(relicRegion, (viewWidth - size) / 2f, (viewHeight - size) / 2f, size, size);
+        }
+
         batch.setColor(Color.WHITE);
         batch.setShader(null);
-
     }
 
     private void renderTileLayer(SpriteBatch batch, Entity entity) {
@@ -190,17 +208,16 @@ public class RenderSystem extends SortedIteratingSystem {
     }
 
     private void renderRenderablesWithOutline(SpriteBatch batch, Entity entity) {
-        var pos = Components.optional(entity, Position.class).orElse(Position.ZERO);
-        var outline = Components.optional(entity, Outline.class).orElse(Outline.CLEAR);
-
-        // Draw simple renderables
-        var image = Components.optional(entity, Image.class).orElse(null);
-        var animator = Components.optional(entity, Animator.class).orElse(null);
+        var pos      = Components.optional(entity, Position.class).orElse(Position.ZERO);
+        var outline  = Components.optional(entity, Outline.class).orElse(Outline.CLEAR);
+        var image    = Components.get(entity, Image.class);
+        var animator = Components.get(entity, Animator.class);
 
         TextureRegion region = null;
         Texture texture = null;
         Rectangle rect = null;
         Color tintColor = FramePool.color().set(Color.WHITE);
+
         if (image != null) {
             region = image.getTextureRegion();
             texture = image.getTexture();
@@ -217,26 +234,30 @@ public class RenderSystem extends SortedIteratingSystem {
             return;
         }
 
-        ShaderProgram outlineShader = Main.game.assets.outlineShader;
-        batch.setShader(outlineShader);
-        outlineShader.setUniformf("u_fill_color", outline.fillColor());
-        outlineShader.setUniformf("u_outline_color", outline.outlineColor());
-
         var prevColor = FramePool.color().set(batch.getColor());
-        batch.setColor(tintColor);
-        if (texture != null) {
-            outlineShader.setUniformf("u_thickness",
-                outline.outlineThickness() / (float) texture.getWidth(),
-                outline.outlineThickness() / (float) texture.getHeight());
-            batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
+        var shader = ShaderType.OUTLINE.get();
+        batch.setShader(shader);
+        {
+            shader.setUniformf("u_fill_color", outline.fillColor());
+            shader.setUniformf("u_outline_color", outline.outlineColor());
+
+            batch.setColor(tintColor);
+
+            if (texture != null) {
+                shader.setUniformf("u_thickness",
+                    outline.outlineThickness() / (float) texture.getWidth(),
+                    outline.outlineThickness() / (float) texture.getHeight());
+                batch.draw(texture, rect.x, rect.y, rect.width, rect.height);
+            }
+
+            if (region != null) {
+                shader.setUniformf("u_thickness",
+                    outline.outlineThickness() / (float) region.getTexture().getWidth(),
+                    outline.outlineThickness() / (float) region.getTexture().getHeight());
+                Util.draw(batch, region, rect, tintColor);
+            }
         }
-        if (region != null) {
-            outlineShader.setUniformf("u_thickness",
-                outline.outlineThickness() / (float) region.getTexture().getWidth(),
-                outline.outlineThickness() / (float) region.getTexture().getHeight());
-            Util.draw(batch, region, rect, tintColor);
-        }
-        batch.setColor(prevColor);
         batch.setShader(null);
+        batch.setColor(prevColor);
     }
 }

@@ -17,10 +17,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 import lando.systems.ld58.Config;
 import lando.systems.ld58.Flag;
-import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.FontType;
-import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.assets.MusicType;
+import lando.systems.ld58.assets.*;
 import lando.systems.ld58.game.Components;
 import lando.systems.ld58.game.Factory;
 import lando.systems.ld58.game.Systems;
@@ -164,7 +161,7 @@ public class IntroScreen extends BaseScreen implements Listener<SignalEvent> {
     public void render(float delta) {
         ScreenUtils.clear(BACKGROUND_COLOR);
 
-        var shader = assets.hippieShader;
+        var shader = ShaderType.HIPPIE.get();
         batch.setShader(shader);
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();

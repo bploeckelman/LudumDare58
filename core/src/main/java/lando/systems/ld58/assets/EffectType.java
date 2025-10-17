@@ -38,6 +38,7 @@ public enum EffectType implements AssetType<ShaderProgram> {
         return container.get(this);
     }
 
+    // TODO: unify with ShaderType to use AssetManager
     public static void init(Assets assets) {
         var prefix = "shaders/transitions/";
         var vertex = prefix + "default.vert";

@@ -8,12 +8,13 @@ import lando.systems.ld58.game.components.Position;
 import lando.systems.ld58.utils.FramePool;
 
 public abstract class ShaderRenderable {
-    public ShaderProgram shaderProgram;
-    public float accum = 0;
-    public Texture texture;
-    public Rectangle bounds = new Rectangle();
-    public Vector2 offset = new Vector2();
 
+    public final Rectangle bounds = new Rectangle();
+    public final Vector2 offset = new Vector2();
+
+    public ShaderProgram shaderProgram;
+    public Texture texture;
+    public float accum = 0;
 
     public Rectangle rect(Position position) {
         return FramePool.rect(

@@ -20,10 +20,7 @@ import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Layout;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.Config;
-import lando.systems.ld58.assets.AnimType;
-import lando.systems.ld58.assets.EffectType;
-import lando.systems.ld58.assets.ImageType;
-import lando.systems.ld58.assets.MusicType;
+import lando.systems.ld58.assets.*;
 import lando.systems.ld58.flashback.FlashbackObject;
 import lando.systems.ld58.flashback.FlashbackParticle;
 import lando.systems.ld58.game.signals.AudioEvent;
@@ -311,7 +308,7 @@ public class FlashbackScreen extends BaseScreen {
     public void render(float delta) {
         ScreenUtils.clear(backgroundColor);
 
-        var shader = assets.flashbackShader;
+        var shader = ShaderType.FLASHBACK.get();
         batch.setShader(shader);
         batch.setProjectionMatrix(windowCamera.combined);
         batch.begin();
@@ -339,7 +336,7 @@ public class FlashbackScreen extends BaseScreen {
         batch.draw(assets.pixel, Config.window_width - 260, 10, 250, 60);
         batch.setColor(Color.WHITE);
         batch.end();
-        var progressShader = assets.progressShader;
+        var progressShader = ShaderType.PROGRESS.get();
         batch.setShader(progressShader);
         batch.begin();
         progressShader.setUniformf("u_percent", MathUtils.clamp(skipTimer / SKIP_TIME, 0f, 1f));

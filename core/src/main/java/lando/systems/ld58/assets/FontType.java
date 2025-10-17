@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.github.tommyettinger.digital.Stringf;
 import com.github.tommyettinger.textra.Font;
-import lando.systems.ld58.utils.FontAssetLoader;
+import lando.systems.ld58.utils.loaders.FontAssetLoader;
 
 import java.util.EnumMap;
 
