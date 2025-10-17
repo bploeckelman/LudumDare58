@@ -35,8 +35,10 @@ public enum FontType implements AssetType<Font> {
 
     public static final int DEFAULT_SIZE = 24;
 
-    public final String fontFilePath;
     public final FreeTypeFontParameter params;
+    public final String fontFilePath;
+    public final String labelStyleName;
+    public final String textraLabelStyleName;
 
     FontType(String fontFilePath) {
         this(fontFilePath, DEFAULT_SIZE);
@@ -49,6 +51,9 @@ public enum FontType implements AssetType<Font> {
     FontType(String fontFilePath, FreeTypeFontParameter params) {
         this.fontFilePath = "fonts/" + fontFilePath;
         this.params = params;
+        // NOTE: these styles are created in SkinType.init() for each FontType
+        this.labelStyleName = "label-" + name().toLowerCase();
+        this.textraLabelStyleName = "textra-label-" + name().toLowerCase();
     }
 
     @Override

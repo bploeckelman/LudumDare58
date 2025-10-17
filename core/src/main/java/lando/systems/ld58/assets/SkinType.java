@@ -48,14 +48,12 @@ public enum SkinType implements AssetType<Skin> {
                 skin.add(fontKey, font);
 
                 // Create and add a TypingLabel style for this font
-                var labelStyleKey = "label-" + fontKey;
                 var labelStyle = new Styles.LabelStyle(font, Color.WHITE);
-                skin.add(labelStyleKey, labelStyle);
+                skin.add(fontType.labelStyleName, labelStyle);
 
                 // Create and add a TextraLabel style for this font
-                var textraLabelStyleKey = "textra-label-" + fontKey;
                 var textraLabelStyle = new Styles.LabelStyle(font, Color.WHITE);
-                skin.add(textraLabelStyleKey, textraLabelStyle);
+                skin.add(fontType.textraLabelStyleName, textraLabelStyle);
 
                 // TODO: maybe add styles similarly for other textra widget types:
                 //  - TextraArea, TextraButton, TextraCheckBox, ...
