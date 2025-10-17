@@ -2,15 +2,15 @@ package lando.systems.ld58.assets;
 
 import com.badlogic.gdx.utils.Null;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class AssetTypeRegistry {
 
-    private final Map<Class<? extends AssetType<?>>, Consumer<Assets>> initializers = new HashMap<>();
-    private final Map<Class<? extends lando.systems.ld58.assets.AssetType<?>>, Consumer<Assets>> loaders = new HashMap<>();
+    private final Map<Class<? extends AssetType<?>>, Consumer<Assets>> initializers = new LinkedHashMap<>();
+    private final Map<Class<? extends AssetType<?>>, Consumer<Assets>> loaders = new LinkedHashMap<>();
 
     public AssetTypeRegistry() {
         register(AnimType.class,    AnimType::init);
@@ -40,10 +40,14 @@ public class AssetTypeRegistry {
     }
 
     public void initAll(Assets assets) {
-        initializers.values().forEach(initializer -> initializer.accept(assets));
+        for (var initializer : initializers.values()) {
+            initializer.accept(assets);
+        }
     }
 
     public void loadAll(Assets assets) {
-        loaders.values().forEach(loader -> loader.accept(assets));
+        for (var loader : loaders.values()) {
+            loader.accept(assets);
+        }
     }
 }
