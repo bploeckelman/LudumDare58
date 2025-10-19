@@ -7,13 +7,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.tommyettinger.textra.TypingLabel;
 import lando.systems.ld58.assets.FontType;
 import lando.systems.ld58.assets.SkinType;
-import lando.systems.ld58.utils.FramePool;
 
 public class LaunchScreen extends BaseScreen {
 
     public LaunchScreen() {
         var skin = SkinType.ZENDO.get();
-        var styleName = FontType.ATKINSON_HYPERLEGIBLE.textraLabelStyleName;
+        var styleName = FontType.HYPERLEGIBLE.textraLabelStyleName;
         var text = "{WAVE}{RAINBOW}Click to Begin{ENDRAINBOW}{ENDWAVE}";
 
         var label = new TypingLabel(text, skin, styleName);

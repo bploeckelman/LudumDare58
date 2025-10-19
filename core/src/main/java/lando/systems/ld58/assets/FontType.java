@@ -1,5 +1,6 @@
 package lando.systems.ld58.assets;
 
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.github.tommyettinger.digital.Stringf;
 import com.github.tommyettinger.textra.Font;
+import lando.systems.ld58.utils.Util;
 import lando.systems.ld58.utils.loaders.FontAssetLoader;
 
 import java.util.EnumMap;
@@ -15,19 +17,19 @@ import java.util.EnumMap;
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 
 public enum FontType implements AssetType<Font> {
-      ATKINSON_HYPERLEGIBLE_NEXT ("atkinson-hyperlegible-next-regular.ttf")
-    , ATKINSON_HYPERLEGIBLE      ("atkinson-hyperlegible-regular.ttf")
-    , CHEVYRAY_RISE              ("chevyray-rise.ttf")
+      HYPERLEGIBLE_NEXT          ("atkinson-hyperlegible-next-regular.ttf")
+    , HYPERLEGIBLE               ("atkinson-hyperlegible-regular.ttf")
+    , RISE                       ("chevyray-rise.ttf")
     , COUSINE                    ("cousine-regular.ttf")
     , DROID_SANS_MONO            ("droid-sans-mono.ttf")
     , FEASFB                     ("feasfb-regular.ttf")
     , INCONSOLATA                ("inconsolata.otf")
     , NOTO_SANS                  ("noto-sans-cjk-jp-medium.otf")
-    , ROBOTO                     ("roboto-regular.ttf")
-    , ROUNDABOUT                 ("chevyray-roundabout.ttf")
-    , ROUNDABOUT_LARGE           ("chevyray-roundabout.ttf", 32)
-    , SOURCE_CODE_PRO            ("source-code-pro-regular.otf")
-    , SOURCE_CODE_PRO_OUTLINED   ("source-code-pro-regular.otf", ParamBuilder.withSize(20).border(2, Color.DARK_GRAY).build())
+//    , ROBOTO                     ("roboto-regular.ttf")
+//    , ROUNDABOUT                 ("chevyray-roundabout.ttf") // TeaVM doesn't seem to like this one?
+//    , ROUNDABOUT_LARGE           ("chevyray-roundabout.ttf", 32)
+//    , SOURCE_CODE_PRO            ("source-code-pro-regular.otf")
+//    , SOURCE_CODE_PRO_OUTLINED   ("source-code-pro-regular.otf", ParamBuilder.withSize(20).border(2, Color.DARK_GRAY).build())
     ;
 
     private static final String TAG = FontType.class.getSimpleName();
@@ -88,7 +90,8 @@ public enum FontType implements AssetType<Font> {
 
     public static void load(Assets assets) {
         var mgr = assets.mgr;
-        var resolver = mgr.getFileHandleResolver();
+        // NOTE: need to use this resolver rather than mgr.getFileHandleResolver() which hangs while loading fonts in teavm
+        var resolver = new InternalFileHandleResolver();
 
         var fontLoader = new FreetypeFontLoader(resolver);
         var fontGenLoader = new FreeTypeFontGeneratorLoader(resolver);
@@ -101,8 +104,9 @@ public enum FontType implements AssetType<Font> {
         mgr.setLoader(Font.class, ".otf", textraFontLoader);
 
         for (var type : FontType.values()) {
-            var key = type.uniqueKey();
+            var key = type.fontFilePath;//.uniqueKey();
             var params = type.loaderParams();
+            Util.log("Loading font: " + key);
             mgr.load(key, Font.class, params);
         }
     }
@@ -110,8 +114,9 @@ public enum FontType implements AssetType<Font> {
     public static void init(Assets assets) {
         var mgr = assets.mgr;
         for (var type : FontType.values()) {
-            var key = type.uniqueKey();
+            var key = type.fontFilePath;//.uniqueKey();
             var font = mgr.get(key, Font.class);
+            Util.log("Caching font: " + key);
             container.put(type, font);
         }
     }

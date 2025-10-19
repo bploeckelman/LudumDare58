@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.github.tommyettinger.freetypist.FreeTypistSkinLoader;
 import com.github.tommyettinger.textra.Styles;
+import lando.systems.ld58.utils.Util;
 
 import java.util.EnumMap;
 
@@ -31,6 +32,7 @@ public enum SkinType implements AssetType<Skin> {
         mgr.setLoader(Skin.class, new FreeTypistSkinLoader(resolver));
 
         for (var type : values()) {
+            Util.log("Loading skin: " + type.skinFilePath);
             mgr.load(type.skinFilePath, Skin.class);
         }
     }
@@ -60,6 +62,7 @@ public enum SkinType implements AssetType<Skin> {
                 //  - TypingButton, TypingCheckBox, TypingTooltip, ...
             }
 
+            Util.log("Caching skin: " + type.skinFilePath);
             container.put(type, skin);
         }
     }

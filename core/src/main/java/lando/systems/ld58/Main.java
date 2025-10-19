@@ -23,6 +23,7 @@ import lando.systems.ld58.game.Systems;
 import lando.systems.ld58.screens.*;
 import lando.systems.ld58.utils.FramePool;
 import lando.systems.ld58.utils.Time;
+import lando.systems.ld58.utils.Util;
 import lando.systems.ld58.utils.accessors.*;
 
 import static com.badlogic.gdx.Application.ApplicationType;
@@ -78,16 +79,24 @@ public class Main extends Game {
         windowCamera.setToOrtho(false, Config.window_width, Config.window_height);
         windowCamera.update();
 
+        Util.log("MAIN: before visui load");
+
         VisUI.setSkipGdxVersionCheck(true);
         VisUI.load(SkinType.ZENDO.get());
 
+        Util.log("MAIN: before engine/systems init");
+
         engine = new Engine();
         Systems.init(engine);
+
+        Util.log("MAIN: before screen ctor");
 
         var showLaunchScreen = (Gdx.app.getType() == ApplicationType.WebGL || Flag.LAUNCH_SCREEN.isEnabled());
         var startScreen = showLaunchScreen ? new LaunchScreen()
             : Flag.GAME_SCREEN.isEnabled() ? new GameScreen()
             : new TitleScreen();
+
+        Util.log("MAIN: before set screen");
 
         setScreen(startScreen);
     }

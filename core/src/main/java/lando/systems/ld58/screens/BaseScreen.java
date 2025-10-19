@@ -50,8 +50,7 @@ public abstract class BaseScreen implements Screen {
         worldCamera.setToOrtho(false, Config.framebuffer_width, Config.framebuffer_height);
         worldCamera.update();
 
-//        this.font = FontType.ROUNDABOUT.font();
-        this.font = FontType.ROUNDABOUT.get();
+        this.font = FontType.RISE.get();
         this.layout = new Layout(font);
         layout.setTargetWidth(windowCamera.viewportWidth);
         font.markup(getClass().getSimpleName(), layout);

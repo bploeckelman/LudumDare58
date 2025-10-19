@@ -1,6 +1,7 @@
 package lando.systems.ld58.assets;
 
 import com.badlogic.gdx.utils.Null;
+import lando.systems.ld58.utils.Util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -40,14 +41,18 @@ public class AssetTypeRegistry {
     }
 
     public void initAll(Assets assets) {
-        for (var initializer : initializers.values()) {
-            initializer.accept(assets);
+        for (var initializer : initializers.entrySet()) {
+            Util.log("Initializing: " + initializer.getKey().getSimpleName());
+            initializer.getValue().accept(assets);
         }
+        Util.log("Finished initializing");
     }
 
     public void loadAll(Assets assets) {
-        for (var loader : loaders.values()) {
-            loader.accept(assets);
+        for (var loader : loaders.entrySet()) {
+            Util.log("Loading: " + loader.getKey().getSimpleName());
+            loader.getValue().accept(assets);
         }
+        Util.log("Finished loading");
     }
 }

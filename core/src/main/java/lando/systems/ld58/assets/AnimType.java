@@ -2,6 +2,7 @@ package lando.systems.ld58.assets;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import lando.systems.ld58.utils.Util;
 
 import java.io.Serializable;
 import java.util.EnumMap;

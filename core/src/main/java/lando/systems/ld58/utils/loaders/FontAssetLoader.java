@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.tommyettinger.textra.Font;
 import lando.systems.ld58.assets.FontType;
+import lando.systems.ld58.utils.Util;
 import lombok.AllArgsConstructor;
 
 import static com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -37,8 +38,10 @@ public class FontAssetLoader extends AsynchronousAssetLoader<Font, FontAssetLoad
 
     @Override
     public Font loadSync(AssetManager manager, String fileName, FileHandle file, Param param) {
+        Util.log("Generating font: param.path='" + param.fontFilePath + "', fileName=" + fileName);
+
         // Bypass the normal FileHandle and resolve based on the actual font file path instead
-        // so that it doesn't try to use the FontType2.uniqueKey() value as the file path.
+        // so that it doesn't try to use the FontType.uniqueKey() value as the file path.
         var actualFile = resolve(param.fontFilePath);
         var generator = new FreeTypeFontGenerator(actualFile);
 

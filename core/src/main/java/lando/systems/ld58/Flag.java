@@ -10,7 +10,7 @@ import lando.systems.ld58.utils.Util;
  */
 public enum Flag {
     //@formatter:off
-      GLOBAL        (false)
+      GLOBAL        (true)
     , LOG_GENERAL   (true)
     , LOG_DEBUG     (true)
     , LOG_WARN      (true)

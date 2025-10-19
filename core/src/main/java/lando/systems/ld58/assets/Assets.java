@@ -28,7 +28,7 @@ public class Assets implements Disposable {
     public final AssetTypeRegistry assetTypeRegistry;
 
     public TextureAtlas atlas;
-    public I18NBundle strings;
+//    public I18NBundle strings;
 
     public final Texture pixel;
     public TextureRegion pixelRegion;
@@ -70,7 +70,7 @@ public class Assets implements Disposable {
 
         // load one-off items
         mgr.load("sprites/sprites.atlas", TextureAtlas.class);
-        mgr.load("i18n/strings", I18NBundle.class);
+//        mgr.load("i18n/strings", I18NBundle.class);
 
         // load asset type items
         assetTypeRegistry.loadAll(this);
@@ -88,7 +88,7 @@ public class Assets implements Disposable {
         }
 
         atlas = mgr.get("sprites/sprites.atlas");
-        strings = mgr.get("i18n/strings");
+//        strings = mgr.get("i18n/strings");
 
         assetTypeRegistry.initAll(this);
 
